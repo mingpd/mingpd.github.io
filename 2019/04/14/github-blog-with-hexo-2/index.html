@@ -1,0 +1,424 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="밍피디">
+    <title>Github 블로그 만들기 with Hexo - 2 - 밍피디</title>
+    <meta name="author" content="밍피디">
+    
+    
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[]},"articleBody":"Hexo 글쓰기hexo-cli가 워낙 잘 되어있기 때문에 간단한 명령어를 통해 글을 만들 수 있습니다.12345678# 일반 post는 아래와 같이 만듭니다.$ hexo new post \"Github 블로그 만들기 with Hexo - 1\"# draft 아래와 같이 만듭니다.$ hexo new draft \"Github 블로그 만들기 with Hexo - 2\"# draft를 post로 만들때$ hexo publish \"Github 블로그 만들기 with Hexo - 2\"\ndraft란 초안이라는 의미입니다.\n\n참고로 draft를 post로 만들면 상단 front-matter가 초기화되니 꼭 확인을 해야겠습니다.꼭 draft를 사용하지 않아도 브랜치 관리를 잘 해주면 해결될것 같기도 합니다.\n위 둘의 경우는 각각 scaffolds/post.md, scaffolds/draft.md를 템플릿으로 사용합니다.템플릿을 수정하고 싶은경우는 이 두 파일을 수정해두면 되겠습니다.아래는 제가 사용하는 post.md 입니다.\n12345678---title: Github 블로그 만들기 with Hexo - 2date: 1555241000000tags: []categories: []thumbnail: \"\"permalink: \"\"---\n다른 항목들은 보시면 바로 이해가 가실테니 permalink만 간단히 설명하겠습니다.각 글의 주소는 http://호스트명/2019/04/14/Github-블로그-만들기-with-Hexo---1/ 과 같이 title이 패스로 들어가게 됩니다.만약 이 부분을 변경하고 싶을 때 permalink를 지정해주면 그 글의 주소는 설정한대로 적용됩니다.자세한 내용은 Front-matter를 참고해주세요.\nEscape12345&#123;% raw %&#125;&#123;% codeblock %&#125;&#123;% endraw %&#125;\n이렇게 템플릿 문법을 이스케이핑 하기 위해서는 raw 구문을 이용합니다.\n이미지 삽입_config.yml1post_asset_folder: true # or false\n만약 _config.yml 파일의 저 항목이 true로 되어있다면 글 마다 글 제목과 같은 asset용 디렉토리가 생깁니다.123&#123;% asset_img demo.png %&#125;\n그 디렉토리의 demo.png를 첨부하려면 위와같이 하면 됩니다.Asset-Folders를 참고해주세요. \n로컬에서 확인하기퍼블리싱 전에 로컬에서 확인을 하기 위해서는 아래 명령을 이용합니다.12$ hexo server$ hexo server --draft # draft도 확인하고 싶을 때\n자세한 내용은 Commands를 참고해주세요.\n마치며사실 공식 문서에 다 있는 내용이고 문서가 번역도 다 되어있어서 거기를 한번 쓱 보시는게 좋을듯 합니다.이제 대충 글 쓰는 방법은 알았으니 다음엔 배포를 어떻게 할지 알아보겠습니다.\n","dateCreated":"2019-04-14T20:23:20+09:00","dateModified":"2019-04-14T20:27:06+09:00","datePublished":"2019-04-14T20:23:20+09:00","description":"","headline":"Github 블로그 만들기 with Hexo - 2","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2019/04/14/github-blog-with-hexo-2/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[]},"url":"http://localhost:4000/2019/04/14/github-blog-with-hexo-2/","keywords":"개발, hexo, github, blog"}</script>
+    <meta name="description" content="Hexo 글쓰기hexo-cli가 워낙 잘 되어있기 때문에 간단한 명령어를 통해 글을 만들 수 있습니다.12345678# 일반 post는 아래와 같이 만듭니다.$ hexo new post &quot;Github 블로그 만들기 with Hexo - 1&quot;# draft 아래와 같이 만듭니다.$ hexo new draft &quot;Github 블로그 만들기 with Hexo - 2">
+<meta name="keywords" content="개발,hexo,github,blog">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Github 블로그 만들기 with Hexo - 2">
+<meta property="og:url" content="http://localhost:4000/2019/04/14/github-blog-with-hexo-2/index.html">
+<meta property="og:site_name" content="밍피디">
+<meta property="og:description" content="Hexo 글쓰기hexo-cli가 워낙 잘 되어있기 때문에 간단한 명령어를 통해 글을 만들 수 있습니다.12345678# 일반 post는 아래와 같이 만듭니다.$ hexo new post &quot;Github 블로그 만들기 with Hexo - 1&quot;# draft 아래와 같이 만듭니다.$ hexo new draft &quot;Github 블로그 만들기 with Hexo - 2">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-04-14T11:27:06.316Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Github 블로그 만들기 with Hexo - 2">
+<meta name="twitter:description" content="Hexo 글쓰기hexo-cli가 워낙 잘 되어있기 때문에 간단한 명령어를 통해 글을 만들 수 있습니다.12345678# 일반 post는 아래와 같이 만듭니다.$ hexo new post &quot;Github 블로그 만들기 with Hexo - 1&quot;# draft 아래와 같이 만듭니다.$ hexo new draft &quot;Github 블로그 만들기 with Hexo - 2">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">밍피디</a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about">
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/ " title="Home">
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-categories" title="Categories">
+                    
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" title="Tags">
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" title="Archives">
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Archives</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="#about" title="About">
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Github 블로그 만들기 with Hexo - 2
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-04-14T20:23:20+09:00">
+	
+		    Apr 14, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/개발/">개발</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h2 id="Hexo-글쓰기"><a href="#Hexo-글쓰기" class="headerlink" title="Hexo 글쓰기"></a>Hexo 글쓰기</h2><p><code>hexo-cli</code>가 워낙 잘 되어있기 때문에 간단한 명령어를 통해 글을 만들 수 있습니다.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 일반 post는 아래와 같이 만듭니다.</span></span><br><span class="line">$ hexo new post <span class="string">"Github 블로그 만들기 with Hexo - 1"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># draft 아래와 같이 만듭니다.</span></span><br><span class="line">$ hexo new draft <span class="string">"Github 블로그 만들기 with Hexo - 2"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># draft를 post로 만들때</span></span><br><span class="line">$ hexo publish <span class="string">"Github 블로그 만들기 with Hexo - 2"</span></span><br></pre></td></tr></table></figure></p>
+<blockquote><p>draft란 초안이라는 의미입니다.</p>
+</blockquote>
+<p>참고로 draft를 post로 만들면 상단 front-matter가 초기화되니 꼭 확인을 해야겠습니다.<br>꼭 draft를 사용하지 않아도 브랜치 관리를 잘 해주면 해결될것 같기도 합니다.</p>
+<p>위 둘의 경우는 각각 <code>scaffolds/post.md</code>, <code>scaffolds/draft.md</code>를 템플릿으로 사용합니다.<br>템플릿을 수정하고 싶은경우는 이 두 파일을 수정해두면 되겠습니다.<br>아래는 제가 사용하는 <code>post.md</code> 입니다.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">Github</span> <span class="string">블로그</span> <span class="string">만들기</span> <span class="string">with</span> <span class="string">Hexo</span> <span class="bullet">-</span> <span class="number">2</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">1555241000000</span></span><br><span class="line"><span class="attr">tags:</span> <span class="string">[]</span></span><br><span class="line"><span class="attr">categories:</span> <span class="string">[]</span></span><br><span class="line"><span class="attr">thumbnail:</span> <span class="string">""</span></span><br><span class="line"><span class="attr">permalink:</span> <span class="string">""</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure>
+<p>다른 항목들은 보시면 바로 이해가 가실테니 <code>permalink</code>만 간단히 설명하겠습니다.<br>각 글의 주소는 <code>http://호스트명/2019/04/14/Github-블로그-만들기-with-Hexo---1/</code> 과 같이 title이 패스로 들어가게 됩니다.<br>만약 이 부분을 변경하고 싶을 때 <code>permalink</code>를 지정해주면 그 글의 주소는 설정한대로 적용됩니다.<br>자세한 내용은 <a href="https://hexo.io/ko/docs/front-matter" target="_blank" rel="noopener">Front-matter</a>를 참고해주세요.</p>
+<h2 id="Escape"><a href="#Escape" class="headerlink" title="Escape"></a>Escape</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#123;% raw %&#125;</span><br><span class="line">&#123;% codeblock %&#125;</span><br><span class="line">&#123;% endraw %&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>이렇게 템플릿 문법을 이스케이핑 하기 위해서는 raw 구문을 이용합니다.</p>
+<h2 id="이미지-삽입"><a href="#이미지-삽입" class="headerlink" title="이미지 삽입"></a>이미지 삽입</h2><figure class="highlight yaml"><figcaption><span>_config.yml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">post_asset_folder:</span> <span class="literal">true</span> <span class="comment"># or false</span></span><br></pre></td></tr></table></figure>
+<p>만약 <code>_config.yml</code> 파일의 저 항목이 true로 되어있다면 글 마다 글 제목과 같은 asset용 디렉토리가 생깁니다.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#123;% asset_img demo.png %&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>그 디렉토리의 <code>demo.png</code>를 첨부하려면 위와같이 하면 됩니다.<br><a href="https://hexo.io/ko/docs/asset-folders" target="_blank" rel="noopener">Asset-Folders</a>를 참고해주세요. </p>
+<h2 id="로컬에서-확인하기"><a href="#로컬에서-확인하기" class="headerlink" title="로컬에서 확인하기"></a>로컬에서 확인하기</h2><p>퍼블리싱 전에 로컬에서 확인을 하기 위해서는 아래 명령을 이용합니다.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br><span class="line">$ hexo server --draft <span class="comment"># draft도 확인하고 싶을 때</span></span><br></pre></td></tr></table></figure></p>
+<p>자세한 내용은 <a href="https://hexo.io/ko/docs/commands" target="_blank" rel="noopener">Commands</a>를 참고해주세요.</p>
+<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>사실 공식 문서에 다 있는 내용이고 문서가 번역도 다 되어있어서 거기를 한번 쓱 보시는게 좋을듯 합니다.<br>이제 대충 글 쓰는 방법은 알았으니 다음엔 배포를 어떻게 할지 알아보겠습니다.</p>
+
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/blog/">blog</a> <a class="tag tag--primary tag--small t-link" href="/tags/github/">github</a> <a class="tag tag--primary tag--small t-link" href="/tags/hexo/">hexo</a> <a class="tag tag--primary tag--small t-link" href="/tags/개발/">개발</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/14/github-blog-with-hexo-3/" data-tooltip="Github 블로그 만들기 with Hexo - 3" aria-label="PREVIOUS: Github 블로그 만들기 with Hexo - 3">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/14/github-blog-with-hexo-1/" data-tooltip="Github 블로그 만들기 with Hexo - 1" aria-label="NEXT: Github 블로그 만들기 with Hexo - 1">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/" title="Share on Google+">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 밍피디. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/14/github-blog-with-hexo-3/" data-tooltip="Github 블로그 만들기 with Hexo - 3" aria-label="PREVIOUS: Github 블로그 만들기 with Hexo - 3">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/14/github-blog-with-hexo-1/" data-tooltip="Github 블로그 만들기 with Hexo - 1" aria-label="NEXT: Github 블로그 만들기 with Hexo - 1">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/" title="Share on Google+">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">밍피디</h4>
+        
+            <div id="about-card-bio"><p>잔망스러운 개발자</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>developer</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/bg.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+    
+
+
+
+    </body>
+</html>
