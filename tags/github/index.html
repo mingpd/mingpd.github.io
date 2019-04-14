@@ -190,7 +190,14 @@
             </div>
             
                 <div class="postShorten-content">
-                    <h2 id="Github-Repository"><a href="#Github-Repository" class="headerlink" title="Github Repository"></a>Github Repository</h2><p>Github 계정 생성 방법에 대한 얘기는 생략하겠습니다.<br>중요한 것은 <code>mingpd.github.io</code> 도메인을 사용하고 싶다면 가입 시 반드시 유저명을 <code>mingpd</code>로 해야합니다.</p>
+                    <h2 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h2><p>이번 글 에서는 이런것들을 해보겠습니다.</p>
+<ul>
+<li>배포하기</li>
+<li>Github Repository 관리하기</li>
+<li>Google Analytics 붙이기</li>
+<li>Disqus 댓글 붙이기</li>
+</ul>
+<h2 id="Github-Repository"><a href="#Github-Repository" class="headerlink" title="Github Repository"></a>Github Repository</h2><p>Github 계정 생성 방법에 대한 얘기는 생략하겠습니다.<br>중요한 것은 <code>mingpd.github.io</code> 도메인을 사용하고 싶다면 가입 시 반드시 유저명을 <code>mingpd</code>로 해야합니다.</p>
 <p>두 개의 Repository를 준비하면 되겠습니다.</p>
 <ol>
 <li>public 권한의 <code>&lt;자기계정명&gt;.github.io</code> 을 이름으로 갖는 Repository</li>
@@ -203,7 +210,9 @@
 <p>이제 아래를 실행해 주면 배포됩니다.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure></p>
 <p>지금 이것과 별개로 작업 디렉토리에서 작업용 Git 설정을 해주시면 되는데요.<br>아래처럼 하면 되겠습니다.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git init</span><br><span class="line">$ git remote <span class="built_in">set</span>-url origin https://github.com/작업용/깃주소.git</span><br><span class="line">...</span><br><span class="line"><span class="comment"># add, push 알아서 해주세요.</span></span><br></pre></td></tr></table></figure></p>
 <p>(git의 pull, add, commit, push 관련 설명은 생략하겠습니다.)<br>참고로 제가 만든 <code>.gitignore</code> 는 아래와 같으니 참고해주세요.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.sass-cache</span><br><span class="line">assets</span><br><span class="line">node_modules</span><br><span class="line">public</span><br><span class="line">.idea</span><br><span class="line">.deploy_git</span><br><span class="line">themes/landscape  # 기본테마인데 삭제 안해서 푸시만 안하게 하려고</span><br><span class="line">db.json</span><br></pre></td></tr></table></figure></p>
-<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>사실 저도 블로그를 만들어가면서 이 글을 쓰고있습니다. 많이 번거로울 줄 알았는데 생각보단 할만한것 같습니다.<br>조금 더 운영해보고 티스토리에 있는 데이터를 이전해올지 고민을 해봐야겠습니다.</p>
+<h2 id="DISQUS"><a href="#DISQUS" class="headerlink" title="DISQUS"></a>DISQUS</h2><p><a href="https://disqus.com" target="_blank" rel="noopener">DISQUS</a>에 가입합니다.<br>가입 후 <code>I want to isntall Disqus on my site</code>를 선택하여 세팅하면 됩니다.<br><code>https://계정명.disqus.com/admin/settings/general/</code>에 있는 shortname을<br><code>themes/tranquilpeak/_config.yml</code>에 세팅해주면 되겠습니다.</p>
+<p>만약에 로딩이 잘 되지 않는다면 아래 사이트를 참고하여 url 설정을 다시 해 봅시다.<br><a href="https://www.thewordcracker.com/miscellaneous/disqus에서-we-were-unable-to-load-disqus-오류가-발생하는-경우/" target="_blank" rel="noopener">disqus에서-we-were-unable-to-load-disqus-오류가-발생하는-경우/</a></p>
+<h2 id="Google-Analytics"><a href="#Google-Analytics" class="headerlink" title="Google Analytics"></a>Google Analytics</h2><h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>사실 저도 블로그를 만들어가면서 이 글을 쓰고있습니다. 많이 번거로울 줄 알았는데 생각보단 할만한것 같습니다.<br>조금 더 운영해보고 티스토리에 있는 데이터를 이전해올지 고민을 해봐야겠습니다.</p>
 
                     
                         
@@ -354,7 +363,7 @@
 <li>위에서 생성한 프로젝트의 _config.yml을 연다. (themes/tranquilpeak/_config.yml이 아닙니다!)</li>
 <li>맨아래로 주르륵 내려가서 테마를 <code>theme: tranquilpeak</code>로 변경한다.</li>
 </ol>
-<p>대충 설정은 다 된것 같으니 띄워봅시다.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 위에서 생성한 프로젝트 디렉토리인 &lt;folder&gt;에서 진행합니다.</span></span><br><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><br>로컬에서는 <a href="http://localhost:4000">http://localhost:4000</a>에서 테스트가 가능합니다.<br><code>Hello World</code>라는 예제가 잘 나타나면 성공입니다.</p>
+<p>대충 설정은 다 된것 같으니 띄워봅시다.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 위에서 생성한 프로젝트 디렉토리인 &lt;folder&gt;에서 진행합니다.</span></span><br><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><br>로컬에서는 <a href="http://localhost:4000" target="_blank" rel="noopener">http://localhost:4000</a>에서 테스트가 가능합니다.<br><code>Hello World</code>라는 예제가 잘 나타나면 성공입니다.</p>
 <h2 id="category-tags-활성화-하기"><a href="#category-tags-활성화-하기" class="headerlink" title="category, tags 활성화 하기"></a>category, tags 활성화 하기</h2><p>자세한건 <a href="https://github.com/LouisBarranqueiro/hexo-theme-tranquilpeak/blob/master/DOCUMENTATION.md" target="_blank" rel="noopener">Tranquilpeak 문서</a>를 참고하시면 됩니다.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 위에서 생성한 프로젝트 디렉토리인 &lt;folder&gt;에서 진행합니다.</span></span><br><span class="line">$ hexo new page <span class="string">"all-categories"</span></span><br><span class="line">$ hexo new page <span class="string">"all-tags"</span></span><br></pre></td></tr></table></figure></p>
 <p>위 두 명령을 실행했다면 아래의 파일들이 생겼을겁니다.</p>
 <ul>
