@@ -10,13 +10,13 @@
     <meta name="author" content="밍피디">
     
     
-        <link rel="icon" href="http://localhost:4000/assets/images/favicon.png">
+        <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
     
     
     <script type="application/ld+json">{}</script>
     <meta property="og:type" content="blog">
 <meta property="og:title" content="밍피디">
-<meta property="og:url" content="http://localhost:4000/tags/hexo/index.html">
+<meta property="og:url" content="https://mingpd.github.io/tags/hexo/index.html">
 <meta property="og:site_name" content="밍피디">
 <meta property="og:locale" content="en">
 <meta name="twitter:card" content="summary">
@@ -26,7 +26,7 @@
         
     
     
-        <meta property="og:image" content="http://localhost:4000/assets/images/profile.png"/>
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png"/>
     
     
     
@@ -38,6 +38,15 @@
     <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
     <!--STYLES END-->
     
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120538979-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120538979-3');
+    </script>
+
 
     
 </head>
@@ -188,10 +197,13 @@
 <li>블로그 프로젝트를 관리할 Repository</li>
 </ol>
 <p>1번의 경우 Github Page 기능을 사용하기 위해 반드시 저 형식을 갖춰야합니다. 그렇지 않으면 Page 기능이 활성화가 안됩니다.</p>
-<p>왜 두개의 저장소가 필요한지 간략히 설명을 드리겠습니다.<br>포토샵의경우 작업시 사용하는 psd 파일이 있고 그것을 내보냈을때의 png 파일이 있습니다.<br>쉽게말해 1번에는 png 파일을 서빙한다고 보시면되고, 2번에는 psd 작업 파일을 보관해둔다고 생각하면 됩니다.</p>
+<p>왜 두개의 저장소가 필요한지 간략히 설명을 드리겠습니다.<br>포토샵의경우 작업시 사용하는 psd 파일이 있고 그것을 내보냈을때의 png 파일이 있습니다.<br>쉽게말해 1번에는 png 파일을 서빙한다고 보시면되고, 2번에는 psd 작업 파일을 관리한다고 생각하면 됩니다.</p>
 <h2 id="Git-설정"><a href="#Git-설정" class="headerlink" title="Git 설정"></a>Git 설정</h2><p><a href="https://hexo.io/ko/docs/deployment" target="_blank" rel="noopener">Deployment</a> 이 문서에 설명이 매우 잘 되어있으니 참고해주세요.<br>Repository는 위에서 말한것과 같이 준비되었다고 가정합니다.<br>우선 Github Page 배포를 설정하겠습니다.<br>앞서 라이브러리를 설치해야 합니다.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure></p>
 <p>_config.yml의 git 부분을 아래와 같이 설정합니다.<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line"><span class="attr">  type:</span> <span class="string">git</span></span><br><span class="line"><span class="attr">  repo:</span> <span class="attr">https://github.com/mingpd/mingpd.github.io.git</span></span><br><span class="line"><span class="attr">  branch:</span> <span class="string">master</span>   <span class="comment"># 혹시 다른 브랜치로 쓰실거면 바꿔주세요</span></span><br></pre></td></tr></table></figure></p>
 <p>이제 아래를 실행해 주면 배포됩니다.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure></p>
+<p>지금 이것과 별개로 작업 디렉토리에서 작업용 Git 설정을 해주시면 되는데요.<br>아래처럼 하면 되겠습니다.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git init</span><br><span class="line">$ git remote <span class="built_in">set</span>-url origin https://github.com/작업용/깃주소.git</span><br><span class="line">...</span><br><span class="line"><span class="comment"># add, push 알아서 해주세요.</span></span><br></pre></td></tr></table></figure></p>
+<p>(git의 pull, add, commit, push 관련 설명은 생략하겠습니다.)<br>참고로 제가 만든 <code>.gitignore</code> 는 아래와 같으니 참고해주세요.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.sass-cache</span><br><span class="line">assets</span><br><span class="line">node_modules</span><br><span class="line">public</span><br><span class="line">.idea</span><br><span class="line">.deploy_git</span><br><span class="line">themes/landscape  # 기본테마인데 삭제 안해서 푸시만 안하게 하려고</span><br><span class="line">db.json</span><br></pre></td></tr></table></figure></p>
+<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>사실 저도 블로그를 만들어가면서 이 글을 쓰고있습니다. 많이 번거로울 줄 알았는데 생각보단 할만한것 같습니다.<br>조금 더 운영해보고 티스토리에 있는 데이터를 이전해올지 고민을 해봐야겠습니다.</p>
 
                     
                         

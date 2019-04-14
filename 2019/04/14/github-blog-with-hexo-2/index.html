@@ -10,15 +10,15 @@
     <meta name="author" content="밍피디">
     
     
-        <link rel="icon" href="http://localhost:4000/assets/images/favicon.png">
+        <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"Hexo 글쓰기hexo-cli가 워낙 잘 되어있기 때문에 간단한 명령어를 통해 글을 만들 수 있습니다.12345678# 일반 post는 아래와 같이 만듭니다.$ hexo new post \"Github 블로그 만들기 with Hexo - 1\"# draft 아래와 같이 만듭니다.$ hexo new draft \"Github 블로그 만들기 with Hexo - 2\"# draft를 post로 만들때$ hexo publish \"Github 블로그 만들기 with Hexo - 2\"\ndraft란 초안이라는 의미입니다.\n\n참고로 draft를 post로 만들면 상단 front-matter가 초기화되니 꼭 확인을 해야겠습니다.꼭 draft를 사용하지 않아도 브랜치 관리를 잘 해주면 해결될것 같기도 합니다.\n위 둘의 경우는 각각 scaffolds/post.md, scaffolds/draft.md를 템플릿으로 사용합니다.템플릿을 수정하고 싶은경우는 이 두 파일을 수정해두면 되겠습니다.아래는 제가 사용하는 post.md 입니다.\n12345678---title: Github 블로그 만들기 with Hexo - 2date: 1555241000000tags: []categories: []thumbnail: \"\"permalink: \"\"---\n다른 항목들은 보시면 바로 이해가 가실테니 permalink만 간단히 설명하겠습니다.각 글의 주소는 http://호스트명/2019/04/14/Github-블로그-만들기-with-Hexo---1/ 과 같이 title이 패스로 들어가게 됩니다.만약 이 부분을 변경하고 싶을 때 permalink를 지정해주면 그 글의 주소는 설정한대로 적용됩니다.자세한 내용은 Front-matter를 참고해주세요.\nEscape12345&#123;% raw %&#125;&#123;% codeblock %&#125;&#123;% endraw %&#125;\n이렇게 템플릿 문법을 이스케이핑 하기 위해서는 raw 구문을 이용합니다.\n이미지 삽입_config.yml1post_asset_folder: true # or false\n만약 _config.yml 파일의 저 항목이 true로 되어있다면 글 마다 글 제목과 같은 asset용 디렉토리가 생깁니다.123&#123;% asset_img demo.png %&#125;\n그 디렉토리의 demo.png를 첨부하려면 위와같이 하면 됩니다.Asset-Folders를 참고해주세요. \n로컬에서 확인하기퍼블리싱 전에 로컬에서 확인을 하기 위해서는 아래 명령을 이용합니다.12$ hexo server$ hexo server --draft # draft도 확인하고 싶을 때\n자세한 내용은 Commands를 참고해주세요.\n마치며사실 공식 문서에 다 있는 내용이고 문서가 번역도 다 되어있어서 거기를 한번 쓱 보시는게 좋을듯 합니다.이제 대충 글 쓰는 방법은 알았으니 다음엔 배포를 어떻게 할지 알아보겠습니다.\n","dateCreated":"2019-04-14T20:23:20+09:00","dateModified":"2019-04-14T20:27:06+09:00","datePublished":"2019-04-14T20:23:20+09:00","description":"","headline":"Github 블로그 만들기 with Hexo - 2","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2019/04/14/github-blog-with-hexo-2/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"http://localhost:4000/2019/04/14/github-blog-with-hexo-2/","keywords":"개발, hexo, github, blog"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"Hexo 글쓰기hexo-cli가 워낙 잘 되어있기 때문에 간단한 명령어를 통해 글을 만들 수 있습니다.12345678# 일반 post는 아래와 같이 만듭니다.$ hexo new post \"Github 블로그 만들기 with Hexo - 1\"# draft 아래와 같이 만듭니다.$ hexo new draft \"Github 블로그 만들기 with Hexo - 2\"# draft를 post로 만들때$ hexo publish \"Github 블로그 만들기 with Hexo - 2\"\ndraft란 초안이라는 의미입니다.\n\n참고로 draft를 post로 만들면 상단 front-matter가 초기화되니 꼭 확인을 해야겠습니다.꼭 draft를 사용하지 않아도 브랜치 관리를 잘 해주면 해결될것 같기도 합니다.\n위 둘의 경우는 각각 scaffolds/post.md, scaffolds/draft.md를 템플릿으로 사용합니다.템플릿을 수정하고 싶은경우는 이 두 파일을 수정해두면 되겠습니다.아래는 제가 사용하는 post.md 입니다.\n12345678---title: Github 블로그 만들기 with Hexo - 2date: 1555241000000tags: []categories: []thumbnail: \"\"permalink: \"\"---\n다른 항목들은 보시면 바로 이해가 가실테니 permalink만 간단히 설명하겠습니다.각 글의 주소는 http://호스트명/2019/04/14/Github-블로그-만들기-with-Hexo---1/ 과 같이 title이 패스로 들어가게 됩니다.만약 이 부분을 변경하고 싶을 때 permalink를 지정해주면 그 글의 주소는 설정한대로 적용됩니다.자세한 내용은 Front-matter를 참고해주세요.\nEscape12345&#123;% raw %&#125;&#123;% codeblock %&#125;&#123;% endraw %&#125;\n이렇게 템플릿 문법을 이스케이핑 하기 위해서는 raw 구문을 이용합니다.\n이미지 삽입_config.yml1post_asset_folder: true # or false\n만약 _config.yml 파일의 저 항목이 true로 되어있다면 글 마다 글 제목과 같은 asset용 디렉토리가 생깁니다.123&#123;% asset_img demo.png %&#125;\n그 디렉토리의 demo.png를 첨부하려면 위와같이 하면 됩니다.Asset-Folders를 참고해주세요. \n로컬에서 확인하기퍼블리싱 전에 로컬에서 확인을 하기 위해서는 아래 명령을 이용합니다.12$ hexo server$ hexo server --draft # draft도 확인하고 싶을 때\n자세한 내용은 Commands를 참고해주세요.\n마치며사실 공식 문서에 다 있는 내용이고 문서가 번역도 다 되어있어서 거기를 한번 쓱 보시는게 좋을듯 합니다.이제 대충 글 쓰는 방법은 알았으니 다음엔 배포를 어떻게 할지 알아보겠습니다.\n","dateCreated":"2019-04-14T20:23:20+09:00","dateModified":"2019-04-14T20:27:06+09:00","datePublished":"2019-04-14T20:23:20+09:00","description":"","headline":"Github 블로그 만들기 with Hexo - 2","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/","keywords":"개발, hexo, github, blog"}</script>
     <meta name="description" content="Hexo 글쓰기hexo-cli가 워낙 잘 되어있기 때문에 간단한 명령어를 통해 글을 만들 수 있습니다.12345678# 일반 post는 아래와 같이 만듭니다.$ hexo new post &quot;Github 블로그 만들기 with Hexo - 1&quot;# draft 아래와 같이 만듭니다.$ hexo new draft &quot;Github 블로그 만들기 with Hexo - 2">
 <meta name="keywords" content="개발,hexo,github,blog">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Github 블로그 만들기 with Hexo - 2">
-<meta property="og:url" content="http://localhost:4000/2019/04/14/github-blog-with-hexo-2/index.html">
+<meta property="og:url" content="https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/index.html">
 <meta property="og:site_name" content="밍피디">
 <meta property="og:description" content="Hexo 글쓰기hexo-cli가 워낙 잘 되어있기 때문에 간단한 명령어를 통해 글을 만들 수 있습니다.12345678# 일반 post는 아래와 같이 만듭니다.$ hexo new post &quot;Github 블로그 만들기 with Hexo - 1&quot;# draft 아래와 같이 만듭니다.$ hexo new draft &quot;Github 블로그 만들기 with Hexo - 2">
 <meta property="og:locale" content="en">
@@ -31,7 +31,7 @@
         
     
     
-        <meta property="og:image" content="http://localhost:4000/assets/images/profile.png"/>
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png"/>
     
     
     
@@ -43,6 +43,15 @@
     <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
     <!--STYLES END-->
     
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120538979-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120538979-3');
+    </script>
+
 
     
 </head>
@@ -248,7 +257,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/" title="Share on Facebook">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Facebook">
                     <i class="fab fa-facebook" aria-hidden="true"></i>
                 </a>
             </li>
@@ -256,7 +265,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/" title="Share on Twitter">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Twitter">
                     <i class="fab fa-twitter" aria-hidden="true"></i>
                 </a>
             </li>
@@ -264,12 +273,18 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/" title="Share on Google+">
+                <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Google+">
                     <i class="fab fa-google-plus" aria-hidden="true"></i>
                 </a>
             </li>
         
         
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
             
         
         <li class="post-action">
@@ -285,6 +300,10 @@
 
         
         
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
             
         
     </div>
@@ -334,7 +353,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/" title="Share on Facebook">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Facebook">
                     <i class="fab fa-facebook" aria-hidden="true"></i>
                 </a>
             </li>
@@ -342,7 +361,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/" title="Share on Twitter">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Twitter">
                     <i class="fab fa-twitter" aria-hidden="true"></i>
                 </a>
             </li>
@@ -350,12 +369,18 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/" title="Share on Google+">
+                <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Google+">
                     <i class="fab fa-google-plus" aria-hidden="true"></i>
                 </a>
             </li>
         
         
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
             
         
         <li class="post-action">
@@ -378,7 +403,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/">
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
                     </a>
                 </li>
@@ -386,7 +411,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/">
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
                     </a>
                 </li>
@@ -394,7 +419,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http://localhost:4000/2019/04/14/github-blog-with-hexo-2/">
+                    <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/">
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
                     </a>
                 </li>
@@ -447,6 +472,23 @@
 <script src="/assets/js/tranquilpeak.js"></script>
 <!--SCRIPTS END-->
 
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/';
+                 
+                    this.page.identifier = '2019/04/14/github-blog-with-hexo-2/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mingpd';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
     
 
 
