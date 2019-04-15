@@ -1,0 +1,528 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="밍피디">
+    <title>spring, aop 특정 조건에서 실행 제외하기 - 밍피디</title>
+    <meta name="author" content="밍피디">
+    
+        <meta name="keywords" content="개발,">
+    
+    
+        <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"AOP에 대한 자세한 설명은 생략합니다. 아주 간략히 정리하면특정 조건(어느 패키지, 어느 클래스, 어느 메소드 등) 메소드를 수행할 때그 메소드의 실행 전, 실행 후, 실행 전 후에 참견하는 기능입니다.(그 특정 조건을 pointcut이라고 합니다.)\nSpring에서는 AspectJ라는 라이브러리를 이용합니다.\n준비물Spring boot에서 AOP 설정 하는 방법을 간략하게 정리하겠습니다.포스트 제목의 답을 구하신다면 과감히 스킵해주세요.\n12345&lt;!-- pom.xml --&gt;&lt;dependency&gt;  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;  &lt;artifactId&gt;spring-boot-starter-aop&lt;/artifactId&gt;&lt;/dependency&gt;\npom.xml에 의존성을 추가해봅시다.\n12345@Configuration@EnableAspectJAutoProxy // 이 어노테이션으로 활성화 해줍시다class SpringConfig &#123;    // ... &#125;\n설정은 위와같이 하면 되겠습니다. \n123456789101112131415161718192021import org.aspectj.lang.ProceedingJoinPointimport org.aspectj.lang.annotation.Aroundimport org.aspectj.lang.annotation.Aspectimport org.aspectj.lang.annotation.Pointcutimport org.springframework.stereotype.Component@Aspect@Componentclass LogExecutionTime &#123;    @Pointcut(\"execution(public * com.your.package.controller.rest.*.*(..))\")    @Around(\"controllerMethods()\") // 물론 이 안에 직접 pointcut을 넣어도 됩니다    fun logExecutionTime(joinPoint: ProceedingJoinPoint): Any? &#123;        val before = System.currentTimeMillis()        val result = joinPoint.proceed()        val after = System.currentTimeMillis()        println(after - before)        return result    &#125;&#125;\n(참고로 kotlin입니다.)\n메소드 실행 전 후의 timestamp를 통해서 메소드 실행 시간을 체크하는 예제입니다.@PointCut 부분을 참고하시면 알 수 있듯이com.your.package.controller.rest. 패키지 밑에 있는 모든 클래스의 모든 메소드에서 수행됩니다.\n특정 메소드만 실행 제외하기그런데 저기서 특정 메소드만 제외하고 싶으면 어떻게 할까요?방법은 두가지입니다.첫째, 특정 메소드 빼고 모든 메소드를 명시하기 (이럼 안되겠죠)둘째, 제외할 메소드를 마킹하고 그것만 안타게 처리하기\n여기서 두번째 방법을 소개합니다.\n123456789import java.lang.annotation.ElementType;import java.lang.annotation.Retention;import java.lang.annotation.RetentionPolicy;import java.lang.annotation.Target;@Target(&#123; ElementType.METHOD&#125;)@Retention(RetentionPolicy.RUNTIME)public @interface NoLogging &#123;&#125;\n위 처럼 NoLogging이라는 어노테이션을 하나 만듭시다.(@Target, @Retention 등의 설명은 생략합니다.)\n12345678910111213import org.springframework.web.bind.annotation.GetMappingimport org.springframework.web.bind.annotation.RequestMappingimport org.springframework.web.bind.annotation.RestControllerimport com.your.package.annotation.NoLogging@RestControllerclass AdminController &#123;    @NoLogging    @GetMapping(\"ping\")    fun ping(): String &#123;        return \"pong\"    &#125;&#125;\n위처럼 생략하고자하는 메소드 위에 @NoLogging 어노테이션을 붙여봅시다.\n123@Pointcut(\"execution(public * com.your.package.controller.rest.*.*(..)) \t\t\t&amp;&amp; !@target(com.your.package.annotation.NoLogging)\")fun controllerMethods() &#123;&#125;\n@PointCut 안의 내용을 위와같이 수정합니다.!@Target 부분을 참고해주세요 (!@Annotation도 가능할겁니다.)\n@Around로 걸려있는 메소드에 break point를 걸며 테스트해봅시다.skip 되는것을 알 수 있습니다.\n마치며생각보다 별거 아니네요.","dateCreated":"2019-03-15T18:41:21+09:00","dateModified":"2019-04-15T22:33:11+09:00","datePublished":"2019-03-15T18:41:21+09:00","description":"AOP는 특정 패키지, 특정 클래스 등의 메소드를 수행할 때그 메소드의 실행 전, 실행 후, 실행 전 후에 참견하는 기능입니다.","headline":"spring, aop 특정 조건에서 실행 제외하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/15/spring-aop-exclude/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/15/spring-aop-exclude/","keywords":"spring, aop"}</script>
+    <meta name="description" content="AOP는 특정 패키지, 특정 클래스 등의 메소드를 수행할 때그 메소드의 실행 전, 실행 후, 실행 전 후에 참견하는 기능입니다.">
+<meta name="keywords" content="spring,aop">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="spring, aop 특정 조건에서 실행 제외하기">
+<meta property="og:url" content="https://mingpd.github.io/2019/03/15/spring-aop-exclude/index.html">
+<meta property="og:site_name" content="밍피디">
+<meta property="og:description" content="AOP는 특정 패키지, 특정 클래스 등의 메소드를 수행할 때그 메소드의 실행 전, 실행 후, 실행 전 후에 참견하는 기능입니다.">
+<meta property="og:locale" content="ko">
+<meta property="og:updated_time" content="2019-04-15T13:33:11.106Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="spring, aop 특정 조건에서 실행 제외하기">
+<meta name="twitter:description" content="AOP는 특정 패키지, 특정 클래스 등의 메소드를 수행할 때그 메소드의 실행 전, 실행 후, 실행 전 후에 참견하는 기능입니다.">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png">
+    
+    
+    
+    
+    <link rel="canonical" href="https://mingpd.github.io/2019/03/15/spring-aop-exclude/">
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120538979-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120538979-3');
+    </script>
+
+
+    
+
+    <!-- adsense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+                                                      google_ad_client: "ca-pub-4098225824538946",
+                                                      enable_page_level_ads: true
+                                                    });
+    </script>
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">밍피디</a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+                </a>
+                <h4 class="sidebar-profile-name">밍피디</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>잔망스러운 개발자</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/ " title="Home">
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-categories" title="Categories">
+                    
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" title="Tags">
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" title="Archives">
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Archives</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="#about" title="About">
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            spring, aop 특정 조건에서 실행 제외하기
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-03-15T18:41:21+09:00">
+	
+		    3월 15, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/개발/">개발</a>, <a class="category-link" href="/categories/개발/소소한-팁/">소소한 팁</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt --><br><h1 id="table-of-contents">목차</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#준비물"><span class="toc-text">준비물</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#특정-메소드만-실행-제외하기"><span class="toc-text">특정 메소드만 실행 제외하기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#마치며"><span class="toc-text">마치며</span></a></li></ol><br>AOP에 대한 자세한 설명은 생략합니다. 아주 간략히 정리하면<br>특정 조건(어느 패키지, 어느 클래스, 어느 메소드 등) 메소드를 수행할 때<br>그 메소드의 실행 전, 실행 후, 실행 전 후에 참견하는 기능입니다.<br>(그 특정 조건을 pointcut이라고 합니다.)<p></p>
+<p>Spring에서는 <code>AspectJ</code>라는 라이브러리를 이용합니다.</p>
+<h2 id="준비물"><a href="#준비물" class="headerlink" title="준비물"></a>준비물</h2><p>Spring boot에서 AOP 설정 하는 방법을 간략하게 정리하겠습니다.<br>포스트 제목의 답을 구하신다면 과감히 스킵해주세요.</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- pom.xml --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-aop<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>pom.xml에 의존성을 추가해봅시다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableAspectJAutoProxy</span> <span class="comment">// 이 어노테이션으로 활성화 해줍시다</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SpringConfig</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>설정은 위와같이 하면 되겠습니다. </p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.aspectj.lang.ProceedingJoinPoint</span><br><span class="line"><span class="keyword">import</span> org.aspectj.lang.<span class="keyword">annotation</span>.Around</span><br><span class="line"><span class="keyword">import</span> org.aspectj.lang.<span class="keyword">annotation</span>.Aspect</span><br><span class="line"><span class="keyword">import</span> org.aspectj.lang.<span class="keyword">annotation</span>.Pointcut</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component</span><br><span class="line"></span><br><span class="line"><span class="meta">@Aspect</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LogExecutionTime</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Pointcut(<span class="meta-string">"execution(public * com.your.package.controller.rest.*.*(..))"</span>)</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Around(<span class="meta-string">"controllerMethods()"</span>)</span> <span class="comment">// 물론 이 안에 직접 pointcut을 넣어도 됩니다</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">logExecutionTime</span><span class="params">(joinPoint: <span class="type">ProceedingJoinPoint</span>)</span></span>: Any? &#123;</span><br><span class="line">        <span class="keyword">val</span> before = System.currentTimeMillis()</span><br><span class="line">        <span class="keyword">val</span> result = joinPoint.proceed()</span><br><span class="line">        <span class="keyword">val</span> after = System.currentTimeMillis()</span><br><span class="line">        println(after - before)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>(참고로 kotlin입니다.)</p>
+<p>메소드 실행 전 후의 timestamp를 통해서 메소드 실행 시간을 체크하는 예제입니다.<br>@PointCut 부분을 참고하시면 알 수 있듯이<br>com.your.package.controller.rest. 패키지 밑에 있는 모든 클래스의 모든 메소드에서 수행됩니다.</p>
+<h2 id="특정-메소드만-실행-제외하기"><a href="#특정-메소드만-실행-제외하기" class="headerlink" title="특정 메소드만 실행 제외하기"></a>특정 메소드만 실행 제외하기</h2><p>그런데 저기서 특정 메소드만 제외하고 싶으면 어떻게 할까요?<br>방법은 두가지입니다.<br>첫째, 특정 메소드 빼고 모든 메소드를 명시하기 (이럼 안되겠죠)<br>둘째, 제외할 메소드를 마킹하고 그것만 안타게 처리하기</p>
+<p>여기서 두번째 방법을 소개합니다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.<span class="keyword">annotation</span>.ElementType;</span><br><span class="line"><span class="keyword">import</span> java.lang.<span class="keyword">annotation</span>.Retention;</span><br><span class="line"><span class="keyword">import</span> java.lang.<span class="keyword">annotation</span>.RetentionPolicy;</span><br><span class="line"><span class="keyword">import</span> java.lang.<span class="keyword">annotation</span>.Target;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Target(&#123; ElementType.METHOD&#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> NoLogging &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위 처럼 NoLogging이라는 어노테이션을 하나 만듭시다.<br>(@Target, @Retention 등의 설명은 생략합니다.)</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.web.bind.<span class="keyword">annotation</span>.GetMapping</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.<span class="keyword">annotation</span>.RequestMapping</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.<span class="keyword">annotation</span>.RestController</span><br><span class="line"><span class="keyword">import</span> com.your.<span class="keyword">package</span>.<span class="keyword">annotation</span>.NoLogging</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AdminController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@NoLogging</span></span><br><span class="line">    <span class="meta">@GetMapping(<span class="meta-string">"ping"</span>)</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">ping</span><span class="params">()</span></span>: String &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"pong"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위처럼 생략하고자하는 메소드 위에 @NoLogging 어노테이션을 붙여봅시다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Pointcut(<span class="meta-string">"execution(public * com.your.package.controller.rest.*.*(..)) </span></span></span><br><span class="line"><span class="meta"><span class="meta-string">			&amp;&amp; !@target(com.your.package.annotation.NoLogging)"</span>)</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">controllerMethods</span><span class="params">()</span></span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>@PointCut 안의 내용을 위와같이 수정합니다.<br>!@Target 부분을 참고해주세요 (!@Annotation도 가능할겁니다.)</p>
+<p>@Around로 걸려있는 메소드에 break point를 걸며 테스트해봅시다.<br>skip 되는것을 알 수 있습니다.</p>
+<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>생각보다 별거 아니네요.</p>
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/aop/">aop</a> <a class="tag tag--primary tag--small t-link" href="/tags/spring/">spring</a>
+
+            </div>
+        
+
+
+
+
+        <!--밍피디가 커스터마이징 해본 관련 글 영역-->
+        <div class="post-footer-tags">
+            <span class="text-color-light text-small">관련 글</span><br>
+            <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/java-google-api/" title="java, google api 이용하기" rel="bookmark">java, google api 이용하기</a></h3></div></li></ul>
+        </div>
+        <!-- 끝 -->
+
+
+
+
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/31/java-orelse-orelseget/" data-tooltip="java, optional의 orElse와 orElseGet의 차이" aria-label="이전: java, optional의 orElse와 orElseGet의 차이">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/14/github-multiple-ssh/" data-tooltip="github, 여러 repository에 대해 ssh 설정 하기" aria-label="다음: github, 여러 repository에 대해 ssh 설정 하기">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/15/spring-aop-exclude/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/15/spring-aop-exclude/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/15/spring-aop-exclude/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 밍피디. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/31/java-orelse-orelseget/" data-tooltip="java, optional의 orElse와 orElseGet의 차이" aria-label="이전: java, optional의 orElse와 orElseGet의 차이">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/14/github-multiple-ssh/" data-tooltip="github, 여러 repository에 대해 ssh 설정 하기" aria-label="다음: github, 여러 repository에 대해 ssh 설정 하기">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/15/spring-aop-exclude/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/15/spring-aop-exclude/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/15/spring-aop-exclude/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/15/spring-aop-exclude/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/15/spring-aop-exclude/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/15/spring-aop-exclude/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+            <h4 id="about-card-name">밍피디</h4>
+        
+            <div id="about-card-bio"><p>잔망스러운 개발자</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>개발자</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/bg.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://mingpd.github.io/2019/03/15/spring-aop-exclude/';
+                 
+                    this.page.identifier = '2019/03/15/spring-aop-exclude/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mingpidi';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+
+    </body>
+</html>
