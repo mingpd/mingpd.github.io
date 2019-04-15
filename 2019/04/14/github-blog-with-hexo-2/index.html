@@ -15,16 +15,18 @@
         <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"\nHexo 글쓰기hexo-cli가 워낙 잘 되어있기 때문에 간단한 명령어를 통해 글을 만들 수 있습니다.12345678# 일반 post는 아래와 같이 만듭니다.$ hexo new post \"Github 블로그 만들기 with Hexo - 1\"# draft 아래와 같이 만듭니다.$ hexo new draft \"Github 블로그 만들기 with Hexo - 2\"# draft를 post로 만들때$ hexo publish \"Github 블로그 만들기 with Hexo - 2\"\ndraft란 초안이라는 의미입니다.\n\n참고로 draft를 post로 만들면 상단 front-matter가 초기화되니 꼭 확인을 해야겠습니다.꼭 draft를 사용하지 않아도 브랜치 관리를 잘 해주면 해결될것 같기도 합니다.\n위 둘의 경우는 각각 scaffolds/post.md, scaffolds/draft.md를 템플릿으로 사용합니다.템플릿을 수정하고 싶은경우는 이 두 파일을 수정해두면 되겠습니다.아래는 제가 사용하는 post.md 입니다.\n1234567891011---title: Github 블로그 만들기 with Hexo - 글쓰기date: 1555241000000tags: []categories: []thumbnail: \"\"permalink: \"\"---&lt;!-- excerpt --&gt;&lt;!-- toc --&gt;\n다른 항목들은 보시면 바로 이해가 가실테니 permalink만 간단히 설명하겠습니다.각 글의 주소는 http://호스트명/2019/04/14/Github-블로그-만들기-with-Hexo---1/ 과 같이 title이 패스로 들어가게 됩니다.만약 이 부분을 변경하고 싶을 때 permalink를 지정해주면 그 글의 주소는 설정한대로 적용됩니다.자세한 내용은 Front-matter를 참고해주세요.\nmore, excerpt인덱스 페이지에 어느부분까지 표시할 건지에 대한 세팅을 할 수 있습니다.본문에 아래 주석을 이용하면 되는데요.123본문이 이렇게 있을 때 여기까지만 인덱스 페이지에 나타납니다.&lt;!-- more --&gt;여기서부턴 인덱스에 안나옵니다.\n123여기까지의 내용은 인덱스 페이지에만 나타납니다.&lt;!-- excerpt --&gt;여기서부턴 본문 시작입니다.\nEscape12345&#123;% raw %&#125;&#123;% codeblock %&#125;&#123;% endraw %&#125;\n이렇게 템플릿 문법을 이스케이핑 하기 위해서는 raw 구문을 이용합니다.\n이미지 삽입_config.yml1post_asset_folder: true # or false\n만약 _config.yml 파일의 저 항목이 true로 되어있다면 글 마다 글 제목과 같은 asset용 디렉토리가 생깁니다.123&#123;% asset_img demo.png %&#125;\n그 디렉토리의 demo.png를 첨부하려면 위와같이 하면 됩니다.Asset-Folders를 참고해주세요. \n로컬에서 확인하기퍼블리싱 전에 로컬에서 확인을 하기 위해서는 아래 명령을 이용합니다.12$ hexo server$ hexo server --draft # draft도 확인하고 싶을 때\n자세한 내용은 Commands를 참고해주세요.\n마치며사실 공식 문서에 다 있는 내용이고 문서가 번역도 다 되어있어서 거기를 한번 쓱 보시는게 좋을듯 합니다.이제 대충 글 쓰는 방법은 알았으니 다음엔 배포를 어떻게 할지 알아보겠습니다.","dateCreated":"2019-04-14T20:23:20+09:00","dateModified":"2019-04-15T00:37:48+09:00","datePublished":"2019-04-14T20:23:20+09:00","description":"hexo-cli가 워낙 잘 되어있기 때문에 간단한 명령어를 통해 글을 만들 수 있습니다.","headline":"Github 블로그 만들기 with Hexo - 글쓰기","image":["github_hexo.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/","keywords":"개발, hexo, github, blog","thumbnailUrl":"github_hexo.png"}</script>
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"\nHexo 글쓰기hexo-cli가 워낙 잘 되어있기 때문에 간단한 명령어를 통해 글을 만들 수 있습니다.12345678# 일반 post는 아래와 같이 만듭니다.$ hexo new post \"Github 블로그 만들기 with Hexo - 1\"# draft 아래와 같이 만듭니다.$ hexo new draft \"Github 블로그 만들기 with Hexo - 2\"# draft를 post로 만들때$ hexo publish \"Github 블로그 만들기 with Hexo - 2\"\ndraft란 초안이라는 의미입니다.\n\n참고로 draft를 post로 만들면 상단 front-matter가 초기화되니 꼭 확인을 해야겠습니다.꼭 draft를 사용하지 않아도 브랜치 관리를 잘 해주면 해결될것 같기도 합니다.\n위 둘의 경우는 각각 scaffolds/post.md, scaffolds/draft.md를 템플릿으로 사용합니다.템플릿을 수정하고 싶은경우는 이 두 파일을 수정해두면 되겠습니다.아래는 제가 사용하는 post.md 입니다.\n1234567891011---title: Github 블로그 만들기 with Hexo - 글쓰기date: 1555241000000tags: []categories: []thumbnail: \"\"permalink: \"\"---&lt;!-- excerpt --&gt;&lt;!-- toc --&gt;\n다른 항목들은 보시면 바로 이해가 가실테니 permalink만 간단히 설명하겠습니다.각 글의 주소는 http://호스트명/2019/04/14/Github-블로그-만들기-with-Hexo---1/ 과 같이 title이 패스로 들어가게 됩니다.만약 이 부분을 변경하고 싶을 때 permalink를 지정해주면 그 글의 주소는 설정한대로 적용됩니다.자세한 내용은 Front-matter를 참고해주세요.\nmore, excerpt인덱스 페이지에 어느부분까지 표시할 건지에 대한 세팅을 할 수 있습니다.본문에 아래 주석을 이용하면 되는데요.123본문이 이렇게 있을 때 여기까지만 인덱스 페이지에 나타납니다.&lt;!-- more --&gt;여기서부턴 인덱스에 안나옵니다.\n123여기까지의 내용은 인덱스 페이지에만 나타납니다.&lt;!-- excerpt --&gt;여기서부턴 본문 시작입니다.\nEscape12345&#123;% raw %&#125;&#123;% codeblock %&#125;&#123;% endraw %&#125;\n이렇게 템플릿 문법을 이스케이핑 하기 위해서는 raw 구문을 이용합니다.\n이미지 삽입_config.yml1post_asset_folder: true # or false\n만약 _config.yml 파일의 저 항목이 true로 되어있다면 글 마다 글 제목과 같은 asset용 디렉토리가 생깁니다.123&#123;% asset_img demo.png %&#125;\n그 디렉토리의 demo.png를 첨부하려면 위와같이 하면 됩니다.Asset-Folders를 참고해주세요. \n로컬에서 확인하기퍼블리싱 전에 로컬에서 확인을 하기 위해서는 아래 명령을 이용합니다.12$ hexo server$ hexo server --draft # draft도 확인하고 싶을 때\n자세한 내용은 Commands를 참고해주세요.\n마치며사실 공식 문서에 다 있는 내용이고 문서가 번역도 다 되어있어서 거기를 한번 쓱 보시는게 좋을듯 합니다.이제 대충 글 쓰는 방법은 알았으니 다음엔 배포를 어떻게 할지 알아보겠습니다.","dateCreated":"2019-04-14T20:23:20+09:00","dateModified":"2019-04-15T11:20:49+09:00","datePublished":"2019-04-14T20:23:20+09:00","description":"hexo-cli가 워낙 잘 되어있기 때문에 간단한 명령어를 통해 글을 만들 수 있습니다.","headline":"Github 블로그 만들기 with Hexo - 글쓰기","image":["github_hexo.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/","keywords":"hexo, github, blog","thumbnailUrl":"github_hexo.png"}</script>
     <meta name="description" content="hexo-cli가 워낙 잘 되어있기 때문에 간단한 명령어를 통해 글을 만들 수 있습니다.">
-<meta name="keywords" content="개발,hexo,github,blog">
+<meta name="keywords" content="hexo,github,blog">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Github 블로그 만들기 with Hexo - 글쓰기">
 <meta property="og:url" content="https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/index.html">
 <meta property="og:site_name" content="밍피디">
 <meta property="og:description" content="hexo-cli가 워낙 잘 되어있기 때문에 간단한 명령어를 통해 글을 만들 수 있습니다.">
 <meta property="og:locale" content="ko">
-<meta property="og:updated_time" content="2019-04-14T15:37:48.993Z">
+<meta property="og:updated_time" content="2019-04-15T02:20:49.510Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Github 블로그 만들기 with Hexo - 글쓰기">
 <meta name="twitter:description" content="hexo-cli가 워낙 잘 되어있기 때문에 간단한 명령어를 통해 글을 만들 수 있습니다.">
@@ -33,14 +35,15 @@
         
     
     
-        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png"/>
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png">
     
     
-        <meta property="og:image" content="https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/github_hexo.png"/>
-        <meta class="swiftype" name="image" data-type="enum" content="https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/github_hexo.png" />
+        <meta property="og:image" content="https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/github_hexo.png">
+        <meta class="swiftype" name="image" data-type="enum" content="https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/github_hexo.png">
     
     
     
+    <link rel="canonical" href="https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/">
     <!--STYLES-->
     <link rel="stylesheet" href="/assets/css/all.css">
     <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
@@ -163,8 +166,7 @@
 </nav>
 
             
-            <div id="main" data-behavior="2"
-                 class="
+            <div id="main" data-behavior="2" class="
                         hasCoverMetaIn
                         ">
                 
@@ -187,7 +189,7 @@
     
         <span>in </span>
         
-    <a class="category-link" href="/categories/개발/">개발</a>
+    <a class="category-link" href="/categories/개발/">개발</a>, <a class="category-link" href="/categories/개발/hexo/">hexo</a>
 
 
     
@@ -206,16 +208,16 @@
 <p>참고로 draft를 post로 만들면 상단 front-matter가 초기화되니 꼭 확인을 해야겠습니다.<br>꼭 draft를 사용하지 않아도 브랜치 관리를 잘 해주면 해결될것 같기도 합니다.</p>
 <p>위 둘의 경우는 각각 <code>scaffolds/post.md</code>, <code>scaffolds/draft.md</code>를 템플릿으로 사용합니다.<br>템플릿을 수정하고 싶은경우는 이 두 파일을 수정해두면 되겠습니다.<br>아래는 제가 사용하는 <code>post.md</code> 입니다.</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">Github</span> <span class="string">블로그</span> <span class="string">만들기</span> <span class="string">with</span> <span class="string">Hexo</span> <span class="bullet">-</span> <span class="string">글쓰기</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">1555241000000</span></span><br><span class="line"><span class="attr">tags:</span> <span class="string">[]</span></span><br><span class="line"><span class="attr">categories:</span> <span class="string">[]</span></span><br><span class="line"><span class="attr">thumbnail:</span> <span class="string">""</span></span><br><span class="line"><span class="attr">permalink:</span> <span class="string">""</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"></span><br><span class="line"><span class="string">&lt;!--</span> <span class="string">excerpt</span> <span class="bullet">--&gt;</span></span><br><span class="line"><span class="string">&lt;!--</span> <span class="string">toc</span> <span class="bullet">--&gt;</span></span><br></pre></td></tr></table></figure>
-<p>다른 항목들은 보시면 바로 이해가 가실테니 <code>permalink</code>만 간단히 설명하겠습니다.<br>각 글의 주소는 <code>http://호스트명/2019/04/14/Github-블로그-만들기-with-Hexo---1/</code> 과 같이 title이 패스로 들어가게 됩니다.<br>만약 이 부분을 변경하고 싶을 때 <code>permalink</code>를 지정해주면 그 글의 주소는 설정한대로 적용됩니다.<br>자세한 내용은 <a href="https://hexo.io/ko/docs/front-matter" target="_blank" rel="noopener">Front-matter</a>를 참고해주세요.</p>
+<p>다른 항목들은 보시면 바로 이해가 가실테니 <code>permalink</code>만 간단히 설명하겠습니다.<br>각 글의 주소는 <code>http://호스트명/2019/04/14/Github-블로그-만들기-with-Hexo---1/</code> 과 같이 title이 패스로 들어가게 됩니다.<br>만약 이 부분을 변경하고 싶을 때 <code>permalink</code>를 지정해주면 그 글의 주소는 설정한대로 적용됩니다.<br>자세한 내용은 <a href="https://hexo.io/ko/docs/front-matter" rel="external nofollow noopener noreferrer" target="_blank">Front-matter</a>를 참고해주세요.</p>
 <h2 id="more-excerpt"><a href="#more-excerpt" class="headerlink" title="more, excerpt"></a>more, excerpt</h2><p>인덱스 페이지에 어느부분까지 표시할 건지에 대한 세팅을 할 수 있습니다.<br>본문에 아래 주석을 이용하면 되는데요.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">본문이 이렇게 있을 때 여기까지만 인덱스 페이지에 나타납니다.</span><br><span class="line">&lt;!-- more --&gt;</span><br><span class="line">여기서부턴 인덱스에 안나옵니다.</span><br></pre></td></tr></table></figure></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">여기까지의 내용은 인덱스 페이지에만 나타납니다.</span><br><span class="line">&lt;!-- excerpt --&gt;</span><br><span class="line">여기서부턴 본문 시작입니다.</span><br></pre></td></tr></table></figure>
 <h2 id="Escape"><a href="#Escape" class="headerlink" title="Escape"></a>Escape</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#123;% raw %&#125;</span><br><span class="line">&#123;% codeblock %&#125;</span><br><span class="line">&#123;% endraw %&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>이렇게 템플릿 문법을 이스케이핑 하기 위해서는 raw 구문을 이용합니다.</p>
 <h2 id="이미지-삽입"><a href="#이미지-삽입" class="headerlink" title="이미지 삽입"></a>이미지 삽입</h2><figure class="highlight yaml"><figcaption><span>_config.yml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">post_asset_folder:</span> <span class="literal">true</span> <span class="comment"># or false</span></span><br></pre></td></tr></table></figure>
 <p>만약 <code>_config.yml</code> 파일의 저 항목이 true로 되어있다면 글 마다 글 제목과 같은 asset용 디렉토리가 생깁니다.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#123;% asset_img demo.png %&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<p>그 디렉토리의 <code>demo.png</code>를 첨부하려면 위와같이 하면 됩니다.<br><a href="https://hexo.io/ko/docs/asset-folders" target="_blank" rel="noopener">Asset-Folders</a>를 참고해주세요. </p>
+<p>그 디렉토리의 <code>demo.png</code>를 첨부하려면 위와같이 하면 됩니다.<br><a href="https://hexo.io/ko/docs/asset-folders" rel="external nofollow noopener noreferrer" target="_blank">Asset-Folders</a>를 참고해주세요. </p>
 <h2 id="로컬에서-확인하기"><a href="#로컬에서-확인하기" class="headerlink" title="로컬에서 확인하기"></a>로컬에서 확인하기</h2><p>퍼블리싱 전에 로컬에서 확인을 하기 위해서는 아래 명령을 이용합니다.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br><span class="line">$ hexo server --draft <span class="comment"># draft도 확인하고 싶을 때</span></span><br></pre></td></tr></table></figure></p>
-<p>자세한 내용은 <a href="https://hexo.io/ko/docs/commands" target="_blank" rel="noopener">Commands</a>를 참고해주세요.</p>
+<p>자세한 내용은 <a href="https://hexo.io/ko/docs/commands" rel="external nofollow noopener noreferrer" target="_blank">Commands</a>를 참고해주세요.</p>
 <h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>사실 공식 문서에 다 있는 내용이고 문서가 번역도 다 되어있어서 거기를 한번 쓱 보시는게 좋을듯 합니다.<br>이제 대충 글 쓰는 방법은 알았으니 다음엔 배포를 어떻게 할지 알아보겠습니다.</p>
             
 
@@ -224,12 +226,24 @@
     <div id="post-footer" class="post-footer main-content-wrap">
         
             <div class="post-footer-tags">
-                <span class="text-color-light text-small">TAGGED IN</span><br>
+                <span class="text-color-light text-small">태그</span><br>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/blog/">blog</a> <a class="tag tag--primary tag--small t-link" href="/tags/github/">github</a> <a class="tag tag--primary tag--small t-link" href="/tags/hexo/">hexo</a> <a class="tag tag--primary tag--small t-link" href="/tags/개발/">개발</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/blog/">blog</a> <a class="tag tag--primary tag--small t-link" href="/tags/github/">github</a> <a class="tag tag--primary tag--small t-link" href="/tags/hexo/">hexo</a>
 
             </div>
         
+
+
+
+
+        <!--밍피디가 커스터마이징 해본 관련 글 영역-->
+        <span class="text-color-light text-small">관련 글</span><br>
+        <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/14/github-blog-with-hexo-1/" title="Github 블로그 만들기 with Hexo - 초기설정" rel="bookmark">Github 블로그 만들기 with Hexo - 초기설정</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/14/github-blog-with-hexo-3/" title="Github 블로그 만들기 with Hexo - 배포 및 기타 설정" rel="bookmark">Github 블로그 만들기 with Hexo - 배포 및 기타 설정</a></h3></div></li></ul>
+        <!-- 끝 -->
+
+
+
+
         
             <div class="post-actions-wrap">
     <nav>
@@ -264,7 +278,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Facebook">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-facebook" aria-hidden="true"></i>
                 </a>
             </li>
@@ -272,7 +286,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Twitter">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-twitter" aria-hidden="true"></i>
                 </a>
             </li>
@@ -280,7 +294,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Google+">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Google+" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-google-plus" aria-hidden="true"></i>
                 </a>
             </li>
@@ -360,7 +374,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Facebook">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-facebook" aria-hidden="true"></i>
                 </a>
             </li>
@@ -368,7 +382,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Twitter">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-twitter" aria-hidden="true"></i>
                 </a>
             </li>
@@ -376,7 +390,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Google+">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" title="Share on Google+" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-google-plus" aria-hidden="true"></i>
                 </a>
             </li>
@@ -410,7 +424,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
                     </a>
                 </li>
@@ -418,7 +432,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
                     </a>
                 </li>
@@ -426,7 +440,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
                     </a>
                 </li>

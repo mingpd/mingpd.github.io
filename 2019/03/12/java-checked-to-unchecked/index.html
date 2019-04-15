@@ -1,0 +1,511 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="밍피디">
+    <title>java, checked excepton을 아름답게 unchecked exception으로 바꾸기 - 밍피디</title>
+    <meta name="author" content="밍피디">
+    
+        <meta name="keywords" content="개발,">
+    
+    
+        <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"\nchecked exception과 unchecked exception이 대체 뭐고, 무슨 차이가 있는지에 대한 내용은 과감히 생략합니다.\n그냥 RuntimeException으로 감싸면 되는거 아냐?맞습니다.\n1234567public List&lt;List&lt;Object&gt;&gt; getSheetValues(String spreadSheetId, String sheetName, String range) &#123;    try &#123;        return sheets.spreadsheets().values().get(spreadSheetId, sheetName + \"!\" + range).execute().getValues();    &#125; catch (IOException e) &#123;        throw new RuntimeException(e);    &#125;&#125;\n(앞서 포스팅했던 구글API 관련하여 구글시트API의 실 사용 예입니다.)네 저러면 되죠. 하지만 한 클래스에 저런류의 메소드가 아주 많다면?보기 싫어집니다. 저만 그런건진 모르겠습니다만 { } 이 많아지는게 참 거슬립니다.또 중복되는 코드가 많아지는데 저것을 공통화 하기도 참 애매한 현실이 너무 싫습니다.\n1234567data.stream().map(p -&gt; &#123;    try &#123;        someCheckedExceptionThrow(p);    &#125; catch (Exception e) &#123;        throw new RuntimeException(e)    &#125;&#125;).collect(Collectors.toList());\n아니면 이런상황을 생각해봅시다.stream.map을 수행할때 checked exception을 발생시키는 메소드를 태워야할 때..정말 보기만 해도 화가 솟구칩니다.좋은 방법이 없을까 찾아보던 찰나…\nthrowable-interfaceshttps://github.com/StefanLiebenberg/throwable-interfaces\n이런 솔루션을 발견했습니다.쉽게말해서 java8의 java.util.function 안에 있는 FunctionInterface들에 Throwable 처리를 해준 라이브러리입니다.작동 방식이 궁금하시면 저 깃헙 코드를 참고해주시면 되고요.제가 위에 든 예시에 이 라이브러리르 적용했을때 어떻게 되는지 보겠습니다.\n12345public List&lt;List&lt;Object&gt;&gt; getSheetValues(String spreadSheetId, String sheetName, String range) &#123;    return SupplierWithThrowable.castSupplierWithThrowable(        () -&gt; sheets.spreadsheets().values().get(spreadSheetId, sheetName + \"!\" + range).execute().getValues()    ).get();&#125;\n위의 예시입니다. try - catch 블럭이 사라졌습니다.\n123data.stream()    .map(FunctionWithThrowable.castFunctionWithThrowable(p -&gt; someCheckedExceptionThrow(p))    .collect(Collectors.toList());\n아래 예시입니다. 역시 사라졌습니다.그런데 메소드가 더 길어져서 불편하다고요..?static import를 사용해서 앞에 class 명은 떼버릴 수 있습니다.그리고 한 클래스에 저런 try-catch 블록이 계속 중복되는 코드를 넣어야 할땐 훨씬 깔끔해 보일 수 있습니다.\n마치며공식이 아닌 서드파티 개발자의 라이브러리 사용하기 vs 그냥 try - catch 사용하기머릿속에서 이 두가치관이 싸우고 있지만 거기서 조금이나마 이기는쪽을 선택하시길 바랍니다.","dateCreated":"2019-03-12T11:59:00+09:00","dateModified":"2019-04-15T13:11:07+09:00","datePublished":"2019-03-12T11:59:00+09:00","description":"그냥 RuntimeException으로 감싸면 되는거 아냐?맞습니다.","headline":"java, checked excepton을 아름답게 unchecked exception으로 바꾸기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/12/java-checked-to-unchecked/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/12/java-checked-to-unchecked/","keywords":"java"}</script>
+    <meta name="description" content="그냥 RuntimeException으로 감싸면 되는거 아냐?맞습니다.">
+<meta name="keywords" content="java">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="java, checked excepton을 아름답게 unchecked exception으로 바꾸기">
+<meta property="og:url" content="https://mingpd.github.io/2019/03/12/java-checked-to-unchecked/index.html">
+<meta property="og:site_name" content="밍피디">
+<meta property="og:description" content="그냥 RuntimeException으로 감싸면 되는거 아냐?맞습니다.">
+<meta property="og:locale" content="ko">
+<meta property="og:updated_time" content="2019-04-15T04:11:07.977Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java, checked excepton을 아름답게 unchecked exception으로 바꾸기">
+<meta name="twitter:description" content="그냥 RuntimeException으로 감싸면 되는거 아냐?맞습니다.">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png">
+    
+    
+    
+    
+    <link rel="canonical" href="https://mingpd.github.io/2019/03/12/java-checked-to-unchecked/">
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120538979-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120538979-3');
+    </script>
+
+
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">밍피디</a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+                </a>
+                <h4 class="sidebar-profile-name">밍피디</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>잔망스러운 개발자</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/ " title="Home">
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-categories" title="Categories">
+                    
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" title="Tags">
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" title="Archives">
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Archives</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="#about" title="About">
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            java, checked excepton을 아름답게 unchecked exception으로 바꾸기
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-03-12T11:59:00+09:00">
+	
+		    3월 12, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/개발/">개발</a>, <a class="category-link" href="/categories/개발/소소한-팁/">소소한 팁</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt --><br><h1 id="table-of-contents">목차</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#그냥-RuntimeException으로-감싸면-되는거-아냐"><span class="toc-text">그냥 RuntimeException으로 감싸면 되는거 아냐?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#throwable-interfaces"><span class="toc-text">throwable-interfaces</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#마치며"><span class="toc-text">마치며</span></a></li></ol><p></p>
+<p>checked exception과 unchecked exception이 대체 뭐고, 무슨 차이가 있는지에 대한 내용은 과감히 생략합니다.</p>
+<h2 id="그냥-RuntimeException으로-감싸면-되는거-아냐"><a href="#그냥-RuntimeException으로-감싸면-되는거-아냐" class="headerlink" title="그냥 RuntimeException으로 감싸면 되는거 아냐?"></a>그냥 RuntimeException으로 감싸면 되는거 아냐?</h2><p>맞습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;List&lt;Object&gt;&gt; getSheetValues(String spreadSheetId, String sheetName, String range) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> sheets.spreadsheets().values().get(spreadSheetId, sheetName + <span class="string">"!"</span> + range).execute().getValues();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>(앞서 포스팅했던 구글API 관련하여 구글시트API의 실 사용 예입니다.)<br>네 저러면 되죠. 하지만 한 클래스에 저런류의 메소드가 아주 많다면?<br>보기 싫어집니다. 저만 그런건진 모르겠습니다만 { } 이 많아지는게 참 거슬립니다.<br>또 중복되는 코드가 많아지는데 저것을 공통화 하기도 참 애매한 현실이 너무 싫습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">data.stream().map(p -&gt; &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        someCheckedExceptionThrow(p);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+<p>아니면 이런상황을 생각해봅시다.<br>stream.map을 수행할때 checked exception을 발생시키는 메소드를 태워야할 때..<br>정말 보기만 해도 화가 솟구칩니다.<br>좋은 방법이 없을까 찾아보던 찰나…</p>
+<h2 id="throwable-interfaces"><a href="#throwable-interfaces" class="headerlink" title="throwable-interfaces"></a>throwable-interfaces</h2><p><a href="https://github.com/StefanLiebenberg/throwable-interfaces" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/StefanLiebenberg/throwable-interfaces</a></p>
+<p>이런 솔루션을 발견했습니다.<br>쉽게말해서 java8의 java.util.function 안에 있는 FunctionInterface들에 Throwable 처리를 해준 라이브러리입니다.<br>작동 방식이 궁금하시면 저 깃헙 코드를 참고해주시면 되고요.<br>제가 위에 든 예시에 이 라이브러리르 적용했을때 어떻게 되는지 보겠습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;List&lt;Object&gt;&gt; getSheetValues(String spreadSheetId, String sheetName, String range) &#123;</span><br><span class="line">    <span class="keyword">return</span> SupplierWithThrowable.castSupplierWithThrowable(</span><br><span class="line">        () -&gt; sheets.spreadsheets().values().get(spreadSheetId, sheetName + <span class="string">"!"</span> + range).execute().getValues()</span><br><span class="line">    ).get();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위의 예시입니다. try - catch 블럭이 사라졌습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">data.stream()</span><br><span class="line">    .map(FunctionWithThrowable.castFunctionWithThrowable(p -&gt; someCheckedExceptionThrow(p))</span><br><span class="line">    .collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+<p>아래 예시입니다. 역시 사라졌습니다.<br>그런데 메소드가 더 길어져서 불편하다고요..?<br>static import를 사용해서 앞에 class 명은 떼버릴 수 있습니다.<br>그리고 한 클래스에 저런 try-catch 블록이 계속 중복되는 코드를 넣어야 할땐 훨씬 깔끔해 보일 수 있습니다.</p>
+<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>공식이 아닌 서드파티 개발자의 라이브러리 사용하기 vs 그냥 try - catch 사용하기<br>머릿속에서 이 두가치관이 싸우고 있지만 거기서 조금이나마 이기는쪽을 선택하시길 바랍니다.</p>
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/java/">java</a>
+
+            </div>
+        
+
+
+
+
+        <!--밍피디가 커스터마이징 해본 관련 글 영역-->
+        <span class="text-color-light text-small">관련 글</span><br>
+        <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/31/java-orelse-orelseget/" title="java, optional의 orElse와 orElseGet의 차이" rel="bookmark">java, optional의 orElse와 orElseGet의 차이</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/java-google-api/" title="java, google api 이용하기" rel="bookmark">java, google api 이용하기</a></h3></div></li></ul>
+        <!-- 끝 -->
+
+
+
+
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/12/angular-force-refresh/" data-tooltip="angular, 같은 패스로 또 route 할 때 강제 새로고침 시키기" aria-label="이전: angular, 같은 패스로 또 route 할 때 강제 새로고침 시키기">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/12/java-google-api/" data-tooltip="java, google api 이용하기" aria-label="다음: java, google api 이용하기">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/12/java-checked-to-unchecked/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/12/java-checked-to-unchecked/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/12/java-checked-to-unchecked/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 밍피디. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/12/angular-force-refresh/" data-tooltip="angular, 같은 패스로 또 route 할 때 강제 새로고침 시키기" aria-label="이전: angular, 같은 패스로 또 route 할 때 강제 새로고침 시키기">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/12/java-google-api/" data-tooltip="java, google api 이용하기" aria-label="다음: java, google api 이용하기">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/12/java-checked-to-unchecked/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/12/java-checked-to-unchecked/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/12/java-checked-to-unchecked/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/12/java-checked-to-unchecked/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/12/java-checked-to-unchecked/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/12/java-checked-to-unchecked/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+            <h4 id="about-card-name">밍피디</h4>
+        
+            <div id="about-card-bio"><p>잔망스러운 개발자</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>개발자</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/bg.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://mingpd.github.io/2019/03/12/java-checked-to-unchecked/';
+                 
+                    this.page.identifier = '2019/03/12/java-checked-to-unchecked/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mingpidi';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+
+    </body>
+</html>

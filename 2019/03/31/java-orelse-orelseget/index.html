@@ -1,0 +1,520 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="밍피디">
+    <title>java, optional의 orElse와 orElseGet의 차이 - 밍피디</title>
+    <meta name="author" content="밍피디">
+    
+        <meta name="keywords" content="개발,">
+    
+    
+        <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"java8의 optional api 많이들 사용하실텐데요.어찌보면 당연하지만 햇갈리는 내용에 대해 다뤄보겠습니다.orElse와 orElseGet의 차이입니다.  \n귀찮으신분들을 위해 요약을 먼저 하자면\norElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.\n\n예시123456String username = \"이름\";String result1 = Optional.ofNullable(username).orElse(\"no name\");System.out.println(result1);String result2 = Optional.ofNullable(username).orElseGet(() -&gt; \"no name\");System.out.println(result2);\n위 두 println의 결과는 무엇일까요?네 당연하게도 “이름” 입니다.왜냐면 username != null 이기 때문이죠.  \n12String username = null;//.. 이하 동일\n그럼 위처럼 username == null 이면?네. 당연하게도 둘다 “no name” 입니다.  \n그럼 같은거 아냐?아닙니다. 아래의 경우를 생각해봅시다.  \n123456789101112public void ohMyGod() &#123;\tString username = null;\tString result1 = Optional.ofNullable(username).orElse(getDefaultName());\tSystem.out.println(result1);\tString result2 = Optional.ofNullable(username).orElseGet(() -&gt; getDefaultName());\tSystem.out.println(result2);&#125;private String getDefaultName() &#123;\treturn \"no name\";&#125;\n이 경우에 결과는 어떻게 될까요?네. 둘다 “no name” 입니다. 결과는 같지만 여긴 굉장한 차이가 있습니다.orElse의 경우는 “값”을 취합니다.orElseGet은 “Supplier”를 취하죠.  \n위의 예시는 아래 코드로 다시 쓰여질 수 있습니다.\n12345678String username = null;String defaultName = getDefaultName(); // 여기가 다릅니다.String result1 = Optional.ofNullable(username).orElse(defaultName);System.out.println(result1);Supplier&lt;String&gt; supplier = () -&gt; getDefaultName(); // 여기요.String result2 = Optional.ofNullable(username).orElseGet(supplier);System.out.println(result2);\n아시겠나요? \norElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.\n\n위의 예시에서는 ‘그래서 뭐?’ 라고 생각하시겠지만 아래의 경우를 한 번 봅시다.실제 이것 때문에 장애를 낼 뻔한 적이 있습니다.  \n큰 일 날 뻔한 사례123456789public User findByUsername(String name) &#123;\treturn userRepository.findByName(name).orElse(createUserWithName(name));&#125;private User createUserWithName(String name) &#123;\tUser newUser = new User();\tnewUser.setName(name)\treturn userRepository.save(user);&#125;\n(대충 이런 상황이었습니다.)만약 user 테이블의 name이 unique였다면?  \n네. 맞습니다. 장애입니다. 왜냐면 아래랑 같기 때문이죠.  \n12345678910public User findByUsername(String name) &#123;\tUser newUser = createUserWithName(name); // ㅠㅠ\treturn userRepository.findByName(name).orElse(newUser);&#125;private User createUserWithName(String name) &#123;\tUser newUser = new User();\tnewUser.setName(name)\treturn userRepository.save(user);&#125;\n이해가 되시나요?\n마치며참 당연한건데 햇갈리는 경우가 있습니다.버그는 정말 사소한것에서 부터 옵니다. 조심합시다.","dateCreated":"2019-03-31T18:06:21+09:00","dateModified":"2019-04-15T11:24:53+09:00","datePublished":"2019-03-31T18:06:21+09:00","description":"orElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.","headline":"java, optional의 orElse와 orElseGet의 차이","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/31/java-orelse-orelseget/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/31/java-orelse-orelseget/","keywords":"java"}</script>
+    <meta name="description" content="orElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.">
+<meta name="keywords" content="java">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="java, optional의 orElse와 orElseGet의 차이">
+<meta property="og:url" content="https://mingpd.github.io/2019/03/31/java-orelse-orelseget/index.html">
+<meta property="og:site_name" content="밍피디">
+<meta property="og:description" content="orElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.">
+<meta property="og:locale" content="ko">
+<meta property="og:updated_time" content="2019-04-15T02:24:53.670Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java, optional의 orElse와 orElseGet의 차이">
+<meta name="twitter:description" content="orElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png">
+    
+    
+    
+    
+    <link rel="canonical" href="https://mingpd.github.io/2019/03/31/java-orelse-orelseget/">
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120538979-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120538979-3');
+    </script>
+
+
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">밍피디</a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+                </a>
+                <h4 class="sidebar-profile-name">밍피디</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>잔망스러운 개발자</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/ " title="Home">
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-categories" title="Categories">
+                    
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" title="Tags">
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" title="Archives">
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Archives</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="#about" title="About">
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            java, optional의 orElse와 orElseGet의 차이
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-03-31T18:06:21+09:00">
+	
+		    3월 31, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/개발/">개발</a>, <a class="category-link" href="/categories/개발/소소한-팁/">소소한 팁</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt --><br><h1 id="table-of-contents">목차</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#예시"><span class="toc-text">예시</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#큰-일-날-뻔한-사례"><span class="toc-text">큰 일 날 뻔한 사례</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#마치며"><span class="toc-text">마치며</span></a></li></ol><br>java8의 optional api 많이들 사용하실텐데요.<br>어찌보면 당연하지만 햇갈리는 내용에 대해 다뤄보겠습니다.<br>orElse와 orElseGet의 차이입니다.  <p></p>
+<p>귀찮으신분들을 위해 요약을 먼저 하자면</p>
+<blockquote><p>orElse는 null이던말던 항상 불립니다.<br>orElseGet은 null일 때만 불립니다.</p>
+</blockquote>
+<h2 id="예시"><a href="#예시" class="headerlink" title="예시"></a>예시</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">String username = <span class="string">"이름"</span>;</span><br><span class="line">String result1 = Optional.ofNullable(username).orElse(<span class="string">"no name"</span>);</span><br><span class="line">System.out.println(result1);</span><br><span class="line"></span><br><span class="line">String result2 = Optional.ofNullable(username).orElseGet(() -&gt; <span class="string">"no name"</span>);</span><br><span class="line">System.out.println(result2);</span><br></pre></td></tr></table></figure>
+<p>위 두 println의 결과는 무엇일까요?<br>네 당연하게도 “이름” 입니다.<br>왜냐면 username != null 이기 때문이죠.  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String username = <span class="keyword">null</span>;</span><br><span class="line"><span class="comment">//.. 이하 동일</span></span><br></pre></td></tr></table></figure>
+<p>그럼 위처럼 username == null 이면?<br>네. 당연하게도 둘다 “no name” 입니다.  </p>
+<p>그럼 같은거 아냐?<br>아닙니다. 아래의 경우를 생각해봅시다.  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ohMyGod</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	String username = <span class="keyword">null</span>;</span><br><span class="line">	String result1 = Optional.ofNullable(username).orElse(getDefaultName());</span><br><span class="line">	System.out.println(result1);</span><br><span class="line"></span><br><span class="line">	String result2 = Optional.ofNullable(username).orElseGet(() -&gt; getDefaultName());</span><br><span class="line">	System.out.println(result2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> String <span class="title">getDefaultName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="string">"no name"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>이 경우에 결과는 어떻게 될까요?<br>네. 둘다 “no name” 입니다. 결과는 같지만 여긴 굉장한 차이가 있습니다.<br>orElse의 경우는 “값”을 취합니다.<br>orElseGet은 “Supplier”를 취하죠.  </p>
+<p>위의 예시는 아래 코드로 다시 쓰여질 수 있습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">String username = <span class="keyword">null</span>;</span><br><span class="line">String defaultName = getDefaultName(); <span class="comment">// 여기가 다릅니다.</span></span><br><span class="line">String result1 = Optional.ofNullable(username).orElse(defaultName);</span><br><span class="line">System.out.println(result1);</span><br><span class="line"></span><br><span class="line">Supplier&lt;String&gt; supplier = () -&gt; getDefaultName(); <span class="comment">// 여기요.</span></span><br><span class="line">String result2 = Optional.ofNullable(username).orElseGet(supplier);</span><br><span class="line">System.out.println(result2);</span><br></pre></td></tr></table></figure>
+<p>아시겠나요? </p>
+<blockquote><p>orElse는 null이던말던 항상 불립니다.<br>orElseGet은 null일 때만 불립니다.</p>
+</blockquote>
+<p>위의 예시에서는 ‘그래서 뭐?’ 라고 생각하시겠지만 아래의 경우를 한 번 봅시다.<br>실제 이것 때문에 장애를 낼 뻔한 적이 있습니다.  </p>
+<h2 id="큰-일-날-뻔한-사례"><a href="#큰-일-날-뻔한-사례" class="headerlink" title="큰 일 날 뻔한 사례"></a>큰 일 날 뻔한 사례</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> User <span class="title">findByUsername</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> userRepository.findByName(name).orElse(createUserWithName(name));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> User <span class="title">createUserWithName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">	User newUser = <span class="keyword">new</span> User();</span><br><span class="line">	newUser.setName(name)</span><br><span class="line">	<span class="keyword">return</span> userRepository.save(user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>(대충 이런 상황이었습니다.)<br>만약 user 테이블의 name이 unique였다면?  </p>
+<p>네. 맞습니다. 장애입니다. 왜냐면 아래랑 같기 때문이죠.  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> User <span class="title">findByUsername</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">	User newUser = createUserWithName(name); <span class="comment">// ㅠㅠ</span></span><br><span class="line">	<span class="keyword">return</span> userRepository.findByName(name).orElse(newUser);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> User <span class="title">createUserWithName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">	User newUser = <span class="keyword">new</span> User();</span><br><span class="line">	newUser.setName(name)</span><br><span class="line">	<span class="keyword">return</span> userRepository.save(user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>이해가 되시나요?</p>
+<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>참 당연한건데 햇갈리는 경우가 있습니다.<br>버그는 정말 사소한것에서 부터 옵니다. 조심합시다.</p>
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/java/">java</a>
+
+            </div>
+        
+
+
+
+
+        <!--밍피디가 커스터마이징 해본 관련 글 영역-->
+        <span class="text-color-light text-small">관련 글</span><br>
+        <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/java-checked-to-unchecked/" title="java, checked excepton을 아름답게 unchecked exception으로 바꾸기" rel="bookmark">java, checked excepton을 아름답게 unchecked exception으로 바꾸기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/java-google-api/" title="java, google api 이용하기" rel="bookmark">java, google api 이용하기</a></h3></div></li></ul>
+        <!-- 끝 -->
+
+
+
+
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/14/github-blog-with-hexo-1/" data-tooltip="Github 블로그 만들기 with Hexo - 초기설정" aria-label="이전: Github 블로그 만들기 with Hexo - 초기설정">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/12/angular-force-refresh/" data-tooltip="angular, 같은 패스로 또 route 할 때 강제 새로고침 시키기" aria-label="다음: angular, 같은 패스로 또 route 할 때 강제 새로고침 시키기">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/31/java-orelse-orelseget/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/31/java-orelse-orelseget/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/31/java-orelse-orelseget/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 밍피디. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/14/github-blog-with-hexo-1/" data-tooltip="Github 블로그 만들기 with Hexo - 초기설정" aria-label="이전: Github 블로그 만들기 with Hexo - 초기설정">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/12/angular-force-refresh/" data-tooltip="angular, 같은 패스로 또 route 할 때 강제 새로고침 시키기" aria-label="다음: angular, 같은 패스로 또 route 할 때 강제 새로고침 시키기">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/31/java-orelse-orelseget/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/31/java-orelse-orelseget/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/31/java-orelse-orelseget/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/31/java-orelse-orelseget/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/31/java-orelse-orelseget/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/31/java-orelse-orelseget/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+            <h4 id="about-card-name">밍피디</h4>
+        
+            <div id="about-card-bio"><p>잔망스러운 개발자</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>개발자</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/bg.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://mingpd.github.io/2019/03/31/java-orelse-orelseget/';
+                 
+                    this.page.identifier = '2019/03/31/java-orelse-orelseget/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mingpidi';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+
+    </body>
+</html>

@@ -15,6 +15,8 @@
         <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
     
     
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
+    
     <script type="application/ld+json">{"@context":"http://schema.org","@type":"Website","@id":"https://mingpd.github.io","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"name":"밍피디","description":null,"url":"https://mingpd.github.io","keywords":"개발"}</script>
     <meta name="keywords" content="개발">
 <meta property="og:type" content="blog">
@@ -30,11 +32,12 @@
         
     
     
-        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png"/>
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png">
     
     
     
     
+    <link rel="canonical" href="https://mingpd.github.io/all-tags/">
     <!--STYLES-->
     <link rel="stylesheet" href="/assets/css/all.css">
     <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
@@ -157,17 +160,20 @@
 </nav>
 
             
-            <div id="main" data-behavior="2"
-                 class="
+            <div id="main" data-behavior="2" class="
                         hasCoverMetaIn
                         ">
                 <div id="tags-archives" class="main-content-wrap">
     <form id="filter-form" action="#">
-        <input name="tag" type="text" class="form-control input--xlarge" placeholder="Search tag" autofocus="autofocus">
+        <input name="tag" type="text" class="form-control input--xlarge" placeholder="태그 찾기" autofocus="autofocus">
     </form>
     <h4 class="archive-result text-color-base text-xlarge" data-message-zero="no tag found" data-message-one="1 tag found" data-message-other="{n} tags found"></h4>
 
         <section>
+        
+            <a class="tag tag--primary tag--small" href="#angular-list" data-tag="angular">
+                angular
+            </a>
         
             <a class="tag tag--primary tag--small" href="#blog-list" data-tag="blog">
                 blog
@@ -175,6 +181,10 @@
         
             <a class="tag tag--primary tag--small" href="#github-list" data-tag="github">
                 github
+            </a>
+        
+            <a class="tag tag--primary tag--small" href="#google-list" data-tag="google">
+                google
             </a>
         
             <a class="tag tag--primary tag--small" href="#hexo-list" data-tag="hexo">
@@ -185,12 +195,32 @@
                 java
             </a>
         
-            <a class="tag tag--primary tag--small" href="#개발-list" data-tag="개발">
-                개발
+            <a class="tag tag--primary tag--small" href="#spring-list" data-tag="spring">
+                spring
             </a>
         
     </section>
     <section class="boxes">
+        
+            <div id="angular-list" class="archive box" data-tag="angular">
+                <h4 class="archive-title">
+                    <a class="link-unstyled" href="/tags/angular">
+                        angular (1)
+                    </a>
+                </h4>
+                <ul class="archive-posts">
+                    
+                        <li class="archive-post">
+                            <a class="archive-post-title" href="/2019/03/12/angular-force-refresh/">
+                                angular, 같은 패스로 또 route 할 때 강제 새로고침 시키기
+                            </a>
+                            <span class="archive-post-date">
+                                 - 3월 12, 2019
+                            </span>
+                        </li>
+                    
+                </ul>
+            </div>
         
             <div id="blog-list" class="archive box" data-tag="blog">
                 <h4 class="archive-title">
@@ -268,6 +298,26 @@
                 </ul>
             </div>
         
+            <div id="google-list" class="archive box" data-tag="google">
+                <h4 class="archive-title">
+                    <a class="link-unstyled" href="/tags/google">
+                        google (1)
+                    </a>
+                </h4>
+                <ul class="archive-posts">
+                    
+                        <li class="archive-post">
+                            <a class="archive-post-title" href="/2019/03/12/java-google-api/">
+                                java, google api 이용하기
+                            </a>
+                            <span class="archive-post-date">
+                                 - 3월 12, 2019
+                            </span>
+                        </li>
+                    
+                </ul>
+            </div>
+        
             <div id="hexo-list" class="archive box" data-tag="hexo">
                 <h4 class="archive-title">
                     <a class="link-unstyled" href="/tags/hexo">
@@ -309,46 +359,55 @@
             <div id="java-list" class="archive box" data-tag="java">
                 <h4 class="archive-title">
                     <a class="link-unstyled" href="/tags/java">
-                        java (0)
+                        java (3)
                     </a>
                 </h4>
                 <ul class="archive-posts">
+                    
+                        <li class="archive-post">
+                            <a class="archive-post-title" href="/2019/03/31/java-orelse-orelseget/">
+                                java, optional의 orElse와 orElseGet의 차이
+                            </a>
+                            <span class="archive-post-date">
+                                 - 3월 31, 2019
+                            </span>
+                        </li>
+                    
+                        <li class="archive-post">
+                            <a class="archive-post-title" href="/2019/03/12/java-checked-to-unchecked/">
+                                java, checked excepton을 아름답게 unchecked exception으로 바꾸기
+                            </a>
+                            <span class="archive-post-date">
+                                 - 3월 12, 2019
+                            </span>
+                        </li>
+                    
+                        <li class="archive-post">
+                            <a class="archive-post-title" href="/2019/03/12/java-google-api/">
+                                java, google api 이용하기
+                            </a>
+                            <span class="archive-post-date">
+                                 - 3월 12, 2019
+                            </span>
+                        </li>
                     
                 </ul>
             </div>
         
-            <div id="개발-list" class="archive box" data-tag="개발">
+            <div id="spring-list" class="archive box" data-tag="spring">
                 <h4 class="archive-title">
-                    <a class="link-unstyled" href="/tags/개발">
-                        개발 (3)
+                    <a class="link-unstyled" href="/tags/spring">
+                        spring (1)
                     </a>
                 </h4>
                 <ul class="archive-posts">
                     
                         <li class="archive-post">
-                            <a class="archive-post-title" href="/2019/04/14/github-blog-with-hexo-3/">
-                                Github 블로그 만들기 with Hexo - 배포 및 기타 설정
+                            <a class="archive-post-title" href="/2019/03/12/java-google-api/">
+                                java, google api 이용하기
                             </a>
                             <span class="archive-post-date">
-                                 - 4월 14, 2019
-                            </span>
-                        </li>
-                    
-                        <li class="archive-post">
-                            <a class="archive-post-title" href="/2019/04/14/github-blog-with-hexo-2/">
-                                Github 블로그 만들기 with Hexo - 글쓰기
-                            </a>
-                            <span class="archive-post-date">
-                                 - 4월 14, 2019
-                            </span>
-                        </li>
-                    
-                        <li class="archive-post">
-                            <a class="archive-post-title" href="/2019/04/14/github-blog-with-hexo-1/">
-                                Github 블로그 만들기 with Hexo - 초기설정
-                            </a>
-                            <span class="archive-post-date">
-                                 - 4월 14, 2019
+                                 - 3월 12, 2019
                             </span>
                         </li>
                     
