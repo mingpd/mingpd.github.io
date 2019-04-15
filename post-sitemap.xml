@@ -8,6 +8,38 @@
     </url>
 
     <url>
+        <loc>https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/</loc>
+        <lastmod>2019-04-15T12:56:29.496Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/</loc>
+        <lastmod>2019-04-15T12:53:59.628Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://mingpd.github.io/2019/04/14/github-blog-with-hexo-1/</loc>
+        <lastmod>2019-04-15T12:53:59.624Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://mingpd.github.io/2019/04/14/github-blog-with-hexo-3/</loc>
+        <lastmod>2019-04-15T12:53:59.619Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://mingpd.github.io/2019/03/12/angular-force-refresh/</loc>
         <lastmod>2019-04-15T04:17:47.176Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -34,30 +66,6 @@
     <url>
         <loc>https://mingpd.github.io/2019/03/12/java-google-api/</loc>
         <lastmod>2019-04-15T02:23:42.291Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://mingpd.github.io/2019/04/14/github-blog-with-hexo-1/</loc>
-        <lastmod>2019-04-15T02:23:00.630Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://mingpd.github.io/2019/04/14/github-blog-with-hexo-2/</loc>
-        <lastmod>2019-04-15T02:20:49.510Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://mingpd.github.io/2019/04/14/github-blog-with-hexo-3/</loc>
-        <lastmod>2019-04-15T02:20:49.490Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 

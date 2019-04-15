@@ -2630,23 +2630,29 @@ a.tag--small,
     margin-top: 0; }
 
 .popular-posts {
-  list-style: none; }
-  .popular-posts .popular-posts-item .popular-posts-title {
-    display: inline; }
-    .popular-posts .popular-posts-item .popular-posts-title h3 {
+  list-style: none;
+  padding-inline-start: 3px; }
+  .popular-posts .popular-posts-item {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+    overflow: hidden; }
+    .popular-posts .popular-posts-item .popular-posts-title {
       display: inline; }
-      .popular-posts .popular-posts-item .popular-posts-title h3 a {
-        margin-left: 10px;
-        color: #5d686f;
-        font-weight: 300;
-        font-size: 1.6rem; }
-    .popular-posts .popular-posts-item .popular-posts-title:hover {
-      text-decoration: underline; }
-  .popular-posts .popular-posts-item::before {
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 600;
-    content: '\f0da';
-    font-size: 1.3rem; }
+      .popular-posts .popular-posts-item .popular-posts-title h3 {
+        display: inline; }
+        .popular-posts .popular-posts-item .popular-posts-title h3 a {
+          margin-left: 10px;
+          color: #5d686f;
+          font-weight: 300;
+          font-size: 1.6rem; }
+      .popular-posts .popular-posts-item .popular-posts-title:hover {
+        text-decoration: underline; }
+    .popular-posts .popular-posts-item::before {
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 600;
+      content: '\f0da';
+      font-size: 1.3rem; }
 
 #algolia-search-modal {
   display: none; }

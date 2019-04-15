@@ -1,0 +1,515 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="밍피디">
+    <title>Github 블로그 만들기 with Hexo - related posts - 밍피디</title>
+    <meta name="author" content="밍피디">
+    
+        <meta name="keywords" content="개발,">
+    
+    
+        <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"\nhexo-related-popular-posts관련 글을 표시하기 위한 hexo-related-popular-posts가 있는데요.단순히 태그 기반으로 관련 글을 보여주거나, Google Analytics를 연동해서 인기글, 방문자 카운터 등의 고급 기능도 지원합니다.저는 가장 기본 기능인 태그 기반 관련글 기능만 사용하려고 합니다.그러나 제가 이래저래 살펴봤지만 Tranquilpeak 테마가 이 라이브러리를 지원하지 않습니다.그래서 야매로 커스터마이징을 해보았습니다.\n위 문서를 참고하여 아래와 같이 설치합니다.\n1$ npm install hexo-related-popular-posts --save \n야매 커스터마이징themes/tranquilpeak/source/_css/components 이 디렉토리에서 새 파일을 생성할건데요.저의 경우 _popular.scss로 지었습니다.\n_popular.scss123456789101112131415161718192021222324252627282930313233343536373839.popular-posts &#123;    list-style: none;    padding-inline-start: 3px;    .popular-posts-item &#123;        text-overflow: ellipsis;        white-space: nowrap;        word-wrap: normal;        overflow: hidden;                    .popular-posts-title &#123;            display: inline;            h3 &#123;                display: inline;                a &#123;                    margin-left: 10px;                    color: $font-color-base;                    font: &#123;                        weight: 300;                        size: map-get($font-size, base);                    &#125;                &#125;            &#125;            &amp;:hover &#123;                text-decoration: underline;            &#125;        &#125;        // Change style of the list by adding font-awesome icon        &amp;::before &#123;            font-family: 'Font Awesome 5 Free';            font-weight: 600;            content:     '\\f0da';            font-size:   map-get($font-size, small);        &#125;    &#125;&#125; \n_archive.scss를 참고해서 만들었습니다. Tranquilpeak 테마에서 지원을 안하는 관계로 css를 좀 억지로 만들 수 밖에 없었습니다.\n다음은 themes/tranquilpeak/source/_css/tranquilpeak.scss을 엽니다.tranquilpeak.scss123456@import    'components/alert',    'components/archive',    //...    //...    'components/popular';  // 위에서 생성한 것을 추가합니다.\n@import 구문에 방금 생성한 파일을 추가합니다.\n다음은 themes/tranquilpeak/layout/_partial/post.ejs를 엽니다.위에서 추가한 스타일대로 관련 글 영역을 표시하려고 합니다.\npost.ejs1234567891011121314151617181920212223242526&lt;div id=\"post-footer\" class=\"post-footer main-content-wrap\"&gt;    &lt;% if ((post.tags) &amp;&amp; (post.tags.length &gt; 0)) &#123; %&gt;        &lt;div class=\"post-footer-tags\"&gt;            &lt;span class=\"text-color-light text-small\"&gt;&lt;%= __('post.tagged_in') %&gt;&lt;/span&gt;&lt;br/&gt;            &lt;%- partial('post/tag', &#123;tags: post.tags&#125;)%&gt;        &lt;/div&gt;    &lt;% &#125; %&gt;    &lt;!--밍피디가 커스터마이징 해본 관련 글 영역--&gt;    &lt;div class=\"post-footer-tags\"&gt;        &lt;span class=\"text-color-light text-small\"&gt;&lt;%= __('post.related') %&gt;&lt;/span&gt;&lt;br/&gt;        &lt;%- popular_posts( &#123;&#125; , post ) %&gt;    &lt;/div&gt;    &lt;!-- 끝 --&gt;    &lt;% if (post.actions === undefined || post.actions) &#123; %&gt;        &lt;%- partial('post/actions', &#123;postContent: postContent&#125;) %&gt;    &lt;% &#125; %&gt;    &lt;% if (post.comments) &#123; %&gt;        &lt;% if (theme.disqus_shortname) &#123; %&gt;            &lt;%- partial('post/disqus') %&gt;        &lt;% &#125; else if (theme.gitment.enable) &#123; %&gt;            &lt;%- partial('post/gitment') %&gt;        &lt;% &#125; %&gt;    &lt;% &#125; %&gt;&lt;/div&gt;\n#post-footer를 찾습니다. 그리고 그 아래에 커스터마이징한것을 넣으면 됩니다.물론 다른곳에 두고 싶으신 분들은 그러셔도 됩니다.원래는 Customize HTML처럼 조작이 가능한것 같은데요.Tranquilpeak 테마에서는 제대로 동작을 안합니다.\n적용했으면 themes/tranquilpeak에서 아래처럼 빌드합니다.1$ grunt build\n이 후 hexo server 명령으로 결과물을 확인해주세요.\n마치며이 테마가 참 좋아서 고른건데 이것을 지원 안하는점이 매우 가슴이 아픕니다.하지만 커스터마이징이 무궁무진한 프로젝트인것 만큼 야매로 처리해봐야겠습니다.혹시 더 좋은 방법을 아시는 분은 알려주세요.","dateCreated":"2019-04-15T19:41:24+09:00","dateModified":"2019-04-15T21:56:29+09:00","datePublished":"2019-04-15T19:41:24+09:00","description":"Tranquilpeak는 hexo-related-popular-posts 지원을 안하는데요.","headline":"Github 블로그 만들기 with Hexo - related posts","image":["github_hexo.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/","keywords":"hexo, tranquilpeak","thumbnailUrl":"github_hexo.png"}</script>
+    <meta name="description" content="Tranquilpeak는 hexo-related-popular-posts 지원을 안하는데요.">
+<meta name="keywords" content="hexo,tranquilpeak">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Github 블로그 만들기 with Hexo - related posts">
+<meta property="og:url" content="https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/index.html">
+<meta property="og:site_name" content="밍피디">
+<meta property="og:description" content="Tranquilpeak는 hexo-related-popular-posts 지원을 안하는데요.">
+<meta property="og:locale" content="ko">
+<meta property="og:updated_time" content="2019-04-15T12:56:29.496Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Github 블로그 만들기 with Hexo - related posts">
+<meta name="twitter:description" content="Tranquilpeak는 hexo-related-popular-posts 지원을 안하는데요.">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png">
+    
+    
+        <meta property="og:image" content="https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/github_hexo.png">
+        <meta class="swiftype" name="image" data-type="enum" content="https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/github_hexo.png">
+    
+    
+    
+    <link rel="canonical" href="https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/">
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120538979-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120538979-3');
+    </script>
+
+
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">밍피디</a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+                </a>
+                <h4 class="sidebar-profile-name">밍피디</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>잔망스러운 개발자</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/ " title="Home">
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-categories" title="Categories">
+                    
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" title="Tags">
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" title="Archives">
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Archives</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="#about" title="About">
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Github 블로그 만들기 with Hexo - related posts
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-04-15T19:41:24+09:00">
+	
+		    4월 15, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/개발/">개발</a>, <a class="category-link" href="/categories/개발/hexo/">hexo</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt --><br><h1 id="table-of-contents">목차</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#hexo-related-popular-posts"><span class="toc-text">hexo-related-popular-posts</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#야매-커스터마이징"><span class="toc-text">야매 커스터마이징</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#마치며"><span class="toc-text">마치며</span></a></li></ol><p></p>
+<h2 id="hexo-related-popular-posts"><a href="#hexo-related-popular-posts" class="headerlink" title="hexo-related-popular-posts"></a>hexo-related-popular-posts</h2><p>관련 글을 표시하기 위한 <a href="https://www.npmjs.com/package/hexo-related-popular-posts" rel="external nofollow noopener noreferrer" target="_blank">hexo-related-popular-posts</a>가 있는데요.<br>단순히 태그 기반으로 관련 글을 보여주거나, Google Analytics를 연동해서 인기글, 방문자 카운터 등의 고급 기능도 지원합니다.<br>저는 가장 기본 기능인 태그 기반 관련글 기능만 사용하려고 합니다.<br>그러나 제가 이래저래 살펴봤지만 Tranquilpeak 테마가 이 라이브러리를 지원하지 않습니다.<br>그래서 <code>야매로</code> 커스터마이징을 해보았습니다.</p>
+<p>위 문서를 참고하여 아래와 같이 설치합니다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-related-popular-posts --save</span><br></pre></td></tr></table></figure> 
+<h2 id="야매-커스터마이징"><a href="#야매-커스터마이징" class="headerlink" title="야매 커스터마이징"></a>야매 커스터마이징</h2><p><code>themes/tranquilpeak/source/_css/components</code> 이 디렉토리에서 새 파일을 생성할건데요.<br>저의 경우 <code>_popular.scss</code>로 지었습니다.</p>
+<figure class="highlight scss"><figcaption><span>_popular.scss</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.popular-posts</span> &#123;</span><br><span class="line">    <span class="attribute">list-style</span>: none;</span><br><span class="line">    <span class="attribute">padding</span>-inline-start: <span class="number">3px</span>;</span><br><span class="line"></span><br><span class="line">    <span class="selector-class">.popular-posts-item</span> &#123;</span><br><span class="line">        <span class="attribute">text-overflow</span>: ellipsis;</span><br><span class="line">        <span class="attribute">white-space</span>: nowrap;</span><br><span class="line">        <span class="attribute">word-wrap</span>: normal;</span><br><span class="line">        <span class="attribute">overflow</span>: hidden;</span><br><span class="line">            </span><br><span class="line">        <span class="selector-class">.popular-posts-title</span> &#123;</span><br><span class="line">            <span class="attribute">display</span>: inline;</span><br><span class="line">            <span class="selector-tag">h3</span> &#123;</span><br><span class="line">                <span class="attribute">display</span>: inline;</span><br><span class="line">                <span class="selector-tag">a</span> &#123;</span><br><span class="line">                    <span class="attribute">margin-left</span>: <span class="number">10px</span>;</span><br><span class="line">                    <span class="attribute">color</span>: <span class="variable">$font-color-base</span>;</span><br><span class="line">                    <span class="attribute">font</span>: &#123;</span><br><span class="line">                        weight: <span class="number">300</span>;</span><br><span class="line">                        size: map-get(<span class="variable">$font-size</span>, base);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            &amp;:hover &#123;</span><br><span class="line">                <span class="attribute">text-decoration</span>: underline;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Change style of the list by adding font-awesome icon</span></span><br><span class="line">        &amp;::before &#123;</span><br><span class="line">            <span class="attribute">font-family</span>: <span class="string">'Font Awesome 5 Free'</span>;</span><br><span class="line">            <span class="attribute">font-weight</span>: <span class="number">600</span>;</span><br><span class="line">            <span class="attribute">content</span>:     <span class="string">'\f0da'</span>;</span><br><span class="line">            <span class="attribute">font-size</span>:   map-get(<span class="variable">$font-size</span>, small);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+<p><code>_archive.scss</code>를 참고해서 만들었습니다. Tranquilpeak 테마에서 지원을 안하는 관계로 css를 좀 억지로 만들 수 밖에 없었습니다.</p>
+<p>다음은 <code>themes/tranquilpeak/source/_css/tranquilpeak.scss</code>을 엽니다.<br><figure class="highlight scss"><figcaption><span>tranquilpeak.scss</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@<span class="keyword">import</span></span><br><span class="line">    <span class="string">'components/alert'</span>,</span><br><span class="line">    <span class="string">'components/archive'</span>,</span><br><span class="line">    //...</span><br><span class="line">    //...</span><br><span class="line">    <span class="string">'components/popular'</span>;  <span class="comment">// 위에서 생성한 것을 추가합니다.</span></span><br></pre></td></tr></table></figure></p>
+<p><code>@import</code> 구문에 방금 생성한 파일을 추가합니다.</p>
+<p>다음은 <code>themes/tranquilpeak/layout/_partial/post.ejs</code>를 엽니다.<br>위에서 추가한 스타일대로 관련 글 영역을 표시하려고 합니다.</p>
+<figure class="highlight html"><figcaption><span>post.ejs</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"post-footer"</span> <span class="attr">class</span>=<span class="string">"post-footer main-content-wrap"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">%</span> <span class="attr">if</span> ((<span class="attr">post.tags</span>) &amp;&amp; (<span class="attr">post.tags.length</span> &gt;</span> 0)) &#123; %&gt;</span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"post-footer-tags"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"text-color-light text-small"</span>&gt;</span><span class="tag">&lt;<span class="name">%=</span> <span class="attr">__</span>('<span class="attr">post.tagged_in</span>') %&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">%-</span> <span class="attr">partial</span>('<span class="attr">post</span>/<span class="attr">tag</span>', &#123;<span class="attr">tags:</span> <span class="attr">post.tags</span>&#125;)%&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">%</span> &#125; %&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--밍피디가 커스터마이징 해본 관련 글 영역--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"post-footer-tags"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"text-color-light text-small"</span>&gt;</span><span class="tag">&lt;<span class="name">%=</span> <span class="attr">__</span>('<span class="attr">post.related</span>') %&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">%-</span> <span class="attr">popular_posts</span>( &#123;&#125; , <span class="attr">post</span> ) %&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 끝 --&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">%</span> <span class="attr">if</span> (<span class="attr">post.actions</span> === <span class="string">undefined</span> || <span class="attr">post.actions</span>) &#123; %&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">%-</span> <span class="attr">partial</span>('<span class="attr">post</span>/<span class="attr">actions</span>', &#123;<span class="attr">postContent:</span> <span class="attr">postContent</span>&#125;) %&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">%</span> &#125; %&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">%</span> <span class="attr">if</span> (<span class="attr">post.comments</span>) &#123; %&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">%</span> <span class="attr">if</span> (<span class="attr">theme.disqus_shortname</span>) &#123; %&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">%-</span> <span class="attr">partial</span>('<span class="attr">post</span>/<span class="attr">disqus</span>') %&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">%</span> &#125; <span class="attr">else</span> <span class="attr">if</span> (<span class="attr">theme.gitment.enable</span>) &#123; %&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">%-</span> <span class="attr">partial</span>('<span class="attr">post</span>/<span class="attr">gitment</span>') %&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">%</span> &#125; %&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">%</span> &#125; %&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>#post-footer</code>를 찾습니다. 그리고 그 아래에 커스터마이징한것을 넣으면 됩니다.<br>물론 다른곳에 두고 싶으신 분들은 그러셔도 됩니다.<br>원래는 <a href="https://github.com/tea3/hexo-related-popular-posts/wiki/More-Settings#customize-html" rel="external nofollow noopener noreferrer" target="_blank">Customize HTML</a>처럼 조작이 가능한것 같은데요.<br>Tranquilpeak 테마에서는 제대로 동작을 안합니다.</p>
+<p>적용했으면 <code>themes/tranquilpeak</code>에서 아래처럼 빌드합니다.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ grunt build</span><br></pre></td></tr></table></figure></p>
+<p>이 후 <code>hexo server</code> 명령으로 결과물을 확인해주세요.</p>
+<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>이 테마가 참 좋아서 고른건데 이것을 지원 안하는점이 매우 가슴이 아픕니다.<br>하지만 커스터마이징이 무궁무진한 프로젝트인것 만큼 야매로 처리해봐야겠습니다.<br>혹시 더 좋은 방법을 아시는 분은 알려주세요.</p>
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/hexo/">hexo</a> <a class="tag tag--primary tag--small t-link" href="/tags/tranquilpeak/">tranquilpeak</a>
+
+            </div>
+        
+
+
+
+
+        <!--밍피디가 커스터마이징 해본 관련 글 영역-->
+        <div class="post-footer-tags">
+            <span class="text-color-light text-small">관련 글</span><br>
+            <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/14/github-blog-with-hexo-2/" title="Github 블로그 만들기 with Hexo - 글쓰기" rel="bookmark">Github 블로그 만들기 with Hexo - 글쓰기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/14/github-blog-with-hexo-3/" title="Github 블로그 만들기 with Hexo - 배포 및 기타 설정" rel="bookmark">Github 블로그 만들기 with Hexo - 배포 및 기타 설정</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/14/github-blog-with-hexo-1/" title="Github 블로그 만들기 with Hexo - 초기설정" rel="bookmark">Github 블로그 만들기 with Hexo - 초기설정</a></h3></div></li></ul>
+        </div>
+        <!-- 끝 -->
+
+
+
+
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/14/github-blog-with-hexo-3/" data-tooltip="Github 블로그 만들기 with Hexo - 배포 및 기타 설정" aria-label="다음: Github 블로그 만들기 with Hexo - 배포 및 기타 설정">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 밍피디. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/14/github-blog-with-hexo-3/" data-tooltip="Github 블로그 만들기 with Hexo - 배포 및 기타 설정" aria-label="다음: Github 블로그 만들기 with Hexo - 배포 및 기타 설정">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+            <h4 id="about-card-name">밍피디</h4>
+        
+            <div id="about-card-bio"><p>잔망스러운 개발자</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>개발자</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/bg.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/';
+                 
+                    this.page.identifier = '2019/04/15/github-blog-with-hexo-4/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mingpidi';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+
+    </body>
+</html>
