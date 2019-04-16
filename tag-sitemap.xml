@@ -4,14 +4,28 @@
 
     <url>
         <loc>https://mingpd.github.io/tags/tranquilpeak/</loc>
-        <lastmod>2019-04-16T01:22:16.653Z</lastmod>
+        <lastmod>2019-04-16T03:25:28.928Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://mingpd.github.io/tags/hexo/</loc>
-        <lastmod>2019-04-16T01:22:16.653Z</lastmod>
+        <lastmod>2019-04-16T03:25:28.928Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://mingpd.github.io/tags/github/</loc>
+        <lastmod>2019-04-16T03:25:04.320Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://mingpd.github.io/tags/java/</loc>
+        <lastmod>2019-04-16T02:27:52.233Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
@@ -31,22 +45,8 @@
     </url>
 
     <url>
-        <loc>https://mingpd.github.io/tags/github/</loc>
-        <lastmod>2019-04-15T13:27:33.369Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>https://mingpd.github.io/tags/angular/</loc>
         <lastmod>2019-04-15T04:17:47.176Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://mingpd.github.io/tags/java/</loc>
-        <lastmod>2019-04-15T04:11:07.977Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
