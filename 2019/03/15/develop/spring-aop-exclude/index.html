@@ -17,7 +17,7 @@
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"AOP에 대한 자세한 설명은 생략합니다. 아주 간략히 정리하면특정 조건(어느 패키지, 어느 클래스, 어느 메소드 등) 메소드를 수행할 때그 메소드의 실행 전, 실행 후, 실행 전 후에 참견하는 기능입니다.(그 특정 조건을 pointcut이라고 합니다.)\nSpring에서는 AspectJ라는 라이브러리를 이용합니다.\n준비물Spring boot에서 AOP 설정 하는 방법을 간략하게 정리하겠습니다.포스트 제목의 답을 구하신다면 과감히 스킵해주세요.\n12345&lt;!-- pom.xml --&gt;&lt;dependency&gt;  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;  &lt;artifactId&gt;spring-boot-starter-aop&lt;/artifactId&gt;&lt;/dependency&gt;\npom.xml에 의존성을 추가해봅시다.\n12345@Configuration@EnableAspectJAutoProxy // 이 어노테이션으로 활성화 해줍시다class SpringConfig &#123;    // ... &#125;\n설정은 위와같이 하면 되겠습니다. \n123456789101112131415161718192021import org.aspectj.lang.ProceedingJoinPointimport org.aspectj.lang.annotation.Aroundimport org.aspectj.lang.annotation.Aspectimport org.aspectj.lang.annotation.Pointcutimport org.springframework.stereotype.Component@Aspect@Componentclass LogExecutionTime &#123;    @Pointcut(\"execution(public * com.your.package.controller.rest.*.*(..))\")    @Around(\"controllerMethods()\") // 물론 이 안에 직접 pointcut을 넣어도 됩니다    fun logExecutionTime(joinPoint: ProceedingJoinPoint): Any? &#123;        val before = System.currentTimeMillis()        val result = joinPoint.proceed()        val after = System.currentTimeMillis()        println(after - before)        return result    &#125;&#125;\n(참고로 kotlin입니다.)\n메소드 실행 전 후의 timestamp를 통해서 메소드 실행 시간을 체크하는 예제입니다.@PointCut 부분을 참고하시면 알 수 있듯이com.your.package.controller.rest. 패키지 밑에 있는 모든 클래스의 모든 메소드에서 수행됩니다.\n특정 메소드만 실행 제외하기그런데 저기서 특정 메소드만 제외하고 싶으면 어떻게 할까요?방법은 두가지입니다.첫째, 특정 메소드 빼고 모든 메소드를 명시하기 (이럼 안되겠죠)둘째, 제외할 메소드를 마킹하고 그것만 안타게 처리하기\n여기서 두번째 방법을 소개합니다.\n123456789import java.lang.annotation.ElementType;import java.lang.annotation.Retention;import java.lang.annotation.RetentionPolicy;import java.lang.annotation.Target;@Target(&#123; ElementType.METHOD&#125;)@Retention(RetentionPolicy.RUNTIME)public @interface NoLogging &#123;&#125;\n위 처럼 NoLogging이라는 어노테이션을 하나 만듭시다.(@Target, @Retention 등의 설명은 생략합니다.)\n12345678910111213import org.springframework.web.bind.annotation.GetMappingimport org.springframework.web.bind.annotation.RequestMappingimport org.springframework.web.bind.annotation.RestControllerimport com.your.package.annotation.NoLogging@RestControllerclass AdminController &#123;    @NoLogging    @GetMapping(\"ping\")    fun ping(): String &#123;        return \"pong\"    &#125;&#125;\n위처럼 생략하고자하는 메소드 위에 @NoLogging 어노테이션을 붙여봅시다.\n123@Pointcut(\"execution(public * com.your.package.controller.rest.*.*(..)) \t\t\t&amp;&amp; !@target(com.your.package.annotation.NoLogging)\")fun controllerMethods() &#123;&#125;\n@PointCut 안의 내용을 위와같이 수정합니다.!@Target 부분을 참고해주세요 (!@Annotation도 가능할겁니다.)\n@Around로 걸려있는 메소드에 break point를 걸며 테스트해봅시다.skip 되는것을 알 수 있습니다.\n마치며생각보다 별거 아니네요.","dateCreated":"2019-03-15T18:41:21+09:00","dateModified":"2019-04-15T22:33:11+09:00","datePublished":"2019-03-15T18:41:21+09:00","description":"AOP는 특정 패키지, 특정 클래스 등의 메소드를 수행할 때그 메소드의 실행 전, 실행 후, 실행 전 후에 참견하는 기능입니다.","headline":"spring, aop 특정 조건에서 실행 제외하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/15/develop/spring-aop-exclude/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/15/develop/spring-aop-exclude/","keywords":"spring, aop"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"AOP에 대한 자세한 설명은 생략합니다. 아주 간략히 정리하면특정 조건(어느 패키지, 어느 클래스, 어느 메소드 등) 메소드를 수행할 때그 메소드의 실행 전, 실행 후, 실행 전 후에 참견하는 기능입니다.(그 특정 조건을 pointcut이라고 합니다.)\nSpring에서는 AspectJ라는 라이브러리를 이용합니다.\n준비물Spring boot에서 AOP 설정 하는 방법을 간략하게 정리하겠습니다.포스트 제목의 답을 구하신다면 과감히 스킵해주세요.\n12345&lt;!-- pom.xml --&gt;&lt;dependency&gt;  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;  &lt;artifactId&gt;spring-boot-starter-aop&lt;/artifactId&gt;&lt;/dependency&gt;\npom.xml에 의존성을 추가해봅시다.\n12345@Configuration@EnableAspectJAutoProxy // 이 어노테이션으로 활성화 해줍시다class SpringConfig &#123;    // ... &#125;\n설정은 위와같이 하면 되겠습니다. \n123456789101112131415161718192021import org.aspectj.lang.ProceedingJoinPointimport org.aspectj.lang.annotation.Aroundimport org.aspectj.lang.annotation.Aspectimport org.aspectj.lang.annotation.Pointcutimport org.springframework.stereotype.Component@Aspect@Componentclass LogExecutionTime &#123;    @Pointcut(\"execution(public * com.your.package.controller.rest.*.*(..))\")    @Around(\"controllerMethods()\") // 물론 이 안에 직접 pointcut을 넣어도 됩니다    fun logExecutionTime(joinPoint: ProceedingJoinPoint): Any? &#123;        val before = System.currentTimeMillis()        val result = joinPoint.proceed()        val after = System.currentTimeMillis()        println(after - before)        return result    &#125;&#125;\n(참고로 kotlin입니다.)\n메소드 실행 전 후의 timestamp를 통해서 메소드 실행 시간을 체크하는 예제입니다.@PointCut 부분을 참고하시면 알 수 있듯이com.your.package.controller.rest. 패키지 밑에 있는 모든 클래스의 모든 메소드에서 수행됩니다.\n특정 메소드만 실행 제외하기그런데 저기서 특정 메소드만 제외하고 싶으면 어떻게 할까요?방법은 두가지입니다.첫째, 특정 메소드 빼고 모든 메소드를 명시하기 (이럼 안되겠죠)둘째, 제외할 메소드를 마킹하고 그것만 안타게 처리하기\n여기서 두번째 방법을 소개합니다.\n123456789import java.lang.annotation.ElementType;import java.lang.annotation.Retention;import java.lang.annotation.RetentionPolicy;import java.lang.annotation.Target;@Target(&#123; ElementType.METHOD&#125;)@Retention(RetentionPolicy.RUNTIME)public @interface NoLogging &#123;&#125;\n위 처럼 NoLogging이라는 어노테이션을 하나 만듭시다.(@Target, @Retention 등의 설명은 생략합니다.)\n12345678910111213import org.springframework.web.bind.annotation.GetMappingimport org.springframework.web.bind.annotation.RequestMappingimport org.springframework.web.bind.annotation.RestControllerimport com.your.package.annotation.NoLogging@RestControllerclass AdminController &#123;    @NoLogging    @GetMapping(\"ping\")    fun ping(): String &#123;        return \"pong\"    &#125;&#125;\n위처럼 생략하고자하는 메소드 위에 @NoLogging 어노테이션을 붙여봅시다.\n123@Pointcut(\"execution(public * com.your.package.controller.rest.*.*(..)) \t\t\t&amp;&amp; !@target(com.your.package.annotation.NoLogging)\")fun controllerMethods() &#123;&#125;\n@PointCut 안의 내용을 위와같이 수정합니다.!@Target 부분을 참고해주세요 (!@Annotation도 가능할겁니다.)\n@Around로 걸려있는 메소드에 break point를 걸며 테스트해봅시다.skip 되는것을 알 수 있습니다.\n마치며생각보다 별거 아니네요.","dateCreated":"2019-03-15T18:41:21+09:00","dateModified":"2019-04-15T22:33:11+09:00","datePublished":"2019-03-15T18:41:21+09:00","description":"AOP는 특정 패키지, 특정 클래스 등의 메소드를 수행할 때그 메소드의 실행 전, 실행 후, 실행 전 후에 참견하는 기능입니다.","headline":"spring, aop 특정 조건에서 실행 제외하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/15/develop/spring-aop-exclude/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/15/develop/spring-aop-exclude/","keywords":"spring, aop"}</script>
     <meta name="description" content="AOP는 특정 패키지, 특정 클래스 등의 메소드를 수행할 때그 메소드의 실행 전, 실행 후, 실행 전 후에 참견하는 기능입니다.">
 <meta name="keywords" content="spring,aop">
 <meta property="og:type" content="blog">
@@ -132,10 +132,10 @@
             
                 <li class="sidebar-button">
                     
-                        <a class="sidebar-button-link " href="/category-일상" title="일상노트">
+                        <a class="sidebar-button-link " href="/category-일상" title="소소한 이야기">
                     
                         <i class="sidebar-button-icon fa fa-calendar" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">일상노트</span>
+                        <span class="sidebar-button-desc">소소한 이야기</span>
                     </a>
             </li>
             
@@ -145,15 +145,6 @@
                     
                         <i class="sidebar-button-icon fa fa-code" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">개발노트</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a class="sidebar-button-link " href="/category-테크" title="테크노트">
-                    
-                        <i class="sidebar-button-icon fa fa-robot" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">테크노트</span>
                     </a>
             </li>
             
@@ -181,6 +172,19 @@
                     
                         <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://cfdf.tistory.com/" target="_blank" rel="external nofollow noopener noreferrer" title="티스토리">
+                    
+                        <i class="sidebar-button-icon fab fa-tumblr" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">티스토리</span>
                     </a>
             </li>
             

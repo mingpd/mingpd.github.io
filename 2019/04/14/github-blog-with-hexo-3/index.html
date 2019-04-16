@@ -17,7 +17,7 @@
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"\nGithub Repository 설정Github 계정 생성에 대한 얘기는 생략합니다.중요한 것은 mingpd.github.io 도메인을 사용하고 싶다면 가입 시 반드시 유저명을 mingpd로 해야합니다.\n두 개의 Repository를 준비하면 되겠습니다.\n\npublic 권한의 &lt;자기계정명&gt;.github.io 을 이름으로 갖는 Repository\n블로그 프로젝트를 관리할 Repository\n\n1번의 경우 Github Page 기능을 사용하기 위해 반드시 저 형식을 갖춰야합니다. 그렇지 않으면 Page 기능이 활성화가 안됩니다.\n왜 두개의 저장소가 필요한지 간략히 설명을 드리겠습니다.포토샵의경우 작업시 사용하는 psd 파일이 있고, 결과물인 png 파일이 있습니다.쉽게말해 1번에는 png 파일을 내보내는것이고, 2번에는 psd 작업 파일을 관리한다고 생각하면 됩니다.\nGithub Page 배포 설정Deployment 이 문서에 설명이 매우 잘 되어있으니 참고해주세요.Repository는 위에서 말한것과 같이 준비되었다고 가정합니다.우선 Github Page 배포를 설정하겠습니다.앞서 라이브러리를 설치해야 합니다.1$ npm install hexo-deployer-git --save\n_config.yml의 git 부분을 아래와 같이 설정합니다.1234deploy:  type: git  repo: https://github.com/mingpd/mingpd.github.io.git  branch: master   # 혹시 다른 브랜치로 쓰실거면 바꿔주세요\n이제 아래를 실행해 주면 배포됩니다.1$ hexo deploy\n작업파일 Git 설정지금 이것과 별개로 작업 디렉토리에서 작업용 Git 설정을 해주시면 되는데요.아래처럼 하면 되겠습니다.1234$ git init$ git remote set-url origin https://github.com/작업용/깃주소.git...# add, push 알아서 해주세요.\n(git의 pull, add, commit, push 관련 설명은 생략하겠습니다.)참고로 제가 만든 .gitignore 는 아래와 같으니 참고해주세요.12345678.sass-cacheassetsnode_modulespublic.idea.deploy_gitthemes/landscape  # 기본테마인데 삭제 안해서 푸시만 안하게 하려고db.json\nDISQUSDISQUS에 가입합니다.가입 후 I want to isntall Disqus on my site를 선택하여 세팅하면 됩니다.https://계정명.disqus.com/admin/settings/general/에 있는 shortname을themes/tranquilpeak/_config.yml에 세팅해주면 되겠습니다.\n만약에 로딩이 잘 되지 않는다면 아래 사이트를 참고하여 url 설정을 다시 해 봅시다.disqus에서-we-were-unable-to-load-disqus-오류가-발생하는-경우/근데 대부분 로딩이 되지 않는 이유는 shortname이 틀려서 일거에요.  \n그리고 DISQUS 언어세팅에 한글이 있었다가 없어졌다고 합니다.그러나 사실 언어선택 select box에서만 없어졌다. 입니다.따라서 dom을 가로채 select box에 넣어주면 되겠습니다.이 링크를 참고해주세요. 디스커스 Disqus 한글 세팅을 해보자 편법(?)으로\n검색엔진 노출 준비이것은 정리가 잘 된 글의 링크를 첨부합니다.검색 엔진 최적화(SEO)에 유용한 Hexo 플러그인Hexo SEO - 하루 만에 검색 엔진 최적화 시키기\n애드센스 설정Hexo 블로그에 구글 애드센스(Adsense) 추가하기\n마치며사실 저도 만들어가면서 이 글을 쓰고있습니다.많이 번거로울 줄 알았는데 생각보단 할만한것 같습니다. 그리고 매우 깔끔하고요.조금 더 운영해보고 티스토리에 있는 데이터를 이전해올지 고민을 해봐야겠습니다.","dateCreated":"2019-04-14T20:41:24+09:00","dateModified":"2019-04-15T22:13:59+09:00","datePublished":"2019-04-14T20:41:24+09:00","description":"public 권한의 &lt;자기계정명&gt;.github.io 을 이름으로 갖는 Repository를 생성합니다.","headline":"Github 블로그 만들기 with Hexo - 배포 및 기타 설정","image":["github_hexo.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/04/14/github-blog-with-hexo-3/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/04/14/github-blog-with-hexo-3/","keywords":"hexo, tranquilpeak","thumbnailUrl":"github_hexo.png"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"\nGithub Repository 설정Github 계정 생성에 대한 얘기는 생략합니다.중요한 것은 mingpd.github.io 도메인을 사용하고 싶다면 가입 시 반드시 유저명을 mingpd로 해야합니다.\n두 개의 Repository를 준비하면 되겠습니다.\n\npublic 권한의 &lt;자기계정명&gt;.github.io 을 이름으로 갖는 Repository\n블로그 프로젝트를 관리할 Repository\n\n1번의 경우 Github Page 기능을 사용하기 위해 반드시 저 형식을 갖춰야합니다. 그렇지 않으면 Page 기능이 활성화가 안됩니다.\n왜 두개의 저장소가 필요한지 간략히 설명을 드리겠습니다.포토샵의경우 작업시 사용하는 psd 파일이 있고, 결과물인 png 파일이 있습니다.쉽게말해 1번에는 png 파일을 내보내는것이고, 2번에는 psd 작업 파일을 관리한다고 생각하면 됩니다.\nGithub Page 배포 설정Deployment 이 문서에 설명이 매우 잘 되어있으니 참고해주세요.Repository는 위에서 말한것과 같이 준비되었다고 가정합니다.우선 Github Page 배포를 설정하겠습니다.앞서 라이브러리를 설치해야 합니다.1$ npm install hexo-deployer-git --save\n_config.yml의 git 부분을 아래와 같이 설정합니다.1234deploy:  type: git  repo: https://github.com/mingpd/mingpd.github.io.git  branch: master   # 혹시 다른 브랜치로 쓰실거면 바꿔주세요\n이제 아래를 실행해 주면 배포됩니다.1$ hexo deploy\n작업파일 Git 설정지금 이것과 별개로 작업 디렉토리에서 작업용 Git 설정을 해주시면 되는데요.아래처럼 하면 되겠습니다.1234$ git init$ git remote set-url origin https://github.com/작업용/깃주소.git...# add, push 알아서 해주세요.\n(git의 pull, add, commit, push 관련 설명은 생략하겠습니다.)참고로 제가 만든 .gitignore 는 아래와 같으니 참고해주세요.12345678.sass-cacheassetsnode_modulespublic.idea.deploy_gitthemes/landscape  # 기본테마인데 삭제 안해서 푸시만 안하게 하려고db.json\nDISQUSDISQUS에 가입합니다.가입 후 I want to isntall Disqus on my site를 선택하여 세팅하면 됩니다.https://계정명.disqus.com/admin/settings/general/에 있는 shortname을themes/tranquilpeak/_config.yml에 세팅해주면 되겠습니다.\n만약에 로딩이 잘 되지 않는다면 아래 사이트를 참고하여 url 설정을 다시 해 봅시다.disqus에서-we-were-unable-to-load-disqus-오류가-발생하는-경우/근데 대부분 로딩이 되지 않는 이유는 shortname이 틀려서 일거에요.  \n그리고 DISQUS 언어세팅에 한글이 있었다가 없어졌다고 합니다.그러나 사실 언어선택 select box에서만 없어졌다. 입니다.따라서 dom을 가로채 select box에 넣어주면 되겠습니다.이 링크를 참고해주세요. 디스커스 Disqus 한글 세팅을 해보자 편법(?)으로\n검색엔진 노출 준비이것은 정리가 잘 된 글의 링크를 첨부합니다.검색 엔진 최적화(SEO)에 유용한 Hexo 플러그인Hexo SEO - 하루 만에 검색 엔진 최적화 시키기\n애드센스 설정Hexo 블로그에 구글 애드센스(Adsense) 추가하기\n마치며사실 저도 만들어가면서 이 글을 쓰고있습니다.많이 번거로울 줄 알았는데 생각보단 할만한것 같습니다. 그리고 매우 깔끔하고요.조금 더 운영해보고 티스토리에 있는 데이터를 이전해올지 고민을 해봐야겠습니다.","dateCreated":"2019-04-14T20:41:24+09:00","dateModified":"2019-04-15T22:13:59+09:00","datePublished":"2019-04-14T20:41:24+09:00","description":"public 권한의 &lt;자기계정명&gt;.github.io 을 이름으로 갖는 Repository를 생성합니다.","headline":"Github 블로그 만들기 with Hexo - 배포 및 기타 설정","image":["github_hexo.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/04/14/github-blog-with-hexo-3/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/04/14/github-blog-with-hexo-3/","keywords":"hexo, tranquilpeak","thumbnailUrl":"github_hexo.png"}</script>
     <meta name="description" content="public 권한의 &amp;lt;자기계정명&amp;gt;.github.io 을 이름으로 갖는 Repository를 생성합니다.">
 <meta name="keywords" content="hexo,tranquilpeak">
 <meta property="og:type" content="blog">
@@ -135,10 +135,10 @@
             
                 <li class="sidebar-button">
                     
-                        <a class="sidebar-button-link " href="/category-일상" title="일상노트">
+                        <a class="sidebar-button-link " href="/category-일상" title="소소한 이야기">
                     
                         <i class="sidebar-button-icon fa fa-calendar" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">일상노트</span>
+                        <span class="sidebar-button-desc">소소한 이야기</span>
                     </a>
             </li>
             
@@ -148,15 +148,6 @@
                     
                         <i class="sidebar-button-icon fa fa-code" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">개발노트</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a class="sidebar-button-link " href="/category-테크" title="테크노트">
-                    
-                        <i class="sidebar-button-icon fa fa-robot" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">테크노트</span>
                     </a>
             </li>
             
@@ -184,6 +175,19 @@
                     
                         <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://cfdf.tistory.com/" target="_blank" rel="external nofollow noopener noreferrer" title="티스토리">
+                    
+                        <i class="sidebar-button-icon fab fa-tumblr" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">티스토리</span>
                     </a>
             </li>
             
@@ -270,7 +274,7 @@
         
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">관련 글</span><br>
-                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/14/github-blog-with-hexo-2/" title="Github 블로그 만들기 with Hexo - 글쓰기" rel="bookmark">Github 블로그 만들기 with Hexo - 글쓰기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/15/github-blog-with-hexo-4/" title="Github 블로그 만들기 with Hexo - related posts" rel="bookmark">Github 블로그 만들기 with Hexo - related posts</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/16/github-blog-with-hexo-5/" title="Github 블로그 만들기 with Hexo - 카테고리 보기 커스터마이징" rel="bookmark">Github 블로그 만들기 with Hexo - 카테고리 보기 커스터마이징</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/14/github-blog-with-hexo-1/" title="Github 블로그 만들기 with Hexo - 초기설정" rel="bookmark">Github 블로그 만들기 with Hexo - 초기설정</a></h3></div></li></ul>
+                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/16/github-blog-with-hexo-5/" title="Github 블로그 만들기 with Hexo - 카테고리 보기 커스터마이징" rel="bookmark">Github 블로그 만들기 with Hexo - 카테고리 보기 커스터마이징</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/15/github-blog-with-hexo-4/" title="Github 블로그 만들기 with Hexo - related posts" rel="bookmark">Github 블로그 만들기 with Hexo - related posts</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/14/github-blog-with-hexo-2/" title="Github 블로그 만들기 with Hexo - 글쓰기" rel="bookmark">Github 블로그 만들기 with Hexo - 글쓰기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/14/github-blog-with-hexo-1/" title="Github 블로그 만들기 with Hexo - 초기설정" rel="bookmark">Github 블로그 만들기 with Hexo - 초기설정</a></h3></div></li></ul>
             </div>
         
         <!-- 끝 -->

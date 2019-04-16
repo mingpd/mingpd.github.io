@@ -17,7 +17,7 @@
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"\nTMI 투척전 서버개발자 인데요. 주로 spring을 다룹니다. 그러나 서버개발자라도 프론트를 다룰일이 생깁니다.바로 운영툴 때문이죠.원래 운영툴은 대충대충 만듭니다. 그래서 spring에서 자주쓰는 템플릿 엔진을 주로 사용하곤 했습니다.(freemarker, velocity 등등)\n그러나 운영자의 요구사항이 많아지고, 기능이 점점 추가되다보면서버 로직과 강하게 결합된 템플릿 엔진의 코드를 보면 한숨이 절로 나오게 됩니다.그래서 프론트를 제대로 다루기 위한 솔루션 도입을 검토하는데요.저흰 angular를 도입했습니다.\n개인적으로 angular는 다른 js 솔루션들 보다spring mvc에 익숙한 서버개발자들이 오히려 구조를 파악하기에 쉬운 것 같습니다.(물론 풀스펙의 프레임워크다보니 진입 장벽은 있습니다.)\nrouting 할 때 매번 새로고침 시키는 방법angular에서 상단, 왼쪽 메뉴에 route 구성을 해줘야하는데요.이때 현재 라우팅 된 메뉴를 한번 더 클릭하면 어떤일이 발생할까요?정답은.. 아무일도 일어나지 않습니다.\n그러려니 하는 찰나에 기획자분께서 요청을 주십니다.“현재 페이지를 여는 메뉴를 한번 더 눌렀을때 이 페이지를 다시 로드하게 해주세요.”\n\n당연히 angular route 옵션에 이런게 있을줄 알았는데 아무리 찾아도 없습니다.그래서 front 개발자분께 자문을 구해봅니다.\n“이러이러한 angular 옵션이 있나요?”...“Nope”\n\n구현다만 이분들도 같은 요구사항을 처리한 적이 있으셔서 자체적으로 방법을 찾으셨는데요.\n123456789load(href: string) &#123;   this.router.navigateByUrl('/blank-for-reload', &#123;     skipLocationChange: true,   &#125;).then(     () =&gt; &#123;       this.router.navigateByUrl(href);     &#125;   ); &#125;\n그분들의 얘기를 듣고 구현한 결과입니다.위는 Menu를 구성하는 component 안에 있는 한 메소드입니다.메뉴를 클릭하면 직접 router의 navigateByUrl을 부르지 않고 위처럼 한번 감싼 load 메소드를 호출합니다.\n감이 오시나요? /blank-for-reload 패스에 아무것도 없는 빈화면 컴포넌트 만들어둡니다.그 후 메뉴에서 특정 버튼을 누르면 빈화면으로 한 번 갔다가 의도한 패스로 다시 보내버립니다.참 쉽죠?주의할 점은 반드시 skipLocationChange: true 로 지정해줘야 한다는 점입니다.\nhttps://angular.io/api/router/NavigationExtras#skipLocationChange 여기를 보면 알수 있듯이이것을 true 로 지정해야 뒤로가기 스택에 쌓이지 않습니다.\n마치며정답이 있어야만 구현 할 수 있는게 아닙니다. 걍 돌아가면 그게 정답인것이죠.(이 일을 몇년 해보면서 느낍니다.)","dateCreated":"2019-03-12T15:26:00+09:00","dateModified":"2019-04-15T13:17:47+09:00","datePublished":"2019-03-12T15:26:00+09:00","description":"현재 라우팅 된 메뉴를 한번 더 클릭하면 어떤일이 발생할까요?…아무일도 일어나지 않습니다.","headline":"angular, 같은 패스로 또 route 할 때 강제 새로고침 시키기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/12/develop/angular-force-refresh/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/12/develop/angular-force-refresh/","keywords":"angular"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"\nTMI 투척전 서버개발자 인데요. 주로 spring을 다룹니다. 그러나 서버개발자라도 프론트를 다룰일이 생깁니다.바로 운영툴 때문이죠.원래 운영툴은 대충대충 만듭니다. 그래서 spring에서 자주쓰는 템플릿 엔진을 주로 사용하곤 했습니다.(freemarker, velocity 등등)\n그러나 운영자의 요구사항이 많아지고, 기능이 점점 추가되다보면서버 로직과 강하게 결합된 템플릿 엔진의 코드를 보면 한숨이 절로 나오게 됩니다.그래서 프론트를 제대로 다루기 위한 솔루션 도입을 검토하는데요.저흰 angular를 도입했습니다.\n개인적으로 angular는 다른 js 솔루션들 보다spring mvc에 익숙한 서버개발자들이 오히려 구조를 파악하기에 쉬운 것 같습니다.(물론 풀스펙의 프레임워크다보니 진입 장벽은 있습니다.)\nrouting 할 때 매번 새로고침 시키는 방법angular에서 상단, 왼쪽 메뉴에 route 구성을 해줘야하는데요.이때 현재 라우팅 된 메뉴를 한번 더 클릭하면 어떤일이 발생할까요?정답은.. 아무일도 일어나지 않습니다.\n그러려니 하는 찰나에 기획자분께서 요청을 주십니다.“현재 페이지를 여는 메뉴를 한번 더 눌렀을때 이 페이지를 다시 로드하게 해주세요.”\n\n당연히 angular route 옵션에 이런게 있을줄 알았는데 아무리 찾아도 없습니다.그래서 front 개발자분께 자문을 구해봅니다.\n“이러이러한 angular 옵션이 있나요?”...“Nope”\n\n구현다만 이분들도 같은 요구사항을 처리한 적이 있으셔서 자체적으로 방법을 찾으셨는데요.\n123456789load(href: string) &#123;   this.router.navigateByUrl('/blank-for-reload', &#123;     skipLocationChange: true,   &#125;).then(     () =&gt; &#123;       this.router.navigateByUrl(href);     &#125;   ); &#125;\n그분들의 얘기를 듣고 구현한 결과입니다.위는 Menu를 구성하는 component 안에 있는 한 메소드입니다.메뉴를 클릭하면 직접 router의 navigateByUrl을 부르지 않고 위처럼 한번 감싼 load 메소드를 호출합니다.\n감이 오시나요? /blank-for-reload 패스에 아무것도 없는 빈화면 컴포넌트 만들어둡니다.그 후 메뉴에서 특정 버튼을 누르면 빈화면으로 한 번 갔다가 의도한 패스로 다시 보내버립니다.참 쉽죠?주의할 점은 반드시 skipLocationChange: true 로 지정해줘야 한다는 점입니다.\nhttps://angular.io/api/router/NavigationExtras#skipLocationChange 여기를 보면 알수 있듯이이것을 true 로 지정해야 뒤로가기 스택에 쌓이지 않습니다.\n마치며정답이 있어야만 구현 할 수 있는게 아닙니다. 걍 돌아가면 그게 정답인것이죠.(이 일을 몇년 해보면서 느낍니다.)","dateCreated":"2019-03-12T15:26:00+09:00","dateModified":"2019-04-15T13:17:47+09:00","datePublished":"2019-03-12T15:26:00+09:00","description":"현재 라우팅 된 메뉴를 한번 더 클릭하면 어떤일이 발생할까요?…아무일도 일어나지 않습니다.","headline":"angular, 같은 패스로 또 route 할 때 강제 새로고침 시키기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/12/develop/angular-force-refresh/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/12/develop/angular-force-refresh/","keywords":"angular"}</script>
     <meta name="description" content="현재 라우팅 된 메뉴를 한번 더 클릭하면 어떤일이 발생할까요?…아무일도 일어나지 않습니다.">
 <meta name="keywords" content="angular">
 <meta property="og:type" content="blog">
@@ -132,10 +132,10 @@
             
                 <li class="sidebar-button">
                     
-                        <a class="sidebar-button-link " href="/category-일상" title="일상노트">
+                        <a class="sidebar-button-link " href="/category-일상" title="소소한 이야기">
                     
                         <i class="sidebar-button-icon fa fa-calendar" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">일상노트</span>
+                        <span class="sidebar-button-desc">소소한 이야기</span>
                     </a>
             </li>
             
@@ -145,15 +145,6 @@
                     
                         <i class="sidebar-button-icon fa fa-code" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">개발노트</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a class="sidebar-button-link " href="/category-테크" title="테크노트">
-                    
-                        <i class="sidebar-button-icon fa fa-robot" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">테크노트</span>
                     </a>
             </li>
             
@@ -181,6 +172,19 @@
                     
                         <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://cfdf.tistory.com/" target="_blank" rel="external nofollow noopener noreferrer" title="티스토리">
+                    
+                        <i class="sidebar-button-icon fab fa-tumblr" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">티스토리</span>
                     </a>
             </li>
             

@@ -17,7 +17,7 @@
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"\ngithub 인증을 http로 하면 별 문제가 없습니다만ssh 인증으로 사용할 때, 만약 자신의 ssh key를 여러 repository에 등록하려고 하면 어떻게 될까요?\n\n아마도 위와 같은 상황이 연출될 것입니다.이미 해당 ssh key가 다른 repository에 이미 등록되어 이 키를 재활용 할 수가 없는것이죠.\n해결방법방법은 간단합니다. 특정 repository 마다 ssh key를 각각에 맞게 여러개 만들어서github repository 설정에서 맞게 등록해주면 됩니다.\n우선 ssh-keygen 명령을 통해 필요한 ssh key들을 만들어 봅시다.(참고 Git-서버-SSH-공개키-만들기)\n12345678910$ ssh-keygenGenerating public/private rsa key pair.Enter file in which to save the key (/자신의/홈패스/.ssh/id_rsa):Created directory &apos;/자신의/홈패스/.ssh&apos;.Enter passphrase (empty for no passphrase):Enter same passphrase again:Your identification has been saved in /자신의/홈패스/.ssh/id_rsa.Your public key has been saved in /자신의/홈패스/.ssh/id_rsa.pub.The key fingerprint is:\n이처럼 파일명을 지정해 주지 않으면 id_rsa.pub , id_rsa로 파일이 생성됩니다.필요한 만큼 ssh key 생성을 하도록 합시다.\n그 다음은 특정 repository 마다 ssh key를 지정합시다.\n123456789$ vi ~/.ssh/config Host project1.github.com  Hostname github.com  IdentityFile ~/.ssh/id_rsa1 Host project2.github.com  Hostname github.com  IdentityFile ~/.ssh/id_rsa2\nHost 뒤에는 내가 식별하기 쉬운 가상의 path를 알아보기 쉽게 넣어주세요.Hostname은 실제 github 주소를 입력합니다.IdentityFile은 각 repository에 사용할 ssh key 파일의 패스를 정확히 입력해주세요.\n이제 본인 로컬에 있는 git 프로젝트의 remote를 위에서 설정한 Host로 바꿔주세요.123456$ git remote -v origin  git@github.com:user/project1.git (fetch)origin  git@github.com:user/project1.git (push) $ git remote set-url origin git@project1.github.com:user/project1.git\nproject2 도 같은 방법으로 바꿔주도록 합시다.\n마치며http로 하면 되지 뭐하러 이렇게 하느냐고 하실 수 있지만한 서버에서 여러 프로젝트로 deploy key를 설정할때는 위 방법을 사용하면 되겠습니다.(서버에서 내 아이디/패스워드를 넣을순 없으니까요)","dateCreated":"2019-03-14T19:27:21+09:00","dateModified":"2019-04-16T12:25:04+09:00","datePublished":"2019-03-14T19:27:21+09:00","description":"만약 자신의 ssh key를 여러 repository에 등록하려고 하면 어떻게 될까요?","headline":"github, 여러 repository에 대해 ssh 설정 하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/14/develop/github-multiple-ssh/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/14/develop/github-multiple-ssh/","keywords":"github"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"\ngithub 인증을 http로 하면 별 문제가 없습니다만ssh 인증으로 사용할 때, 만약 자신의 ssh key를 여러 repository에 등록하려고 하면 어떻게 될까요?\n\n아마도 위와 같은 상황이 연출될 것입니다.이미 해당 ssh key가 다른 repository에 이미 등록되어 이 키를 재활용 할 수가 없는것이죠.\n해결방법방법은 간단합니다. 특정 repository 마다 ssh key를 각각에 맞게 여러개 만들어서github repository 설정에서 맞게 등록해주면 됩니다.\n우선 ssh-keygen 명령을 통해 필요한 ssh key들을 만들어 봅시다.(참고 Git-서버-SSH-공개키-만들기)\n12345678910$ ssh-keygenGenerating public/private rsa key pair.Enter file in which to save the key (/자신의/홈패스/.ssh/id_rsa):Created directory &apos;/자신의/홈패스/.ssh&apos;.Enter passphrase (empty for no passphrase):Enter same passphrase again:Your identification has been saved in /자신의/홈패스/.ssh/id_rsa.Your public key has been saved in /자신의/홈패스/.ssh/id_rsa.pub.The key fingerprint is:\n이처럼 파일명을 지정해 주지 않으면 id_rsa.pub , id_rsa로 파일이 생성됩니다.필요한 만큼 ssh key 생성을 하도록 합시다.\n그 다음은 특정 repository 마다 ssh key를 지정합시다.\n123456789$ vi ~/.ssh/config Host project1.github.com  Hostname github.com  IdentityFile ~/.ssh/id_rsa1 Host project2.github.com  Hostname github.com  IdentityFile ~/.ssh/id_rsa2\nHost 뒤에는 내가 식별하기 쉬운 가상의 path를 알아보기 쉽게 넣어주세요.Hostname은 실제 github 주소를 입력합니다.IdentityFile은 각 repository에 사용할 ssh key 파일의 패스를 정확히 입력해주세요.\n이제 본인 로컬에 있는 git 프로젝트의 remote를 위에서 설정한 Host로 바꿔주세요.123456$ git remote -v origin  git@github.com:user/project1.git (fetch)origin  git@github.com:user/project1.git (push) $ git remote set-url origin git@project1.github.com:user/project1.git\nproject2 도 같은 방법으로 바꿔주도록 합시다.\n마치며http로 하면 되지 뭐하러 이렇게 하느냐고 하실 수 있지만한 서버에서 여러 프로젝트로 deploy key를 설정할때는 위 방법을 사용하면 되겠습니다.(서버에서 내 아이디/패스워드를 넣을순 없으니까요)","dateCreated":"2019-03-14T19:27:21+09:00","dateModified":"2019-04-16T12:25:04+09:00","datePublished":"2019-03-14T19:27:21+09:00","description":"만약 자신의 ssh key를 여러 repository에 등록하려고 하면 어떻게 될까요?","headline":"github, 여러 repository에 대해 ssh 설정 하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/14/develop/github-multiple-ssh/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/14/develop/github-multiple-ssh/","keywords":"github"}</script>
     <meta name="description" content="만약 자신의 ssh key를 여러 repository에 등록하려고 하면 어떻게 될까요?">
 <meta name="keywords" content="github">
 <meta property="og:type" content="blog">
@@ -134,10 +134,10 @@
             
                 <li class="sidebar-button">
                     
-                        <a class="sidebar-button-link " href="/category-일상" title="일상노트">
+                        <a class="sidebar-button-link " href="/category-일상" title="소소한 이야기">
                     
                         <i class="sidebar-button-icon fa fa-calendar" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">일상노트</span>
+                        <span class="sidebar-button-desc">소소한 이야기</span>
                     </a>
             </li>
             
@@ -147,15 +147,6 @@
                     
                         <i class="sidebar-button-icon fa fa-code" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">개발노트</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a class="sidebar-button-link " href="/category-테크" title="테크노트">
-                    
-                        <i class="sidebar-button-icon fa fa-robot" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">테크노트</span>
                     </a>
             </li>
             
@@ -183,6 +174,19 @@
                     
                         <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://cfdf.tistory.com/" target="_blank" rel="external nofollow noopener noreferrer" title="티스토리">
+                    
+                        <i class="sidebar-button-icon fab fa-tumblr" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">티스토리</span>
                     </a>
             </li>
             

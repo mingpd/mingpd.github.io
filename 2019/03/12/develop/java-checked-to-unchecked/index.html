@@ -17,7 +17,7 @@
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"\nchecked exception과 unchecked exception이 대체 뭐고, 무슨 차이가 있는지에 대한 내용은 과감히 생략합니다.\n그냥 RuntimeException으로 감싸면 되는거 아냐?맞습니다.\n1234567public List&lt;List&lt;Object&gt;&gt; getSheetValues(String spreadSheetId, String sheetName, String range) &#123;    try &#123;        return sheets.spreadsheets().values().get(spreadSheetId, sheetName + \"!\" + range).execute().getValues();    &#125; catch (IOException e) &#123;        throw new RuntimeException(e);    &#125;&#125;\n(앞서 포스팅했던 구글API 관련하여 구글시트API의 실 사용 예입니다.)네 저러면 되죠. 하지만 한 클래스에 저런류의 메소드가 아주 많다면?보기 싫어집니다. 저만 그런건진 모르겠습니다만 { } 이 많아지는게 참 거슬립니다.또 중복되는 코드가 많아지는데 저것을 공통화 하기도 참 애매한 현실이 너무 싫습니다.\n1234567data.stream().map(p -&gt; &#123;    try &#123;        someCheckedExceptionThrow(p);    &#125; catch (Exception e) &#123;        throw new RuntimeException(e)    &#125;&#125;).collect(Collectors.toList());\n아니면 이런상황을 생각해봅시다.stream.map을 수행할때 checked exception을 발생시키는 메소드를 태워야할 때..정말 보기만 해도 화가 솟구칩니다.좋은 방법이 없을까 찾아보던 찰나…\nthrowable-interfaceshttps://github.com/StefanLiebenberg/throwable-interfaces\n이런 솔루션을 발견했습니다.쉽게말해서 java8의 java.util.function 안에 있는 FunctionInterface들에 Throwable 처리를 해준 라이브러리입니다.작동 방식이 궁금하시면 저 깃헙 코드를 참고해주시면 되고요.제가 위에 든 예시에 이 라이브러리르 적용했을때 어떻게 되는지 보겠습니다.\n12345public List&lt;List&lt;Object&gt;&gt; getSheetValues(String spreadSheetId, String sheetName, String range) &#123;    return SupplierWithThrowable.castSupplierWithThrowable(        () -&gt; sheets.spreadsheets().values().get(spreadSheetId, sheetName + \"!\" + range).execute().getValues()    ).get();&#125;\n위의 예시입니다. try - catch 블럭이 사라졌습니다.\n123data.stream()    .map(FunctionWithThrowable.castFunctionWithThrowable(p -&gt; someCheckedExceptionThrow(p))    .collect(Collectors.toList());\n아래 예시입니다. 역시 사라졌습니다.그런데 메소드가 더 길어져서 불편하다고요..?static import를 사용해서 앞에 class 명은 떼버릴 수 있습니다.그리고 한 클래스에 저런 try-catch 블록이 계속 중복되는 코드를 넣어야 할땐 훨씬 깔끔해 보일 수 있습니다.\n마치며공식이 아닌 서드파티 개발자의 라이브러리 사용하기 vs 그냥 try - catch 사용하기머릿속에서 이 두가치관이 싸우고 있지만 거기서 조금이나마 이기는쪽을 선택하시길 바랍니다.","dateCreated":"2019-03-12T11:59:00+09:00","dateModified":"2019-04-15T13:11:07+09:00","datePublished":"2019-03-12T11:59:00+09:00","description":"그냥 RuntimeException으로 감싸면 되는거 아냐?맞습니다.","headline":"java, checked excepton을 아름답게 unchecked exception으로 바꾸기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/12/develop/java-checked-to-unchecked/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/12/develop/java-checked-to-unchecked/","keywords":"java"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"\nchecked exception과 unchecked exception이 대체 뭐고, 무슨 차이가 있는지에 대한 내용은 과감히 생략합니다.\n그냥 RuntimeException으로 감싸면 되는거 아냐?맞습니다.\n1234567public List&lt;List&lt;Object&gt;&gt; getSheetValues(String spreadSheetId, String sheetName, String range) &#123;    try &#123;        return sheets.spreadsheets().values().get(spreadSheetId, sheetName + \"!\" + range).execute().getValues();    &#125; catch (IOException e) &#123;        throw new RuntimeException(e);    &#125;&#125;\n(앞서 포스팅했던 구글API 관련하여 구글시트API의 실 사용 예입니다.)네 저러면 되죠. 하지만 한 클래스에 저런류의 메소드가 아주 많다면?보기 싫어집니다. 저만 그런건진 모르겠습니다만 { } 이 많아지는게 참 거슬립니다.또 중복되는 코드가 많아지는데 저것을 공통화 하기도 참 애매한 현실이 너무 싫습니다.\n1234567data.stream().map(p -&gt; &#123;    try &#123;        someCheckedExceptionThrow(p);    &#125; catch (Exception e) &#123;        throw new RuntimeException(e)    &#125;&#125;).collect(Collectors.toList());\n아니면 이런상황을 생각해봅시다.stream.map을 수행할때 checked exception을 발생시키는 메소드를 태워야할 때..정말 보기만 해도 화가 솟구칩니다.좋은 방법이 없을까 찾아보던 찰나…\nthrowable-interfaceshttps://github.com/StefanLiebenberg/throwable-interfaces\n이런 솔루션을 발견했습니다.쉽게말해서 java8의 java.util.function 안에 있는 FunctionInterface들에 Throwable 처리를 해준 라이브러리입니다.작동 방식이 궁금하시면 저 깃헙 코드를 참고해주시면 되고요.제가 위에 든 예시에 이 라이브러리르 적용했을때 어떻게 되는지 보겠습니다.\n12345public List&lt;List&lt;Object&gt;&gt; getSheetValues(String spreadSheetId, String sheetName, String range) &#123;    return SupplierWithThrowable.castSupplierWithThrowable(        () -&gt; sheets.spreadsheets().values().get(spreadSheetId, sheetName + \"!\" + range).execute().getValues()    ).get();&#125;\n위의 예시입니다. try - catch 블럭이 사라졌습니다.\n123data.stream()    .map(FunctionWithThrowable.castFunctionWithThrowable(p -&gt; someCheckedExceptionThrow(p))    .collect(Collectors.toList());\n아래 예시입니다. 역시 사라졌습니다.그런데 메소드가 더 길어져서 불편하다고요..?static import를 사용해서 앞에 class 명은 떼버릴 수 있습니다.그리고 한 클래스에 저런 try-catch 블록이 계속 중복되는 코드를 넣어야 할땐 훨씬 깔끔해 보일 수 있습니다.\n마치며공식이 아닌 서드파티 개발자의 라이브러리 사용하기 vs 그냥 try - catch 사용하기머릿속에서 이 두가치관이 싸우고 있지만 거기서 조금이나마 이기는쪽을 선택하시길 바랍니다.","dateCreated":"2019-03-12T11:59:00+09:00","dateModified":"2019-04-15T13:11:07+09:00","datePublished":"2019-03-12T11:59:00+09:00","description":"그냥 RuntimeException으로 감싸면 되는거 아냐?맞습니다.","headline":"java, checked excepton을 아름답게 unchecked exception으로 바꾸기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/12/develop/java-checked-to-unchecked/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/12/develop/java-checked-to-unchecked/","keywords":"java"}</script>
     <meta name="description" content="그냥 RuntimeException으로 감싸면 되는거 아냐?맞습니다.">
 <meta name="keywords" content="java">
 <meta property="og:type" content="blog">
@@ -132,10 +132,10 @@
             
                 <li class="sidebar-button">
                     
-                        <a class="sidebar-button-link " href="/category-일상" title="일상노트">
+                        <a class="sidebar-button-link " href="/category-일상" title="소소한 이야기">
                     
                         <i class="sidebar-button-icon fa fa-calendar" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">일상노트</span>
+                        <span class="sidebar-button-desc">소소한 이야기</span>
                     </a>
             </li>
             
@@ -145,15 +145,6 @@
                     
                         <i class="sidebar-button-icon fa fa-code" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">개발노트</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a class="sidebar-button-link " href="/category-테크" title="테크노트">
-                    
-                        <i class="sidebar-button-icon fa fa-robot" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">테크노트</span>
                     </a>
             </li>
             
@@ -181,6 +172,19 @@
                     
                         <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://cfdf.tistory.com/" target="_blank" rel="external nofollow noopener noreferrer" title="티스토리">
+                    
+                        <i class="sidebar-button-icon fab fa-tumblr" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">티스토리</span>
                     </a>
             </li>
             
@@ -261,7 +265,7 @@
         
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">관련 글</span><br>
-                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/31/develop/java-orelse-orelseget/" title="java, optional의 orElse와 orElseGet의 차이" rel="bookmark">java, optional의 orElse와 orElseGet의 차이</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-google-api/" title="java, google api 이용하기" rel="bookmark">java, google api 이용하기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/03/develop/java-stream-npe/" title="java, stream api에서 NPE 발생 주의" rel="bookmark">java, stream api에서 NPE 발생 주의</a></h3></div></li></ul>
+                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/31/develop/java-orelse-orelseget/" title="java, optional의 orElse와 orElseGet의 차이" rel="bookmark">java, optional의 orElse와 orElseGet의 차이</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/03/develop/java-stream-npe/" title="java, stream api에서 NPE 발생 주의" rel="bookmark">java, stream api에서 NPE 발생 주의</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-google-api/" title="java, google api 이용하기" rel="bookmark">java, google api 이용하기</a></h3></div></li></ul>
             </div>
         
         <!-- 끝 -->

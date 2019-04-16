@@ -3,6 +3,13 @@
 
 
     <url>
+        <loc>https://mingpd.github.io/tags/%EC%9D%BC%EC%83%81/</loc>
+        <lastmod>2019-04-16T13:00:02.532Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://mingpd.github.io/tags/%ED%95%9C%EA%B8%80/</loc>
         <lastmod>2019-04-16T10:31:40.409Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -61,13 +68,6 @@
     <url>
         <loc>https://mingpd.github.io/tags/hexo/</loc>
         <lastmod>2019-04-16T05:49:30.160Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://mingpd.github.io/tags/%EC%9D%BC%EC%83%81/</loc>
-        <lastmod>2019-04-16T05:19:01.065Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

@@ -17,7 +17,7 @@
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"java8의 optional api 많이들 사용하실텐데요.어찌보면 당연하지만 햇갈리는 내용에 대해 다뤄보겠습니다.orElse와 orElseGet의 차이입니다.  \n귀찮으신분들을 위해 요약을 먼저 하자면\norElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.\n\n예시123456String username = \"이름\";String result1 = Optional.ofNullable(username).orElse(\"no name\");System.out.println(result1);String result2 = Optional.ofNullable(username).orElseGet(() -&gt; \"no name\");System.out.println(result2);\n위 두 println의 결과는 무엇일까요?네 당연하게도 “이름” 입니다.왜냐면 username != null 이기 때문이죠.  \n12String username = null;//.. 이하 동일\n그럼 위처럼 username == null 이면?네. 당연하게도 둘다 “no name” 입니다.  \n그럼 같은거 아냐?아닙니다. 아래의 경우를 생각해봅시다.  \n123456789101112public void ohMyGod() &#123;\tString username = null;\tString result1 = Optional.ofNullable(username).orElse(getDefaultName());\tSystem.out.println(result1);\tString result2 = Optional.ofNullable(username).orElseGet(() -&gt; getDefaultName());\tSystem.out.println(result2);&#125;private String getDefaultName() &#123;\treturn \"no name\";&#125;\n이 경우에 결과는 어떻게 될까요?네. 둘다 “no name” 입니다. 결과는 같지만 여긴 굉장한 차이가 있습니다.orElse의 경우는 “값”을 취합니다.orElseGet은 “Supplier”를 취하죠.  \n위의 예시는 아래 코드로 다시 쓰여질 수 있습니다.\n12345678String username = null;String defaultName = getDefaultName(); // 여기가 다릅니다.String result1 = Optional.ofNullable(username).orElse(defaultName);System.out.println(result1);Supplier&lt;String&gt; supplier = () -&gt; getDefaultName(); // 여기요.String result2 = Optional.ofNullable(username).orElseGet(supplier);System.out.println(result2);\n아시겠나요? \norElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.\n\n위의 예시에서는 ‘그래서 뭐?’ 라고 생각하시겠지만 아래의 경우를 한 번 봅시다.실제 이것 때문에 장애를 낼 뻔한 적이 있습니다.  \n큰 일 날 뻔한 사례123456789public User findByUsername(String name) &#123;\treturn userRepository.findByName(name).orElse(createUserWithName(name));&#125;private User createUserWithName(String name) &#123;\tUser newUser = new User();\tnewUser.setName(name)\treturn userRepository.save(user);&#125;\n(대충 이런 상황이었습니다.)만약 user 테이블의 name이 unique였다면?  \n네. 맞습니다. 장애입니다. 왜냐면 아래랑 같기 때문이죠.  \n12345678910public User findByUsername(String name) &#123;\tUser newUser = createUserWithName(name); // ㅠㅠ\treturn userRepository.findByName(name).orElse(newUser);&#125;private User createUserWithName(String name) &#123;\tUser newUser = new User();\tnewUser.setName(name)\treturn userRepository.save(user);&#125;\n이해가 되시나요?\n마치며참 당연한건데 햇갈리는 경우가 있습니다.버그는 정말 사소한것에서 부터 옵니다. 조심합시다.","dateCreated":"2019-03-31T18:06:21+09:00","dateModified":"2019-04-16T11:27:52+09:00","datePublished":"2019-03-31T18:06:21+09:00","description":"orElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.","headline":"java, optional의 orElse와 orElseGet의 차이","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/31/develop/java-orelse-orelseget/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/31/develop/java-orelse-orelseget/","keywords":"java"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"java8의 optional api 많이들 사용하실텐데요.어찌보면 당연하지만 햇갈리는 내용에 대해 다뤄보겠습니다.orElse와 orElseGet의 차이입니다.  \n귀찮으신분들을 위해 요약을 먼저 하자면\norElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.\n\n예시123456String username = \"이름\";String result1 = Optional.ofNullable(username).orElse(\"no name\");System.out.println(result1);String result2 = Optional.ofNullable(username).orElseGet(() -&gt; \"no name\");System.out.println(result2);\n위 두 println의 결과는 무엇일까요?네 당연하게도 “이름” 입니다.왜냐면 username != null 이기 때문이죠.  \n12String username = null;//.. 이하 동일\n그럼 위처럼 username == null 이면?네. 당연하게도 둘다 “no name” 입니다.  \n그럼 같은거 아냐?아닙니다. 아래의 경우를 생각해봅시다.  \n123456789101112public void ohMyGod() &#123;\tString username = null;\tString result1 = Optional.ofNullable(username).orElse(getDefaultName());\tSystem.out.println(result1);\tString result2 = Optional.ofNullable(username).orElseGet(() -&gt; getDefaultName());\tSystem.out.println(result2);&#125;private String getDefaultName() &#123;\treturn \"no name\";&#125;\n이 경우에 결과는 어떻게 될까요?네. 둘다 “no name” 입니다. 결과는 같지만 여긴 굉장한 차이가 있습니다.orElse의 경우는 “값”을 취합니다.orElseGet은 “Supplier”를 취하죠.  \n위의 예시는 아래 코드로 다시 쓰여질 수 있습니다.\n12345678String username = null;String defaultName = getDefaultName(); // 여기가 다릅니다.String result1 = Optional.ofNullable(username).orElse(defaultName);System.out.println(result1);Supplier&lt;String&gt; supplier = () -&gt; getDefaultName(); // 여기요.String result2 = Optional.ofNullable(username).orElseGet(supplier);System.out.println(result2);\n아시겠나요? \norElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.\n\n위의 예시에서는 ‘그래서 뭐?’ 라고 생각하시겠지만 아래의 경우를 한 번 봅시다.실제 이것 때문에 장애를 낼 뻔한 적이 있습니다.  \n큰 일 날 뻔한 사례123456789public User findByUsername(String name) &#123;\treturn userRepository.findByName(name).orElse(createUserWithName(name));&#125;private User createUserWithName(String name) &#123;\tUser newUser = new User();\tnewUser.setName(name)\treturn userRepository.save(user);&#125;\n(대충 이런 상황이었습니다.)만약 user 테이블의 name이 unique였다면?  \n네. 맞습니다. 장애입니다. 왜냐면 아래랑 같기 때문이죠.  \n12345678910public User findByUsername(String name) &#123;\tUser newUser = createUserWithName(name); // ㅠㅠ\treturn userRepository.findByName(name).orElse(newUser);&#125;private User createUserWithName(String name) &#123;\tUser newUser = new User();\tnewUser.setName(name)\treturn userRepository.save(user);&#125;\n이해가 되시나요?\n마치며참 당연한건데 햇갈리는 경우가 있습니다.버그는 정말 사소한것에서 부터 옵니다. 조심합시다.","dateCreated":"2019-03-31T18:06:21+09:00","dateModified":"2019-04-16T11:27:52+09:00","datePublished":"2019-03-31T18:06:21+09:00","description":"orElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.","headline":"java, optional의 orElse와 orElseGet의 차이","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/31/develop/java-orelse-orelseget/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/31/develop/java-orelse-orelseget/","keywords":"java"}</script>
     <meta name="description" content="orElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.">
 <meta name="keywords" content="java">
 <meta property="og:type" content="blog">
@@ -132,10 +132,10 @@
             
                 <li class="sidebar-button">
                     
-                        <a class="sidebar-button-link " href="/category-일상" title="일상노트">
+                        <a class="sidebar-button-link " href="/category-일상" title="소소한 이야기">
                     
                         <i class="sidebar-button-icon fa fa-calendar" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">일상노트</span>
+                        <span class="sidebar-button-desc">소소한 이야기</span>
                     </a>
             </li>
             
@@ -145,15 +145,6 @@
                     
                         <i class="sidebar-button-icon fa fa-code" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">개발노트</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a class="sidebar-button-link " href="/category-테크" title="테크노트">
-                    
-                        <i class="sidebar-button-icon fa fa-robot" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">테크노트</span>
                     </a>
             </li>
             
@@ -181,6 +172,19 @@
                     
                         <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://cfdf.tistory.com/" target="_blank" rel="external nofollow noopener noreferrer" title="티스토리">
+                    
+                        <i class="sidebar-button-icon fab fa-tumblr" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">티스토리</span>
                     </a>
             </li>
             
@@ -270,7 +274,7 @@
         
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">관련 글</span><br>
-                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-checked-to-unchecked/" title="java, checked excepton을 아름답게 unchecked exception으로 바꾸기" rel="bookmark">java, checked excepton을 아름답게 unchecked exception으로 바꾸기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-google-api/" title="java, google api 이용하기" rel="bookmark">java, google api 이용하기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/03/develop/java-stream-npe/" title="java, stream api에서 NPE 발생 주의" rel="bookmark">java, stream api에서 NPE 발생 주의</a></h3></div></li></ul>
+                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-checked-to-unchecked/" title="java, checked excepton을 아름답게 unchecked exception으로 바꾸기" rel="bookmark">java, checked excepton을 아름답게 unchecked exception으로 바꾸기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/03/develop/java-stream-npe/" title="java, stream api에서 NPE 발생 주의" rel="bookmark">java, stream api에서 NPE 발생 주의</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-google-api/" title="java, google api 이용하기" rel="bookmark">java, google api 이용하기</a></h3></div></li></ul>
             </div>
         
         <!-- 끝 -->
