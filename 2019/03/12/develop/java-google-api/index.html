@@ -17,12 +17,12 @@
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"\n준비물첫번째 준비물, https://console.cloud.google.com/apis/dashboard 에서 어떤 API를 사용할지 세팅\n\n앱을 생성하지 않았다면 앱 이름부터 잘 지어서 생성하도록 합시다.\n저의 경우 YouTube Data API v3, Google Sheets API, Google Drive API 이 3개를 지정했습니다.\n참고로 구글스프레드시트를 사용할거면 Google Drive API도 꼭 사용 설정을 해야합니다.\n\n두번째 준비물, https://console.cloud.google.com/iam-admin/serviceaccounts 에서 서비스 계정 생성하기\n\nprivate 구글 시트의 경우는 서버 인증키 방식으로 데이터 엑세스를 못하므로 서비스 계정을 생성하여 접근해야 합니다.\n여기서 중요한것은, 설정한 이메일 주소를 구글 시트 공유 기능을 이용하여 권한 초대를 해줘야 한다는 점입니다. (말그대로 계정이니까)\n또 중요한 것은 인증 키 파일을 json으로 저장해둬야 합니다. (왜냐면 밑에서 개발을 그렇게 할거니까요..)\n\n개발 착수spring-boot 2 프로젝트(그냥 spring mvc도 가능)를 준비합시다.우선 위에서 다운로드 받은 서비스 계정 관련 json 파일을 resources 디렉토리에 복사합니다.그 다음, 아래처럼 pom.xml을 열고 필요한 api 라이브러리들의 의존성을 넣습니다.\n12345678910111213141516171819&lt;!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-sheets --&gt;&lt;dependency&gt;    &lt;groupId&gt;com.google.apis&lt;/groupId&gt;    &lt;artifactId&gt;google-api-services-sheets&lt;/artifactId&gt;    &lt;version&gt;v4-rev1-1.21.0&lt;/version&gt;    &lt;exclusions&gt;        &lt;exclusion&gt;            &lt;groupId&gt;com.google.api-client&lt;/groupId&gt;            &lt;artifactId&gt;google-api-client&lt;/artifactId&gt;        &lt;/exclusion&gt;    &lt;/exclusions&gt;&lt;/dependency&gt; &lt;!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-youtube --&gt;&lt;dependency&gt;    &lt;groupId&gt;com.google.apis&lt;/groupId&gt;    &lt;artifactId&gt;google-api-services-youtube&lt;/artifactId&gt;    &lt;version&gt;v3-rev206-1.25.0&lt;/version&gt;&lt;/dependency&gt;\n위에서 언급한것 처럼 구글시트와 youtube api를 사용할건데요. 그래서 그 두개를 추가했습니다.여기서 중요한 것은 저 exclusions인데, 위 아래 두개의 라이브러리에서 버전이 다른 google-api-client를 참조해서그런지 충들이 발생하네요.따라서 더 낮은 버전을 제외하기 위해 저런 구문을 추가하도록 합시다.\n12345678910111213141516171819202122232425262728293031import java.io.IOException;import java.io.InputStream;import java.security.GeneralSecurityException;import java.util.Arrays; import org.springframework.beans.factory.annotation.Value;import org.springframework.stereotype.Component;import org.springframework.util.ResourceUtils; import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;import com.google.api.client.http.javanet.NetHttpTransport;import com.google.api.client.json.jackson2.JacksonFactory;import com.google.api.services.sheets.v4.Sheets;import com.google.api.services.sheets.v4.SheetsScopes;import com.google.api.services.youtube.YouTube;import com.google.api.services.youtube.YouTubeScopes; @Componentpublic class GoogleAPIClient &#123;    private Sheets sheets;    private YouTube youTube;    public GoogleAPIClient(@Value(\"$&#123;api.google.appName\") String appName,                           @Value(\"$&#123;api.google.serviceAccountAuthFile&#125;\") String keyFileName) throws IOException, GeneralSecurityException &#123;        InputStream keyFile = ResourceUtils.getURL(\"classpath:\" + keyFileName).openStream();        GoogleCredential credential = GoogleCredential.fromStream(keyFile).createScoped(Arrays.asList(SheetsScopes.SPREADSHEETS, YouTubeScopes.YOUTUBE));        NetHttpTransport transport = GoogleNetHttpTransport.newTrustedTransport();        sheets = new Sheets.Builder(transport, JacksonFactory.getDefaultInstance(), credential).setApplicationName(appName).build();        youTube = new YouTube.Builder(transport, JacksonFactory.getDefaultInstance(), credential).setApplicationName(appName).build();    &#125;&#125;\n사실, 이게 다 입니다. 저 @Value 부분만 잘 설정해주세요.저의경우 application.yml에 저런 형태로 넣었기때문에 저렇게 했지만 하드코딩을 하셔도 되고, 다르게 하셔도 됩니다.\n위처럼 GoogleAPIClient 라는 bean 의 생성자에서 필요한 객체들을 생성해주고요.그 다음부턴 아래를 참고하여 api를 사용하시면 되겠습니다.https://developers.google.com/youtube/v3/docs/https://developers.google.com/sheets/api/?hl=ko\n마치며구글 api 로그인하는건 저 코드가 다인데 저렇게 정리된 사이트가 없더군요.(물론 구글 공식 레퍼런스도 있는데 뭔가 막 이것저것 써있어서 알아보기가 어렵네요.)수동으로 인증 태워서 restful api를 사용하고 싶은 분도 계시겠지만 그걸 자동으로 해주는게 위 과정이라서java에서 사용하실거라면 맘편히 위 방법을 추천드립니다.저렇게 인증로직한 한번 잘 만들면 google api 여러개를 사용할 수 있으니까요.","dateCreated":"2019-03-12T10:50:00+09:00","dateModified":"2019-04-15T11:23:42+09:00","datePublished":"2019-03-12T10:50:00+09:00","description":"Google API를 이용하기 위한 인증처리를 해봅시다.","headline":"java, google api 이용하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/12/java-google-api/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/12/java-google-api/","keywords":"java, spring, google"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"\n준비물첫번째 준비물, https://console.cloud.google.com/apis/dashboard 에서 어떤 API를 사용할지 세팅\n\n앱을 생성하지 않았다면 앱 이름부터 잘 지어서 생성하도록 합시다.\n저의 경우 YouTube Data API v3, Google Sheets API, Google Drive API 이 3개를 지정했습니다.\n참고로 구글스프레드시트를 사용할거면 Google Drive API도 꼭 사용 설정을 해야합니다.\n\n두번째 준비물, https://console.cloud.google.com/iam-admin/serviceaccounts 에서 서비스 계정 생성하기\n\nprivate 구글 시트의 경우는 서버 인증키 방식으로 데이터 엑세스를 못하므로 서비스 계정을 생성하여 접근해야 합니다.\n여기서 중요한것은, 설정한 이메일 주소를 구글 시트 공유 기능을 이용하여 권한 초대를 해줘야 한다는 점입니다. (말그대로 계정이니까)\n또 중요한 것은 인증 키 파일을 json으로 저장해둬야 합니다. (왜냐면 밑에서 개발을 그렇게 할거니까요..)\n\n개발 착수spring-boot 2 프로젝트(그냥 spring mvc도 가능)를 준비합시다.우선 위에서 다운로드 받은 서비스 계정 관련 json 파일을 resources 디렉토리에 복사합니다.그 다음, 아래처럼 pom.xml을 열고 필요한 api 라이브러리들의 의존성을 넣습니다.\n12345678910111213141516171819&lt;!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-sheets --&gt;&lt;dependency&gt;    &lt;groupId&gt;com.google.apis&lt;/groupId&gt;    &lt;artifactId&gt;google-api-services-sheets&lt;/artifactId&gt;    &lt;version&gt;v4-rev1-1.21.0&lt;/version&gt;    &lt;exclusions&gt;        &lt;exclusion&gt;            &lt;groupId&gt;com.google.api-client&lt;/groupId&gt;            &lt;artifactId&gt;google-api-client&lt;/artifactId&gt;        &lt;/exclusion&gt;    &lt;/exclusions&gt;&lt;/dependency&gt; &lt;!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-youtube --&gt;&lt;dependency&gt;    &lt;groupId&gt;com.google.apis&lt;/groupId&gt;    &lt;artifactId&gt;google-api-services-youtube&lt;/artifactId&gt;    &lt;version&gt;v3-rev206-1.25.0&lt;/version&gt;&lt;/dependency&gt;\n위에서 언급한것 처럼 구글시트와 youtube api를 사용할건데요. 그래서 그 두개를 추가했습니다.여기서 중요한 것은 저 exclusions인데, 위 아래 두개의 라이브러리에서 버전이 다른 google-api-client를 참조해서그런지 충들이 발생하네요.따라서 더 낮은 버전을 제외하기 위해 저런 구문을 추가하도록 합시다.\n12345678910111213141516171819202122232425262728293031import java.io.IOException;import java.io.InputStream;import java.security.GeneralSecurityException;import java.util.Arrays; import org.springframework.beans.factory.annotation.Value;import org.springframework.stereotype.Component;import org.springframework.util.ResourceUtils; import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;import com.google.api.client.http.javanet.NetHttpTransport;import com.google.api.client.json.jackson2.JacksonFactory;import com.google.api.services.sheets.v4.Sheets;import com.google.api.services.sheets.v4.SheetsScopes;import com.google.api.services.youtube.YouTube;import com.google.api.services.youtube.YouTubeScopes; @Componentpublic class GoogleAPIClient &#123;    private Sheets sheets;    private YouTube youTube;    public GoogleAPIClient(@Value(\"$&#123;api.google.appName\") String appName,                           @Value(\"$&#123;api.google.serviceAccountAuthFile&#125;\") String keyFileName) throws IOException, GeneralSecurityException &#123;        InputStream keyFile = ResourceUtils.getURL(\"classpath:\" + keyFileName).openStream();        GoogleCredential credential = GoogleCredential.fromStream(keyFile).createScoped(Arrays.asList(SheetsScopes.SPREADSHEETS, YouTubeScopes.YOUTUBE));        NetHttpTransport transport = GoogleNetHttpTransport.newTrustedTransport();        sheets = new Sheets.Builder(transport, JacksonFactory.getDefaultInstance(), credential).setApplicationName(appName).build();        youTube = new YouTube.Builder(transport, JacksonFactory.getDefaultInstance(), credential).setApplicationName(appName).build();    &#125;&#125;\n사실, 이게 다 입니다. 저 @Value 부분만 잘 설정해주세요.저의경우 application.yml에 저런 형태로 넣었기때문에 저렇게 했지만 하드코딩을 하셔도 되고, 다르게 하셔도 됩니다.\n위처럼 GoogleAPIClient 라는 bean 의 생성자에서 필요한 객체들을 생성해주고요.그 다음부턴 아래를 참고하여 api를 사용하시면 되겠습니다.https://developers.google.com/youtube/v3/docs/https://developers.google.com/sheets/api/?hl=ko\n마치며구글 api 로그인하는건 저 코드가 다인데 저렇게 정리된 사이트가 없더군요.(물론 구글 공식 레퍼런스도 있는데 뭔가 막 이것저것 써있어서 알아보기가 어렵네요.)수동으로 인증 태워서 restful api를 사용하고 싶은 분도 계시겠지만 그걸 자동으로 해주는게 위 과정이라서java에서 사용하실거라면 맘편히 위 방법을 추천드립니다.저렇게 인증로직한 한번 잘 만들면 google api 여러개를 사용할 수 있으니까요.","dateCreated":"2019-03-12T10:50:00+09:00","dateModified":"2019-04-15T11:23:42+09:00","datePublished":"2019-03-12T10:50:00+09:00","description":"Google API를 이용하기 위한 인증처리를 해봅시다.","headline":"java, google api 이용하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/12/develop/java-google-api/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/12/develop/java-google-api/","keywords":"java, spring, google"}</script>
     <meta name="description" content="Google API를 이용하기 위한 인증처리를 해봅시다.">
 <meta name="keywords" content="java,spring,google">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="java, google api 이용하기">
-<meta property="og:url" content="https://mingpd.github.io/2019/03/12/java-google-api/index.html">
+<meta property="og:url" content="https://mingpd.github.io/2019/03/12/develop/java-google-api/index.html">
 <meta property="og:site_name" content="밍피디">
 <meta property="og:description" content="Google API를 이용하기 위한 인증처리를 해봅시다.">
 <meta property="og:locale" content="ko">
@@ -40,7 +40,7 @@
     
     
     
-    <link rel="canonical" href="https://mingpd.github.io/2019/03/12/java-google-api/">
+    <link rel="canonical" href="https://mingpd.github.io/2019/03/12/develop/java-google-api/">
     <!--STYLES-->
     <link rel="stylesheet" href="/assets/css/all.css">
     <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
@@ -267,7 +267,7 @@
         
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">관련 글</span><br>
-                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/31/java-orelse-orelseget/" title="java, optional의 orElse와 orElseGet의 차이" rel="bookmark">java, optional의 orElse와 orElseGet의 차이</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/java-checked-to-unchecked/" title="java, checked excepton을 아름답게 unchecked exception으로 바꾸기" rel="bookmark">java, checked excepton을 아름답게 unchecked exception으로 바꾸기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/15/spring-aop-exclude/" title="spring, aop 특정 조건에서 실행 제외하기" rel="bookmark">spring, aop 특정 조건에서 실행 제외하기</a></h3></div></li></ul>
+                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-checked-to-unchecked/" title="java, checked excepton을 아름답게 unchecked exception으로 바꾸기" rel="bookmark">java, checked excepton을 아름답게 unchecked exception으로 바꾸기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/03/develop/java-stream-npe/" title="java, stream api에서 NPE 발생 주의" rel="bookmark">java, stream api에서 NPE 발생 주의</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/31/develop/java-orelse-orelseget/" title="java, optional의 orElse와 orElseGet의 차이" rel="bookmark">java, optional의 orElse와 orElseGet의 차이</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/15/develop/spring-aop-exclude/" title="spring, aop 특정 조건에서 실행 제외하기" rel="bookmark">spring, aop 특정 조건에서 실행 제외하기</a></h3></div></li></ul>
             </div>
         
         <!-- 끝 -->
@@ -282,7 +282,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/12/java-checked-to-unchecked/" data-tooltip="java, checked excepton을 아름답게 unchecked exception으로 바꾸기" aria-label="이전: java, checked excepton을 아름답게 unchecked exception으로 바꾸기">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/12/develop/java-checked-to-unchecked/" data-tooltip="java, checked excepton을 아름답게 unchecked exception으로 바꾸기" aria-label="이전: java, checked excepton을 아름답게 unchecked exception으로 바꾸기">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">이전</span>
@@ -308,7 +308,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/12/java-google-api/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/12/develop/java-google-api/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-facebook" aria-hidden="true"></i>
                 </a>
             </li>
@@ -316,7 +316,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/12/java-google-api/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/12/develop/java-google-api/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-twitter" aria-hidden="true"></i>
                 </a>
             </li>
@@ -324,7 +324,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/12/java-google-api/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/12/develop/java-google-api/" title="Share on Google+" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-google-plus" aria-hidden="true"></i>
                 </a>
             </li>
@@ -377,7 +377,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/12/java-checked-to-unchecked/" data-tooltip="java, checked excepton을 아름답게 unchecked exception으로 바꾸기" aria-label="이전: java, checked excepton을 아름답게 unchecked exception으로 바꾸기">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/12/develop/java-checked-to-unchecked/" data-tooltip="java, checked excepton을 아름답게 unchecked exception으로 바꾸기" aria-label="이전: java, checked excepton을 아름답게 unchecked exception으로 바꾸기">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">이전</span>
@@ -403,7 +403,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/12/java-google-api/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/12/develop/java-google-api/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-facebook" aria-hidden="true"></i>
                 </a>
             </li>
@@ -411,7 +411,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/12/java-google-api/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/12/develop/java-google-api/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-twitter" aria-hidden="true"></i>
                 </a>
             </li>
@@ -419,7 +419,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/12/java-google-api/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/12/develop/java-google-api/" title="Share on Google+" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-google-plus" aria-hidden="true"></i>
                 </a>
             </li>
@@ -453,7 +453,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/12/java-google-api/" rel="external nofollow noopener noreferrer">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/12/develop/java-google-api/" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
                     </a>
                 </li>
@@ -461,7 +461,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/12/java-google-api/" rel="external nofollow noopener noreferrer">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/12/develop/java-google-api/" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
                     </a>
                 </li>
@@ -469,7 +469,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/12/java-google-api/" rel="external nofollow noopener noreferrer">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/12/develop/java-google-api/" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
                     </a>
                 </li>
@@ -531,9 +531,9 @@
     
         <script>
              var disqus_config = function () {
-                 this.page.url = 'https://mingpd.github.io/2019/03/12/java-google-api/';
+                 this.page.url = 'https://mingpd.github.io/2019/03/12/develop/java-google-api/';
                  
-                    this.page.identifier = '2019/03/12/java-google-api/';
+                    this.page.identifier = '2019/03/12/develop/java-google-api/';
                  
              };
             (function() {

@@ -1,0 +1,559 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="밍피디">
+    <title>android, realm 초간단 정리 - 밍피디</title>
+    <meta name="author" content="밍피디">
+    
+        <meta name="keywords" content="개발,">
+    
+    
+        <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"\n대체 저의 커리어가 어떻게 돼가는것인지 잘 모르겠습니다만..최근에 안드로이드 공부를 시작했습니다.안드로이드 앱을 만들때면 거의 필수적으로 앱 내장 DB를 사용해야 합니다.이때 sqlite 같은 기본 솔루션을 쓸 수도 있겠지만 좀 더 쉬운 툴이 있으면 그것을 써야겠죠.\n쉽게 설명하자면 안드로이드 내장DB에서 사용되는 ORM 이라고 보시면 됩니다.java, spring 을 잘 아시는 서버개발자 분들께서는 JPA가 생각나실겁니다.\n공식 홈페이지의 설명에 따르면..Realm DB로 모바일앱 데이터 저장을 뚝딱뚝딱 만들수 있고,자바, 스위프트, 오브젝티브C, 자바스크립트 등등에서 쓸 수 있대네요\n\nRealm 공식 사이트의 설명\n사용법거두절미하고 어떻게 사용하는지 아주 간략히 정리하겠습니다.12345678dependencies &#123;    classpath 'com.android.tools.build:gradle:3.3.2'    classpath \"org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version\"    ...    ...            classpath \"io.realm:realm-gradle-plugin:5.2.0\"&#125;\n프로젝트 레벨의 build.gradle 파일에 realm 관련 플러그인을 넣어 봅시다.\n1234567apply plugin: 'com.android.application'apply plugin: 'kotlin-android'...apply plugin: 'realm-android'\n다음은 app 레벨의 build.gradle 인데요. 위와같이 realm-android를 추가해줍시다.\n그 후 android studio 메뉴 중 File - Re-Import Gradle Project를 눌러줍시다.\n저는 어떤 비디오를 “좋아요” 하는 객체를 저장한다는 가정을 세웠습니다.따라서 Like 클래스를 아래와 같이 만들었습니다. (kotlin 이에요)\n123456789import io.realm.RealmObjectimport io.realm.annotations.PrimaryKeyimport java.util.Dateopen class Like(    @PrimaryKey var id: Long = 0,    var videoId: String? = null,    var date: Date? = null) : RealmObject()\n필요한 필드들을 constructor 에 선언해 주었습니다.특별한것은 PK로 사용할 필드를 @PrimaryKey 어노테이션으로 마킹한 것과RealmObject 클래스를 상속받았다는 점 입니다.\n123456789101112131415161718class MainActivity : AppCompatActivity() &#123;\t...    var realm: Realm    override fun onCreate(savedInstanceState: Bundle?) &#123;        super.onCreate(savedInstanceState)        Realm.init(this)                realm = Realm.getDefaultInstance()    \t...        &#125;    ...        override fun onDestroy() &#123;        super.onDestroy()        realm.close()    &#125;&#125;\n그리고 Realm.init을 해줘야하는데요 전 그냥 메인이되는 액티비티에다가 넣어줬습니다.onDestroy 안에다가 close 하는것도 넣어줍시다.\n123456789101112addButton.setOnClickListener &#123;    realm.beginTransaction()    val currentId = realm.where&lt;Like&gt;(Like::class.java).max(\"id\")    val nextId = if (currentId == null) 1 else currentId.toInt() + 1    val newObject = realm.createObject&lt;Like&gt;(nextId)    newObject.videoId = \"video-$nextId\"    newObject.date = Date()    realm.commitTransaction()    Toast.makeText(context, \"인서트 했어요\", Toast.LENGTH_SHORT).show()&#125;\n액티비티나 프래그먼트에서 getDefaultInstance를 통해 수행 객체를 들고옵니다.그 후 위처럼 트랜잭션을 열고, 데이터를 설정하고, 트랜잭션을 커밋하면 끝입니다.\n정말 안타까운 점은 PK에 Auto-Increment 속성을 걸 수 없는것 이었습니다.따라서 위처럼 마지막 id를 가져와서 +1을 해주는 작업을 해줘야 합니다.(진짜 없는것인지 아닌진 모르겠습니다. 문서를 아직 다 안읽어봤거든요)\n1val all = realm.where(Like::class.java).findAll()\n잘 들어갔는지 확인할 때는 위처럼 findAll 메소드를 이용하면 됩니다.\n마치며사실 전 서버 개발자라서 이렇게 하는게 정답인가는 잘 모르겠습니다.좀 내용이 부실하다는 생각이 들긴 하지만 기본은 이정도 인것 같네요.이제 realm 객체를 통해 어떤 쿼리를 날릴것인지 공식 문서나 많은 예제들을 통해 학습하면 되겠습니다.","dateCreated":"2019-03-19T20:20:00+09:00","dateModified":"2019-04-16T18:18:49+09:00","datePublished":"2019-03-19T20:20:00+09:00","description":"쉽게 설명하자면 안드로이드 내장DB에서 사용되는 ORM 이라고 보시면 됩니다.","headline":"android, realm 초간단 정리","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/19/develop/android-realm/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/19/develop/android-realm/","keywords":"android"}</script>
+    <meta name="description" content="쉽게 설명하자면 안드로이드 내장DB에서 사용되는 ORM 이라고 보시면 됩니다.">
+<meta name="keywords" content="android">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="android, realm 초간단 정리">
+<meta property="og:url" content="https://mingpd.github.io/2019/03/19/develop/android-realm/index.html">
+<meta property="og:site_name" content="밍피디">
+<meta property="og:description" content="쉽게 설명하자면 안드로이드 내장DB에서 사용되는 ORM 이라고 보시면 됩니다.">
+<meta property="og:locale" content="ko">
+<meta property="og:image" content="https://mingpd.github.io/2019/03/19/develop/android-realm/realm.png">
+<meta property="og:updated_time" content="2019-04-16T09:18:49.728Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android, realm 초간단 정리">
+<meta name="twitter:description" content="쉽게 설명하자면 안드로이드 내장DB에서 사용되는 ORM 이라고 보시면 됩니다.">
+<meta name="twitter:image" content="https://mingpd.github.io/2019/03/19/develop/android-realm/realm.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png">
+    
+    
+    
+    
+    <link rel="canonical" href="https://mingpd.github.io/2019/03/19/develop/android-realm/">
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120538979-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120538979-3');
+    </script>
+
+
+    
+
+    <!-- adsense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+                                                      google_ad_client: "ca-pub-4098225824538946",
+                                                      enable_page_level_ads: true
+                                                    });
+    </script>
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">밍피디</a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+                </a>
+                <h4 class="sidebar-profile-name">밍피디</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>잔망스러운 개발자</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/ " title="홈">
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">홈</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-일상" title="일상노트">
+                    
+                        <i class="sidebar-button-icon fa fa-calendar" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">일상노트</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-개발" title="개발노트">
+                    
+                        <i class="sidebar-button-icon fa fa-code" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">개발노트</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-테크" title="테크노트">
+                    
+                        <i class="sidebar-button-icon fa fa-robot" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">테크노트</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" title="아카이브">
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" title="태그">
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="#about" title="About">
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            android, realm 초간단 정리
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-03-19T20:20:00+09:00">
+	
+		    3월 19, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/개발/">개발</a>, <a class="category-link" href="/categories/개발/소소한-팁/">소소한 팁</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt --><br><h1 id="table-of-contents">목차</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#사용법"><span class="toc-text">사용법</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#마치며"><span class="toc-text">마치며</span></a></li></ol><p></p>
+<p>대체 저의 커리어가 어떻게 돼가는것인지 잘 모르겠습니다만..<br>최근에 안드로이드 공부를 시작했습니다.<br>안드로이드 앱을 만들때면 거의 필수적으로 앱 내장 DB를 사용해야 합니다.<br>이때 sqlite 같은 기본 솔루션을 쓸 수도 있겠지만 좀 더 쉬운 툴이 있으면 그것을 써야겠죠.</p>
+<p>쉽게 설명하자면 안드로이드 내장DB에서 사용되는 ORM 이라고 보시면 됩니다.<br>java, spring 을 잘 아시는 서버개발자 분들께서는 JPA가 생각나실겁니다.</p>
+<p><a href="https://realm.io/kr/" rel="external nofollow noopener noreferrer" target="_blank">공식 홈페이지</a>의 설명에 따르면..<br>Realm DB로 모바일앱 데이터 저장을 뚝딱뚝딱 만들수 있고,<br>자바, 스위프트, 오브젝티브C, 자바스크립트 등등에서 쓸 수 있대네요</p>
+<img src="/2019/03/19/develop/android-realm/realm.png">
+<p>Realm 공식 사이트의 설명</p>
+<h2 id="사용법"><a href="#사용법" class="headerlink" title="사용법"></a>사용법</h2><p>거두절미하고 어떻게 사용하는지 아주 간략히 정리하겠습니다.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    classpath <span class="string">'com.android.tools.build:gradle:3.3.2'</span></span><br><span class="line">    classpath <span class="string">"org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"</span></span><br><span class="line">    ...</span><br><span class="line">    ...</span><br><span class="line">        </span><br><span class="line">    classpath <span class="string">"io.realm:realm-gradle-plugin:5.2.0"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>프로젝트 레벨의 build.gradle 파일에 realm 관련 플러그인을 넣어 봅시다.</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">apply <span class="string">plugin:</span> <span class="string">'com.android.application'</span></span><br><span class="line"></span><br><span class="line">apply <span class="string">plugin:</span> <span class="string">'kotlin-android'</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">apply <span class="string">plugin:</span> <span class="string">'realm-android'</span></span><br></pre></td></tr></table></figure>
+<p>다음은 app 레벨의 build.gradle 인데요. 위와같이 realm-android를 추가해줍시다.</p>
+<p>그 후 android studio 메뉴 중 <code>File - Re-Import Gradle Project</code>를 눌러줍시다.</p>
+<p>저는 어떤 비디오를 “좋아요” 하는 객체를 저장한다는 가정을 세웠습니다.<br>따라서 Like 클래스를 아래와 같이 만들었습니다. (kotlin 이에요)</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> io.realm.RealmObject</span><br><span class="line"><span class="keyword">import</span> io.realm.annotations.PrimaryKey</span><br><span class="line"><span class="keyword">import</span> java.util.Date</span><br><span class="line"></span><br><span class="line"><span class="keyword">open</span> <span class="class"><span class="keyword">class</span> <span class="title">Like</span></span>(</span><br><span class="line">    <span class="meta">@PrimaryKey</span> <span class="keyword">var</span> id: <span class="built_in">Long</span> = <span class="number">0</span>,</span><br><span class="line">    <span class="keyword">var</span> videoId: String? = <span class="literal">null</span>,</span><br><span class="line">    <span class="keyword">var</span> date: Date? = <span class="literal">null</span></span><br><span class="line">) : RealmObject()</span><br></pre></td></tr></table></figure>
+<p>필요한 필드들을 constructor 에 선언해 주었습니다.<br>특별한것은 PK로 사용할 필드를 <code>@PrimaryKey</code> 어노테이션으로 마킹한 것과<br><code>RealmObject</code> 클래스를 상속받았다는 점 입니다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">	...</span><br><span class="line">    <span class="keyword">var</span> realm: Realm</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        Realm.<span class="keyword">init</span>(<span class="keyword">this</span>)</span><br><span class="line">        </span><br><span class="line">        realm = Realm.getDefaultInstance()</span><br><span class="line">    	...</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDestroy</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy()</span><br><span class="line">        realm.close()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>그리고 Realm.init을 해줘야하는데요 전 그냥 메인이되는 액티비티에다가 넣어줬습니다.<br>onDestroy 안에다가 close 하는것도 넣어줍시다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">addButton.setOnClickListener &#123;</span><br><span class="line">    realm.beginTransaction()</span><br><span class="line">    <span class="keyword">val</span> currentId = realm.<span class="keyword">where</span>&lt;Like&gt;(Like::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>).<span class="title">max</span></span>(<span class="string">"id"</span>)</span><br><span class="line">    <span class="keyword">val</span> nextId = <span class="keyword">if</span> (currentId == <span class="literal">null</span>) <span class="number">1</span> <span class="keyword">else</span> currentId.toInt() + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> newObject = realm.createObject&lt;Like&gt;(nextId)</span><br><span class="line">    newObject.videoId = <span class="string">"video-<span class="variable">$nextId</span>"</span></span><br><span class="line">    newObject.date = Date()</span><br><span class="line"></span><br><span class="line">    realm.commitTransaction()</span><br><span class="line">    Toast.makeText(context, <span class="string">"인서트 했어요"</span>, Toast.LENGTH_SHORT).show()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>액티비티나 프래그먼트에서 getDefaultInstance를 통해 수행 객체를 들고옵니다.<br>그 후 위처럼 트랜잭션을 열고, 데이터를 설정하고, 트랜잭션을 커밋하면 끝입니다.</p>
+<p>정말 안타까운 점은 PK에 Auto-Increment 속성을 걸 수 없는것 이었습니다.<br>따라서 위처럼 마지막 id를 가져와서 +1을 해주는 작업을 해줘야 합니다.<br>(진짜 없는것인지 아닌진 모르겠습니다. 문서를 아직 다 안읽어봤거든요)</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> all = realm.<span class="keyword">where</span>(Like::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>).<span class="title">findAll</span></span>()</span><br></pre></td></tr></table></figure>
+<p>잘 들어갔는지 확인할 때는 위처럼 findAll 메소드를 이용하면 됩니다.</p>
+<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>사실 전 서버 개발자라서 이렇게 하는게 정답인가는 잘 모르겠습니다.<br>좀 내용이 부실하다는 생각이 들긴 하지만 기본은 이정도 인것 같네요.<br>이제 realm 객체를 통해 어떤 쿼리를 날릴것인지 공식 문서나 많은 예제들을 통해 학습하면 되겠습니다.</p>
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/android/">android</a>
+
+            </div>
+        
+
+
+
+
+        <!--밍피디가 커스터마이징 해본 관련 글 영역-->
+        
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">관련 글</span><br>
+                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/28/develop/android-lost-keystore/" title="android, 앱 출시하려는데 keystore 잃어버렸을 때" rel="bookmark">android, 앱 출시하려는데 keystore 잃어버렸을 때</a></h3></div></li></ul>
+            </div>
+        
+        <!-- 끝 -->
+
+
+
+
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/20/develop/github-src-refspec-master-does-not-match/" data-tooltip="github, src refspec master does not match any ..." aria-label="이전: github, src refspec master does not match any ...">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/15/develop/spring-aop-exclude/" data-tooltip="spring, aop 특정 조건에서 실행 제외하기" aria-label="다음: spring, aop 특정 조건에서 실행 제외하기">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/19/develop/android-realm/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/19/develop/android-realm/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/19/develop/android-realm/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 밍피디. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/20/develop/github-src-refspec-master-does-not-match/" data-tooltip="github, src refspec master does not match any ..." aria-label="이전: github, src refspec master does not match any ...">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/15/develop/spring-aop-exclude/" data-tooltip="spring, aop 특정 조건에서 실행 제외하기" aria-label="다음: spring, aop 특정 조건에서 실행 제외하기">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/19/develop/android-realm/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/19/develop/android-realm/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/19/develop/android-realm/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/19/develop/android-realm/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/19/develop/android-realm/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/19/develop/android-realm/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+            <h4 id="about-card-name">밍피디</h4>
+        
+            <div id="about-card-bio"><p>잔망스러운 개발자</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>개발자</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                판교
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/bg.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://mingpd.github.io/2019/03/19/develop/android-realm/';
+                 
+                    this.page.identifier = '2019/03/19/develop/android-realm/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mingpidi';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+
+    </body>
+</html>

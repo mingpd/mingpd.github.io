@@ -1,0 +1,571 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="밍피디">
+    <title>android, 앱 출시하려는데 keystore 잃어버렸을 때 - 밍피디</title>
+    <meta name="author" content="밍피디">
+    
+        <meta name="keywords" content="개발,">
+    
+    
+        <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"\n누누히 말씀드렸던것 처럼 저는 서버개발자입니다만최근 안드로이드에 관심이 생겨서 병맛 앱 한가지를 출시할 예정입니다.바로 아이디어노트에서 소개했던 “스팸체 생성기” 입니다.(사실 무료서버 사용기간이 얼마 안남아서 앱으로라도 만들어두려 합니다.)\n그런데 참.. 안드로이드는 처음 겪다보니 해매는 일이 한두가지가 아닙니다.다른 블로그를 참고하면서 앱 등록 절차를 진행중인데요.테스트로 apk를 한번 올리고 나서그때 사용했던 keystore.jks 를 날려버리고 말았습니다.(이게 이렇게 중요한 것인지 몰랐네요)\n\n아무 생각없이 테스트로 여기에 App Bundle 업로드 했는데 삭제도 안되고..다른 keystore 로 서명된 App Bundle은 이전 버전과 싸인이 안맞다고 업로드도 안되고 말이죠.낭패네요.\n물론 구글 플레이 콘솔에서 앱 자체를 삭제해버리고 새로 등록하는 방법도 있겠습니다만그러면 패키지명을 변경하고 새로 빌드해야합니다.그러긴 쫌 그렇고.. 뭐 급한것도 아니니 keystore 서명 바꿔달라고 찡찡대봐야겠습니다.\n새로운 keystore 파일을 만들자12사실 https://developer.android.com/studio/publish/app-signing 여기 가면더 잘 설명되어있습니다.\n\n무튼 keystore를 새로 만들어야 할것 같습니다.android studio 에서 Build - Generate Signed Bundle / APK 항목으로 들어가봅시다.\n\nkey를 지정하는 화면인데.. Create New로 새로 만들어야겠습니다.\n\n뭐 사용자한테 보여지는게 아닌것 같으니 대충 기입하고 완료합시다.또 잃어버리지 않게 안전하게 파일을 잘 갖다두어요.\n구글에게 찡찡대기Google Play 앱 서명 사용일단 여기에 잘 설명된 내용임을 밝힙니다.\n\n일단 저 스스로 해결할 순 없는것 같습니다. 준비물과 함께 구글에 요청을 하면되는데요.upload_certificate.pem 파일을 첨부하라고 하네요.저희가 앞서 만든것은 keystore.jks 인데 말이죠.\n그것에 대한 설명은 저 섹션 바로 윗줄에 설명되어있습니다.요약하면 아래와 같은데요.\n1$ keytool -export -rfc -keystore upload-keystore.jks -alias upload -file upload_certificate.pem\n아까 만들어준 jks 파일의 경로를 잘 기입해서 위 명령을 실행하면됩니다.주의 할 점은 -alias upload 라고 되어있는 이 부분인데요.위에서 keystore.jks 를 생성할 때 기입했던 alias 정보를 정확히 넣으면 됩니다.(위에서 key0 라고 써놨던 그 부분)\n일반적인 문제 - Play Console 고객센터\n그 후 “지원팀에게 문의하여 키를 재설정하도록” 부분 링크를 누르거나위 링크로 직접 들어갑니다.여기서 upload_certificate.pem 을 첨부하고 구구절절히 사연을 적으면 되겠습니다.주의할 점은 개발자 계정, 앱 패키지 명을 정확히 적어줘야 한다는 것입니다.영업일 기준 2일 정도 소요된다고 하니 잘못 입력해서 빠꾸 맞는 일이 없도록 합시다.\n약 30시간 정도 후 답장 도착다행히 주말이 오기전에 답이 도착하였습니다.더 다행인것은 한국어로 도착다는 점 입니다. (한국인 담당자가 계신것 같아요.)\n두 개의 메일이 도착했습니다.하나는 접수 되었다는 안내메일이고요. 하나는 담당자 이름으로 처리되었다는 메일이 왔습니다.생각보다 빠르게 처리해주셔서 놀랐습니다.\n그러나 매우 안타깝게, 처리와 별개로 실제 업로드 가능한 시각은 며칠 뒤였습니다.\n확인 차원에서 업로드를 시도해보았습니다. 역시 안되더군요.그래도 그냥 안된다고 하는게 아니라 메일에서 안내된것과 동일한 안내메시지를 리턴해줘서 감동받았습니다.\n19. 3. 31. 오전 10:36 이후 ..다행히 별 탈없이 업로드가 잘 되었습니다.며칠 시간을 버리긴 했지만 가이드대로 하면 구글측에서 처리를 잘 해주네요.\n마치며역시 안하던 짓을 하려니 좀 어렵네요. 정신을 똑바로 차려야겠습니다.","dateCreated":"2019-03-28T19:43:00+09:00","dateModified":"2019-04-16T18:38:40+09:00","datePublished":"2019-03-28T19:43:00+09:00","description":"테스트로 apk를 한번 올리고 나서 그때 사용했던 keystore.jks 를 날려버리고 말았습니다.","headline":"android, 앱 출시하려는데 keystore 잃어버렸을 때","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/","keywords":"android, keystore"}</script>
+    <meta name="description" content="테스트로 apk를 한번 올리고 나서 그때 사용했던 keystore.jks 를 날려버리고 말았습니다.">
+<meta name="keywords" content="android,keystore">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="android, 앱 출시하려는데 keystore 잃어버렸을 때">
+<meta property="og:url" content="https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/index.html">
+<meta property="og:site_name" content="밍피디">
+<meta property="og:description" content="테스트로 apk를 한번 올리고 나서 그때 사용했던 keystore.jks 를 날려버리고 말았습니다.">
+<meta property="og:locale" content="ko">
+<meta property="og:image" content="https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/1.png">
+<meta property="og:image" content="https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/2.png">
+<meta property="og:image" content="https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/3.png">
+<meta property="og:image" content="https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/4.png">
+<meta property="og:image" content="https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/5.png">
+<meta property="og:image" content="https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/6.png">
+<meta property="og:image" content="https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/7.png">
+<meta property="og:image" content="https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/8.png">
+<meta property="og:updated_time" content="2019-04-16T09:38:40.686Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android, 앱 출시하려는데 keystore 잃어버렸을 때">
+<meta name="twitter:description" content="테스트로 apk를 한번 올리고 나서 그때 사용했던 keystore.jks 를 날려버리고 말았습니다.">
+<meta name="twitter:image" content="https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/1.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png">
+    
+    
+    
+    
+    <link rel="canonical" href="https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/">
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120538979-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120538979-3');
+    </script>
+
+
+    
+
+    <!-- adsense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+                                                      google_ad_client: "ca-pub-4098225824538946",
+                                                      enable_page_level_ads: true
+                                                    });
+    </script>
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">밍피디</a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+                </a>
+                <h4 class="sidebar-profile-name">밍피디</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>잔망스러운 개발자</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/ " title="홈">
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">홈</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-일상" title="일상노트">
+                    
+                        <i class="sidebar-button-icon fa fa-calendar" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">일상노트</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-개발" title="개발노트">
+                    
+                        <i class="sidebar-button-icon fa fa-code" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">개발노트</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-테크" title="테크노트">
+                    
+                        <i class="sidebar-button-icon fa fa-robot" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">테크노트</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" title="아카이브">
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" title="태그">
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="#about" title="About">
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            android, 앱 출시하려는데 keystore 잃어버렸을 때
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-03-28T19:43:00+09:00">
+	
+		    3월 28, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/개발/">개발</a>, <a class="category-link" href="/categories/개발/소소한-팁/">소소한 팁</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt --><br><h1 id="table-of-contents">목차</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#새로운-keystore-파일을-만들자"><span class="toc-text">새로운 keystore 파일을 만들자</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#구글에게-찡찡대기"><span class="toc-text">구글에게 찡찡대기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#약-30시간-정도-후-답장-도착"><span class="toc-text">약 30시간 정도 후 답장 도착</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#19-3-31-오전-10-36-이후"><span class="toc-text">19. 3. 31. 오전 10:36 이후 ..</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#마치며"><span class="toc-text">마치며</span></a></li></ol><p></p>
+<p>누누히 말씀드렸던것 처럼 저는 서버개발자입니다만<br>최근 안드로이드에 관심이 생겨서 병맛 앱 한가지를 출시할 예정입니다.<br>바로 아이디어노트에서 소개했던 “스팸체 생성기” 입니다.<br>(사실 무료서버 사용기간이 얼마 안남아서 앱으로라도 만들어두려 합니다.)</p>
+<p>그런데 참.. 안드로이드는 처음 겪다보니 해매는 일이 한두가지가 아닙니다.<br>다른 블로그를 참고하면서 앱 등록 절차를 진행중인데요.<br>테스트로 apk를 한번 올리고 나서<br>그때 사용했던 keystore.jks 를 날려버리고 말았습니다.<br>(이게 이렇게 중요한 것인지 몰랐네요)</p>
+<img src="/2019/03/28/develop/android-lost-keystore/1.png">
+<p>아무 생각없이 테스트로 여기에 App Bundle 업로드 했는데 삭제도 안되고..<br>다른 keystore 로 서명된 App Bundle은 이전 버전과 싸인이 안맞다고 업로드도 안되고 말이죠.<br>낭패네요.</p>
+<p>물론 구글 플레이 콘솔에서 앱 자체를 삭제해버리고 새로 등록하는 방법도 있겠습니다만<br>그러면 <em>패키지명을 변경하고 새로 빌드</em>해야합니다.<br>그러긴 쫌 그렇고.. 뭐 급한것도 아니니 keystore 서명 바꿔달라고 찡찡대봐야겠습니다.</p>
+<h2 id="새로운-keystore-파일을-만들자"><a href="#새로운-keystore-파일을-만들자" class="headerlink" title="새로운 keystore 파일을 만들자"></a>새로운 keystore 파일을 만들자</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">사실 https://developer.android.com/studio/publish/app-signing 여기 가면</span><br><span class="line">더 잘 설명되어있습니다.</span><br></pre></td></tr></table></figure>
+<img src="/2019/03/28/develop/android-lost-keystore/2.png">
+<p>무튼 keystore를 새로 만들어야 할것 같습니다.<br>android studio 에서 <code>Build - Generate Signed Bundle / APK</code> 항목으로 들어가봅시다.</p>
+<img src="/2019/03/28/develop/android-lost-keystore/3.png">
+<p>key를 지정하는 화면인데.. Create New로 새로 만들어야겠습니다.</p>
+<img src="/2019/03/28/develop/android-lost-keystore/4.png">
+<p>뭐 사용자한테 보여지는게 아닌것 같으니 대충 기입하고 완료합시다.<br>또 잃어버리지 않게 안전하게 파일을 잘 갖다두어요.</p>
+<h2 id="구글에게-찡찡대기"><a href="#구글에게-찡찡대기" class="headerlink" title="구글에게 찡찡대기"></a>구글에게 찡찡대기</h2><p><a href="https://support.google.com/googleplay/android-developer/answer/7384423?hl=ko" rel="external nofollow noopener noreferrer" target="_blank">Google Play 앱 서명 사용</a><br>일단 여기에 잘 설명된 내용임을 밝힙니다.</p>
+<img src="/2019/03/28/develop/android-lost-keystore/5.png">
+<p>일단 저 스스로 해결할 순 없는것 같습니다. 준비물과 함께 구글에 요청을 하면되는데요.<br>upload_certificate.pem 파일을 첨부하라고 하네요.<br>저희가 앞서 만든것은 keystore.jks 인데 말이죠.</p>
+<p>그것에 대한 설명은 저 섹션 바로 윗줄에 설명되어있습니다.<br>요약하면 아래와 같은데요.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ keytool -export -rfc -keystore upload-keystore.jks -alias upload -file upload_certificate.pem</span><br></pre></td></tr></table></figure>
+<p>아까 만들어준 jks 파일의 경로를 잘 기입해서 위 명령을 실행하면됩니다.<br>주의 할 점은 -alias upload 라고 되어있는 이 부분인데요.<br>위에서 keystore.jks 를 생성할 때 기입했던 alias 정보를 정확히 넣으면 됩니다.<br>(위에서 key0 라고 써놨던 그 부분)</p>
+<p><a href="https://support.google.com/googleplay/android-developer/contact/otherbugs" rel="external nofollow noopener noreferrer" target="_blank">일반적인 문제 - Play Console 고객센터</a></p>
+<p>그 후 “지원팀에게 문의하여 키를 재설정하도록” 부분 링크를 누르거나<br>위 링크로 직접 들어갑니다.<br>여기서 upload_certificate.pem 을 첨부하고 구구절절히 사연을 적으면 되겠습니다.<br>주의할 점은 개발자 계정, 앱 패키지 명을 정확히 적어줘야 한다는 것입니다.<br>영업일 기준 2일 정도 소요된다고 하니 잘못 입력해서 빠꾸 맞는 일이 없도록 합시다.</p>
+<h2 id="약-30시간-정도-후-답장-도착"><a href="#약-30시간-정도-후-답장-도착" class="headerlink" title="약 30시간 정도 후 답장 도착"></a>약 30시간 정도 후 답장 도착</h2><p>다행히 주말이 오기전에 답이 도착하였습니다.<br>더 다행인것은 한국어로 도착다는 점 입니다. (한국인 담당자가 계신것 같아요.)<br><img src="/2019/03/28/develop/android-lost-keystore/6.png"><br><img src="/2019/03/28/develop/android-lost-keystore/7.png"></p>
+<p>두 개의 메일이 도착했습니다.<br>하나는 접수 되었다는 안내메일이고요. 하나는 담당자 이름으로 처리되었다는 메일이 왔습니다.<br>생각보다 빠르게 처리해주셔서 놀랐습니다.</p>
+<p>그러나 매우 안타깝게, 처리와 별개로 실제 업로드 가능한 시각은 며칠 뒤였습니다.<br><img src="/2019/03/28/develop/android-lost-keystore/8.png"></p>
+<p>확인 차원에서 업로드를 시도해보았습니다. 역시 안되더군요.<br>그래도 그냥 안된다고 하는게 아니라 메일에서 안내된것과 동일한 안내메시지를 리턴해줘서 감동받았습니다.</p>
+<h2 id="19-3-31-오전-10-36-이후"><a href="#19-3-31-오전-10-36-이후" class="headerlink" title="19. 3. 31. 오전 10:36 이후 .."></a>19. 3. 31. 오전 10:36 이후 ..</h2><p>다행히 별 탈없이 업로드가 잘 되었습니다.<br>며칠 시간을 버리긴 했지만 가이드대로 하면 구글측에서 처리를 잘 해주네요.</p>
+<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>역시 안하던 짓을 하려니 좀 어렵네요. 정신을 똑바로 차려야겠습니다.</p>
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/android/">android</a> <a class="tag tag--primary tag--small t-link" href="/tags/keystore/">keystore</a>
+
+            </div>
+        
+
+
+
+
+        <!--밍피디가 커스터마이징 해본 관련 글 영역-->
+        
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">관련 글</span><br>
+                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/19/develop/android-realm/" title="android, realm 초간단 정리" rel="bookmark">android, realm 초간단 정리</a></h3></div></li></ul>
+            </div>
+        
+        <!-- 끝 -->
+
+
+
+
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/31/develop/java-orelse-orelseget/" data-tooltip="java, optional의 orElse와 orElseGet의 차이" aria-label="이전: java, optional의 orElse와 orElseGet의 차이">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/20/develop/github-src-refspec-master-does-not-match/" data-tooltip="github, src refspec master does not match any ..." aria-label="다음: github, src refspec master does not match any ...">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 밍피디. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/31/develop/java-orelse-orelseget/" data-tooltip="java, optional의 orElse와 orElseGet의 차이" aria-label="이전: java, optional의 orElse와 orElseGet의 차이">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/20/develop/github-src-refspec-master-does-not-match/" data-tooltip="github, src refspec master does not match any ..." aria-label="다음: github, src refspec master does not match any ...">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+            <h4 id="about-card-name">밍피디</h4>
+        
+            <div id="about-card-bio"><p>잔망스러운 개발자</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>개발자</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                판교
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/bg.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/';
+                 
+                    this.page.identifier = '2019/03/28/develop/android-lost-keystore/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mingpidi';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+
+    </body>
+</html>

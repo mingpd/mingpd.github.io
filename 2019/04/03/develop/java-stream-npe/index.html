@@ -1,0 +1,557 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="밍피디">
+    <title>java, stream api에서 NPE 발생 주의 - 밍피디</title>
+    <meta name="author" content="밍피디">
+    
+        <meta name="keywords" content="개발,">
+    
+    
+        <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":[],"image":"profile.png"},"articleBody":"java stream api를 많이 사용하실텐데요.예상치 못하게 NullPointerException 발생을 맞이하는 경우가 있어서 정리해보고자 합니다.\n예시12SimpleEntry&lt;String, String&gt; keyValue = new SimpleEntry(\"test\", null);System.out.println(keyValue.getValue());\nSimpleEntry는 java.util의 key-value를 담을 수 있는 클래스입니다.(HashMap에서 사용하는 그것)\n위를 실행하면 어떤 결과가 나올까요?네. 예상하신것 처럼 null입니다.\n12345678SimpleEntry&lt;String, String&gt; keyValue = new SimpleEntry&lt;&gt;(\"test\", null);List&lt;SimpleEntry&lt;String, String&gt;&gt; list = Arrays.asList(keyValue);Object aNull = list.stream()\t\t.map(e -&gt; e.getValue())\t\t.findAny()\t\t.orElse(\"널이에요\");        System.out.println(aNull);\n그렇다면 위의 예시의 결과는 뭘까요?\n훗..list는 SimpleEntry 1개로 이루어진 리스트이고그 list에서 stream api를 이용하는데거기서 e.getValue()를 호출했고, 그게 null이니orElse를 타게되므로 “널이에요”가 출력되겠지?\n\n하지만 결과는 그렇지 않습니다.\n12345Exception in thread &quot;main&quot; java.lang.NullPointerException\tat java.util.Objects.requireNonNull(Objects.java:203)\tat java.util.Optional.&lt;init&gt;(Optional.java:96)\tat java.util.Optional.of(Optional.java:108)    ...\n???\nStream.java를 읽어봅시다.\nStream.java의 findAny 선언 부분인데요. 위와같은 설명이 써있습니다.findFirst도 동일하게 NPE를 발생시킵니다.\n그럼 아래와 같은 상황은 어떨까요?\n12345678List&lt;SimpleEntry&lt;String, String&gt;&gt; list = Arrays.asList(\tnew SimpleEntry&lt;&gt;(\"test2\", \"notnull\"), new SimpleEntry&lt;&gt;(\"test\", null));    Object aNull = list.stream()\t\t.map(e -&gt; e.getValue())\t\t.findAny()\t\t.orElse(\"널이에요\");System.out.println(aNull);\n이 상황에도 NPE가 발생될까요?아닙니다. null을 취하지 않으면 발생하지 않습니다.(위를 findFirst()로 변경해도 동일합니다.)\n그럼 아래처럼 filter를 추가하면 어떻게 될까요?\n12345678910List&lt;SimpleEntry&lt;String, String&gt;&gt; list = Arrays.asList(\tnew SimpleEntry&lt;&gt;(\"test2\", \"notnull\"), new SimpleEntry&lt;&gt;(\"test\", null));    Object aNull = list.stream()\t\t// 필터추가\t\t.filter(e -&gt; \"test\".equalsIgnoreCase(e.getKey()))\t\t.map(e -&gt; e.getValue())\t\t.findAny()\t\t.orElse(\"널이에요\");System.out.println(aNull);\n위의 경우 null을 취하는 상황이 되므로 역시 NPE가 발생됩니다.\n마치며이 역시 별거 아닌것 같지만버그는 항상 사소한것 부터 오는것이므로 조심합시다.","dateCreated":"2019-04-03T13:51:00+09:00","dateModified":"2019-04-16T18:46:31+09:00","datePublished":"2019-04-03T13:51:00+09:00","description":"java stream api를 많이 사용하실텐데요.예상치 못하게 NullPointerException 발생을 맞이하는 경우가 있어서 정리해보고자 합니다.","headline":"java, stream api에서 NPE 발생 주의","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/04/03/develop/java-stream-npe/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":[],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/04/03/develop/java-stream-npe/","keywords":"java, stream"}</script>
+    <meta name="description" content="java stream api를 많이 사용하실텐데요.예상치 못하게 NullPointerException 발생을 맞이하는 경우가 있어서 정리해보고자 합니다.">
+<meta name="keywords" content="java,stream">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="java, stream api에서 NPE 발생 주의">
+<meta property="og:url" content="https://mingpd.github.io/2019/04/03/develop/java-stream-npe/index.html">
+<meta property="og:site_name" content="밍피디">
+<meta property="og:description" content="java stream api를 많이 사용하실텐데요.예상치 못하게 NullPointerException 발생을 맞이하는 경우가 있어서 정리해보고자 합니다.">
+<meta property="og:locale" content="ko">
+<meta property="og:image" content="https://mingpd.github.io/2019/04/03/develop/java-stream-npe/1.png">
+<meta property="og:updated_time" content="2019-04-16T09:46:31.605Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java, stream api에서 NPE 발생 주의">
+<meta name="twitter:description" content="java stream api를 많이 사용하실텐데요.예상치 못하게 NullPointerException 발생을 맞이하는 경우가 있어서 정리해보고자 합니다.">
+<meta name="twitter:image" content="https://mingpd.github.io/2019/04/03/develop/java-stream-npe/1.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png">
+    
+    
+    
+    
+    <link rel="canonical" href="https://mingpd.github.io/2019/04/03/develop/java-stream-npe/">
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120538979-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120538979-3');
+    </script>
+
+
+    
+
+    <!-- adsense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+                                                      google_ad_client: "ca-pub-4098225824538946",
+                                                      enable_page_level_ads: true
+                                                    });
+    </script>
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">밍피디</a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+                </a>
+                <h4 class="sidebar-profile-name">밍피디</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>잔망스러운 개발자</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/ " title="홈">
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">홈</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-일상" title="일상노트">
+                    
+                        <i class="sidebar-button-icon fa fa-calendar" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">일상노트</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-개발" title="개발노트">
+                    
+                        <i class="sidebar-button-icon fa fa-code" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">개발노트</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-테크" title="테크노트">
+                    
+                        <i class="sidebar-button-icon fa fa-robot" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">테크노트</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" title="아카이브">
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" title="태그">
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="#about" title="About">
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            java, stream api에서 NPE 발생 주의
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-04-03T13:51:00+09:00">
+	
+		    4월 03, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/개발/">개발</a>, <a class="category-link" href="/categories/개발/소소한-팁/">소소한 팁</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt --><br><h1 id="table-of-contents">목차</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#예시"><span class="toc-text">예시</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Stream-java를-읽어봅시다"><span class="toc-text">Stream.java를 읽어봅시다.</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#마치며"><span class="toc-text">마치며</span></a></li></ol><br>java stream api를 많이 사용하실텐데요.<br>예상치 못하게 NullPointerException 발생을 맞이하는 경우가 있어서 정리해보고자 합니다.<p></p>
+<h2 id="예시"><a href="#예시" class="headerlink" title="예시"></a>예시</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SimpleEntry&lt;String, String&gt; keyValue = <span class="keyword">new</span> SimpleEntry(<span class="string">"test"</span>, <span class="keyword">null</span>);</span><br><span class="line">System.out.println(keyValue.getValue());</span><br></pre></td></tr></table></figure>
+<p>SimpleEntry는 java.util의 key-value를 담을 수 있는 클래스입니다.<br>(HashMap에서 사용하는 그것)</p>
+<p>위를 실행하면 어떤 결과가 나올까요?<br>네. 예상하신것 처럼 null입니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SimpleEntry&lt;String, String&gt; keyValue = <span class="keyword">new</span> SimpleEntry&lt;&gt;(<span class="string">"test"</span>, <span class="keyword">null</span>);</span><br><span class="line">List&lt;SimpleEntry&lt;String, String&gt;&gt; list = Arrays.asList(keyValue);</span><br><span class="line">Object aNull = list.stream()</span><br><span class="line">		.map(e -&gt; e.getValue())</span><br><span class="line">		.findAny()</span><br><span class="line">		.orElse(<span class="string">"널이에요"</span>);</span><br><span class="line">        </span><br><span class="line">System.out.println(aNull);</span><br></pre></td></tr></table></figure>
+<p>그렇다면 위의 예시의 결과는 뭘까요?</p>
+<blockquote><p>훗..<br>list는 SimpleEntry 1개로 이루어진 리스트이고<br>그 list에서 stream api를 이용하는데<br>거기서 e.getValue()를 호출했고, 그게 null이니<br>orElse를 타게되므로 “널이에요”가 출력되겠지?</p>
+</blockquote>
+<p>하지만 결과는 그렇지 않습니다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.NullPointerException</span><br><span class="line">	at java.util.Objects.requireNonNull(Objects.java:203)</span><br><span class="line">	at java.util.Optional.&lt;init&gt;(Optional.java:96)</span><br><span class="line">	at java.util.Optional.of(Optional.java:108)</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>???</p>
+<h2 id="Stream-java를-읽어봅시다"><a href="#Stream-java를-읽어봅시다" class="headerlink" title="Stream.java를 읽어봅시다."></a>Stream.java를 읽어봅시다.</h2><img src="/2019/04/03/develop/java-stream-npe/1.png">
+<p>Stream.java의 findAny 선언 부분인데요. 위와같은 설명이 써있습니다.<br>findFirst도 동일하게 NPE를 발생시킵니다.</p>
+<p>그럼 아래와 같은 상황은 어떨까요?</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">List&lt;SimpleEntry&lt;String, String&gt;&gt; list = Arrays.asList(</span><br><span class="line">	<span class="keyword">new</span> SimpleEntry&lt;&gt;(<span class="string">"test2"</span>, <span class="string">"notnull"</span>), <span class="keyword">new</span> SimpleEntry&lt;&gt;(<span class="string">"test"</span>, <span class="keyword">null</span>));</span><br><span class="line">    </span><br><span class="line">Object aNull = list.stream()</span><br><span class="line">		.map(e -&gt; e.getValue())</span><br><span class="line">		.findAny()</span><br><span class="line">		.orElse(<span class="string">"널이에요"</span>);</span><br><span class="line">System.out.println(aNull);</span><br></pre></td></tr></table></figure>
+<p>이 상황에도 NPE가 발생될까요?<br>아닙니다. <code>null을 취하지 않으면 발생하지 않습니다.</code><br>(위를 findFirst()로 변경해도 동일합니다.)</p>
+<p>그럼 아래처럼 filter를 추가하면 어떻게 될까요?</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">List&lt;SimpleEntry&lt;String, String&gt;&gt; list = Arrays.asList(</span><br><span class="line">	<span class="keyword">new</span> SimpleEntry&lt;&gt;(<span class="string">"test2"</span>, <span class="string">"notnull"</span>), <span class="keyword">new</span> SimpleEntry&lt;&gt;(<span class="string">"test"</span>, <span class="keyword">null</span>));</span><br><span class="line">    </span><br><span class="line">Object aNull = list.stream()</span><br><span class="line">		<span class="comment">// 필터추가</span></span><br><span class="line">		.filter(e -&gt; <span class="string">"test"</span>.equalsIgnoreCase(e.getKey()))</span><br><span class="line">		.map(e -&gt; e.getValue())</span><br><span class="line">		.findAny()</span><br><span class="line">		.orElse(<span class="string">"널이에요"</span>);</span><br><span class="line">System.out.println(aNull);</span><br></pre></td></tr></table></figure>
+<p>위의 경우 null을 취하는 상황이 되므로 역시 NPE가 발생됩니다.</p>
+<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>이 역시 별거 아닌것 같지만<br>버그는 항상 사소한것 부터 오는것이므로 조심합시다.</p>
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/java/">java</a> <a class="tag tag--primary tag--small t-link" href="/tags/stream/">stream</a>
+
+            </div>
+        
+
+
+
+
+        <!--밍피디가 커스터마이징 해본 관련 글 영역-->
+        
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">관련 글</span><br>
+                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-checked-to-unchecked/" title="java, checked excepton을 아름답게 unchecked exception으로 바꾸기" rel="bookmark">java, checked excepton을 아름답게 unchecked exception으로 바꾸기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-google-api/" title="java, google api 이용하기" rel="bookmark">java, google api 이용하기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/31/develop/java-orelse-orelseget/" title="java, optional의 orElse와 orElseGet의 차이" rel="bookmark">java, optional의 orElse와 orElseGet의 차이</a></h3></div></li></ul>
+            </div>
+        
+        <!-- 끝 -->
+
+
+
+
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/09/develop/unicode-hangle/" data-tooltip="한글 유니코드를 초성, 중성, 종성으로 쪼개자" aria-label="이전: 한글 유니코드를 초성, 중성, 종성으로 쪼개자">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/31/develop/java-orelse-orelseget/" data-tooltip="java, optional의 orElse와 orElseGet의 차이" aria-label="다음: java, optional의 orElse와 orElseGet의 차이">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/03/develop/java-stream-npe/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/03/develop/java-stream-npe/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/03/develop/java-stream-npe/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 밍피디. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/09/develop/unicode-hangle/" data-tooltip="한글 유니코드를 초성, 중성, 종성으로 쪼개자" aria-label="이전: 한글 유니코드를 초성, 중성, 종성으로 쪼개자">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/03/31/develop/java-orelse-orelseget/" data-tooltip="java, optional의 orElse와 orElseGet의 차이" aria-label="다음: java, optional의 orElse와 orElseGet의 차이">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/03/develop/java-stream-npe/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/03/develop/java-stream-npe/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/03/develop/java-stream-npe/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/03/develop/java-stream-npe/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/03/develop/java-stream-npe/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/03/develop/java-stream-npe/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+            <h4 id="about-card-name">밍피디</h4>
+        
+            <div id="about-card-bio"><p>잔망스러운 개발자</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>개발자</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                판교
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/bg.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://mingpd.github.io/2019/04/03/develop/java-stream-npe/';
+                 
+                    this.page.identifier = '2019/04/03/develop/java-stream-npe/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mingpidi';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+
+    </body>
+</html>
