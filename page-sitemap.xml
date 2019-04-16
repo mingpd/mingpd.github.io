@@ -8,6 +8,27 @@
     </url>
     
     <url>
+        <loc>https://mingpd.github.io/category-%ED%85%8C%ED%81%AC/</loc>
+        <lastmod>2019-04-16T04:04:43.809Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>https://mingpd.github.io/category-%EC%9D%BC%EC%83%81/</loc>
+        <lastmod>2019-04-16T04:00:15.744Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>https://mingpd.github.io/category-%EA%B0%9C%EB%B0%9C/</loc>
+        <lastmod>2019-04-16T03:55:54.831Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
         <loc>https://mingpd.github.io/all-archives/</loc>
         <lastmod>2019-04-14T02:03:48.686Z</lastmod>
         <changefreq>weekly</changefreq>
