@@ -8,6 +8,14 @@
     </url>
 
     <url>
+        <loc>https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/</loc>
+        <lastmod>2019-04-16T00:33:36.604Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://mingpd.github.io/2019/03/15/spring-aop-exclude/</loc>
         <lastmod>2019-04-15T13:33:11.106Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -18,14 +26,6 @@
     <url>
         <loc>https://mingpd.github.io/2019/03/14/github-multiple-ssh/</loc>
         <lastmod>2019-04-15T13:27:33.369Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://mingpd.github.io/2019/04/15/github-blog-with-hexo-4/</loc>
-        <lastmod>2019-04-15T13:26:52.825Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
