@@ -663,13 +663,15 @@ blockquote {
   top: 0;
   background: rgba(17, 26, 35, 0);
   overflow: auto;
+  overflow-y: hidden;
   z-index: 20;
   transition: transform .25s ease-in-out;
   -webkit-transition: -webkit-transform .25s ease-in-out;
   -webkit-font-smoothing: antialiased;
   font-smoothing: antialiased; }
   #sidebar .sidebar-container {
-    overflow: auto; }
+    overflow: auto;
+    overflow-y: hidden; }
   #sidebar .sidebar-profile {
     color: #ebebeb;
     text-align: center;
@@ -1327,6 +1329,10 @@ blockquote {
 @media print {
   #sidebar {
     display: none; } }
+
+@media only screen and (min-width: 1024px) {
+  #sidebar-ad {
+    width: 100%; } }
 
 .alert {
   position: relative;
