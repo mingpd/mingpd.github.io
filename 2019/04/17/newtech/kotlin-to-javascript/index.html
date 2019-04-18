@@ -1,0 +1,557 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="밍피디의 개발노트">
+    <title>kotlin to javascript (client side) - 밍피디의 개발노트</title>
+    <meta name="author" content="밍피디">
+    
+        <meta name="keywords" content="개발,developer,">
+    
+    
+        <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"kotlin으로 작성된 코드를 javascript로 바꾸는 방법을 알아봅니다.작업실 카테고리에 스팸체 생성기를 올려두었는데요.원래 kotlin 기반의 Spring boot로 짜여진 코드였습니다. 그런데 spring boot를 돌리던 heroku 무료 사용 가능 기간(1000시간)이 도래하여 서버가 내려갈 위기에 처했습니다.별건 아니지만 재밌는 작품이어서 버리긴 좀 아깝고.. js로 포팅해서 이 블로그에 넣을 생각을 하던 찰나에 이런 문서를 발견했습니다.\nKotlin to JavaScriptKotlin to JavaScript 문서를 보니 대충 감이 오는데요.kotlin에서 공식적으로 javascript로 빌드하는 기능을 제공한다고 합니다.web browser에서 돌릴 수 있는 형태(client side)와 nodejs 등 에서 돌릴 수 있는 형태도(server side) 지원합니다. 저의경우 GitHub 블로그에서 돌릴것이므로 client side 형태로 빌드해보겠습니다.\n문서에 의하면 방법은 세가지입니다. \n\ngradle을 이용\nmaven을 이용\n그냥 intellij만 이용\n\n저의 경우 간단하게 끝내고 싶어서 intellij에서 바로 빌드하는 방법을 사용했습니다.하지만 실 서비스에서 제대로 관리하신다면 gradle 혹은 maven 프로젝트 설정을 추천합니다.\n개발 방법프로젝트를 만들건데요. Kotlin을 선택합니다. 그리고 오른쪽에서 JS | IDEA를 선택합니다.\n여긴 이름만 잘 지어서 Finish 합니다.\n그 후 src 하위에 kotlin 코드를 넣습니다. 꼭 main이 있어야 할 필요는 없습니다.참고로 다른 프로젝트에서 kotlin 코드를 가져온 경우 빨간줄이 많을 수 있으니 다시 체크해봐야합니다.package 구조가 다르다보니 이 부분에서 꼬이는 경우가 많더군요.저의경우 아래와 같은 프로젝트 구조가 되었습니다.\n간단히 Main.kt와 index.html만 살펴보겠습니다.\nMain.kt1234567891011val spamServices = listOf(SymbolizationService(), HangleService())@JsName(\"toSpam\")   // 중요fun toSpam(input: String): String &#123;    var output = input    spamServices.forEach &#123;        output = it.process(output)    &#125;    return output&#125;// ... 후략\n스팸체 생성기의 진입 포인트입니다.그냥 똑같이 kotlin 코드를 작성하면 되는데요. @JsName 어노테이션이 중요합니다.이는 javascript로 빌드 되었을 때 function의 이름을 지정하는 역할을 합니다.저 어노테이션이 없으면 kotlin 코드의 함수이름_임의문자 형태로 function이 만들어집니다.위 예시에서 어노테이션이 없을경우 toSpam_2DFg3h 뭐 이런식으로 만들어지는 것이죠.따라서 html에서 직접 호출하여 사용할 함수의 경우는 반드시 이름을 지정해주도록 합니다.\nindex.html12345678910111213&lt;!DOCTYPE html&gt;&lt;html lang=\"en\"&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;&lt;!-- 반드시 import 하자 --&gt;&lt;script type=\"text/javascript\" src=\"out/production/spammaker/lib/kotlin.js\"&gt;&lt;/script&gt;&lt;script type=\"text/javascript\" src=\"out/production/spammaker/spammaker.js\"&gt;&lt;/script&gt;&lt;script&gt;  console.log(spammaker.toSpam(\"동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세\"))&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;\n다음은 index.html의 내용입니다. lib/kotlin.js는 그냥 무조건 import 한다고 생각하시면 됩니다.두번째 script는 kotlin으로 작성된 코드를 javascript로 빌드했을 때 만들어지는 코드입니다.기본적으로 프로젝트 모듈명의 카멜케이스로 만들어지기 때문에 모듈명에 특수문자가 들어간다면 수정을 하는게 좋겠습니다.그리고 모듈명으로 객체가 만들어지기 때문에 저의 경우 spammaker.toSpam(...) 처럼 호출했습니다.눈치채셨겠지만 위에서 설명한 @JsName이 바로 함수 이름이 됩니다.내용이 궁금하신 분들은 모듈명.js를 직접 열어보시기 바랍니다.\n실행 방법이 다음에 뭐 어떡해야하나 난감했는데 아주 쉽더군요. 일단 빌드를 합니다.빌드를 하게 되면 out디렉토리에 이것저것 생깁니다. 저의경우 아래처럼 생겼습니다.그 후 실행을 하면되는데요. 방법은 아주 쉽습니다.아래처럼 index.html에서 팝업메뉴를 띄워서 바로 실행할 수 있습니다.그러면 브라우저창이 나타나면서 바로 실행할 수 있습니다.정말 좋은점은 바로 Debug 모드인데요. 이를 실행하면 browser 콘솔창의 내용이 intellij 콘솔창에서 나타나게 됩니다. 브레이크 포인트도 잘 먹습니다.\n갖다 쓰기만들어진 out 디렉토리 하위에 있는 파일들을 복사해다가 원하는곳에 붙여넣어 사용하면 됩니다.중요한 점은 위의 예시처럼 두 가지 파일을 모두 import해야 한다는 점입니다.\n마치며사용하실 분들은 공식 문서를 잘 살펴보시길 권장해드립니다.공식문서가 좀 부실하게 설명이 되있긴 하지만 도움은 됩니다. 그리고 아직 이걸 많이 안사용하는 것 같습니다. 검색해도 결과가 별로 없네요.저의경우 가벼운 예제를 들었지만 kotlin 코드 상에서 DOM을 직접 조작할 수 있는 API도 있습니다.필요하신 분들은 한번 파보시길 추천드립니다. \nkotlin은 정말 여러 분야에서 사용하기로 작정하고 나온 언어인것 같습니다.","dateCreated":"2019-04-17T20:00:00+09:00","dateModified":"2019-04-18T13:41:08+09:00","datePublished":"2019-04-17T20:00:00+09:00","description":"kotlin으로 작성된 코드를 javascript로 바꾸는 방법을 알아봅니다.","headline":"kotlin to javascript (client side)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/","keywords":"kotlin, javascript"}</script>
+    <meta name="description" content="kotlin으로 작성된 코드를 javascript로 바꾸는 방법을 알아봅니다.">
+<meta name="keywords" content="kotlin,javascript">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="kotlin to javascript (client side)">
+<meta property="og:url" content="https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/index.html">
+<meta property="og:site_name" content="밍피디의 개발노트">
+<meta property="og:description" content="kotlin으로 작성된 코드를 javascript로 바꾸는 방법을 알아봅니다.">
+<meta property="og:locale" content="ko">
+<meta property="og:image" content="https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/1.png">
+<meta property="og:image" content="https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/2.png">
+<meta property="og:image" content="https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/3.png">
+<meta property="og:image" content="https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/4.png">
+<meta property="og:image" content="https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/5.png">
+<meta property="og:image" content="https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/6.png">
+<meta property="og:updated_time" content="2019-04-18T04:41:08.704Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kotlin to javascript (client side)">
+<meta name="twitter:description" content="kotlin으로 작성된 코드를 javascript로 바꾸는 방법을 알아봅니다.">
+<meta name="twitter:image" content="https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/1.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png">
+    
+    
+    
+    
+
+    <!-- adsense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+                                                      google_ad_client: "ca-pub-4098225824538946",
+                                                      enable_page_level_ads: true
+                                                    });
+    </script>
+
+    <link rel="canonical" href="https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/">
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120538979-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120538979-3');
+    </script>
+
+
+    
+
+    <!-- naver 검색 -->
+    <meta name="naver-site-verification" content="cc953655bf884f0df42eb141555d032a9b64c1ee">
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">밍피디의 개발노트</a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+                </a>
+                <h4 class="sidebar-profile-name">밍피디</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>잔망스러운 개발자</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/ " title="홈">
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">홈</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-아무말" title="아무말">
+                    
+                        <i class="sidebar-button-icon fa fa-calendar" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아무말</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-개발" title="개발노트">
+                    
+                        <i class="sidebar-button-icon fa fa-code" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">개발노트</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" title="아카이브">
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" title="태그">
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://cfdf.tistory.com/" target="_blank" rel="external nofollow noopener noreferrer" title="티스토리">
+                    
+                        <i class="sidebar-button-icon fab fa-tumblr" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">티스토리</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            kotlin to javascript (client side)
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-04-17T20:00:00+09:00">
+	
+		    4월 17, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/개발/">개발</a>, <a class="category-link" href="/categories/개발/신기술/">신기술</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt --><br><h1 id="table-of-contents">목차</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Kotlin-to-JavaScript"><span class="toc-text">Kotlin to JavaScript</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#개발-방법"><span class="toc-text">개발 방법</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#실행-방법"><span class="toc-text">실행 방법</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#갖다-쓰기"><span class="toc-text">갖다 쓰기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#마치며"><span class="toc-text">마치며</span></a></li></ol><br>kotlin으로 작성된 코드를 javascript로 바꾸는 방법을 알아봅니다.<br>작업실 카테고리에 <a href="/2019/04/18/workroom/spammaker/" title="스팸체 생성기">스팸체 생성기</a>를 올려두었는데요.<br>원래 kotlin 기반의 Spring boot로 짜여진 코드였습니다. 그런데 spring boot를 돌리던 heroku 무료 사용 가능 기간(1000시간)이 도래하여 서버가 내려갈 위기에 처했습니다.<br>별건 아니지만 재밌는 작품이어서 버리긴 좀 아깝고.. js로 포팅해서 이 블로그에 넣을 생각을 하던 찰나에 이런 문서를 발견했습니다.<p></p>
+<h2 id="Kotlin-to-JavaScript"><a href="#Kotlin-to-JavaScript" class="headerlink" title="Kotlin to JavaScript"></a>Kotlin to JavaScript</h2><p><a href="https://kotlinlang.org/docs/tutorials/javascript/kotlin-to-javascript/kotlin-to-javascript.html" rel="external nofollow noopener noreferrer" target="_blank">Kotlin to JavaScript</a> 문서를 보니 대충 감이 오는데요.<br>kotlin에서 공식적으로 javascript로 빌드하는 기능을 제공한다고 합니다.<br>web browser에서 돌릴 수 있는 형태(client side)와 nodejs 등 에서 돌릴 수 있는 형태도(server side) 지원합니다. 저의경우 GitHub 블로그에서 돌릴것이므로 client side 형태로 빌드해보겠습니다.</p>
+<p>문서에 의하면 방법은 세가지입니다. </p>
+<ul>
+<li>gradle을 이용</li>
+<li>maven을 이용</li>
+<li>그냥 intellij만 이용</li>
+</ul>
+<p>저의 경우 간단하게 끝내고 싶어서 intellij에서 바로 빌드하는 방법을 사용했습니다.<br>하지만 실 서비스에서 제대로 관리하신다면 gradle 혹은 maven 프로젝트 설정을 추천합니다.</p>
+<h2 id="개발-방법"><a href="#개발-방법" class="headerlink" title="개발 방법"></a>개발 방법</h2><p>프로젝트를 만들건데요. Kotlin을 선택합니다. 그리고 오른쪽에서 <code>JS | IDEA</code>를 선택합니다.<br><img src="/2019/04/17/newtech/kotlin-to-javascript/1.png"></p>
+<p>여긴 이름만 잘 지어서 Finish 합니다.<br><img src="/2019/04/17/newtech/kotlin-to-javascript/2.png"></p>
+<p>그 후 <code>src</code> 하위에 kotlin 코드를 넣습니다. 꼭 main이 있어야 할 필요는 없습니다.<br>참고로 다른 프로젝트에서 kotlin 코드를 가져온 경우 빨간줄이 많을 수 있으니 다시 체크해봐야합니다.<br>package 구조가 다르다보니 이 부분에서 꼬이는 경우가 많더군요.<br>저의경우 아래와 같은 프로젝트 구조가 되었습니다.<br><img src="/2019/04/17/newtech/kotlin-to-javascript/3.png" style="width: 400px"></p>
+<p>간단히 Main.kt와 index.html만 살펴보겠습니다.</p>
+<figure class="highlight kotlin"><figcaption><span>Main.kt</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> spamServices = listOf(SymbolizationService(), HangleService())</span><br><span class="line"></span><br><span class="line"><span class="meta">@JsName(<span class="meta-string">"toSpam"</span>)</span>   <span class="comment">// 중요</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">toSpam</span><span class="params">(input: <span class="type">String</span>)</span></span>: String &#123;</span><br><span class="line">    <span class="keyword">var</span> output = input</span><br><span class="line">    spamServices.forEach &#123;</span><br><span class="line">        output = it.process(output)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> output</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ... 후략</span></span><br></pre></td></tr></table></figure>
+<p>스팸체 생성기의 진입 포인트입니다.<br>그냥 똑같이 kotlin 코드를 작성하면 되는데요. <code>@JsName</code> 어노테이션이 중요합니다.<br>이는 javascript로 빌드 되었을 때 function의 이름을 지정하는 역할을 합니다.<br>저 어노테이션이 없으면 kotlin 코드의 <code>함수이름_임의문자</code> 형태로 function이 만들어집니다.<br>위 예시에서 어노테이션이 없을경우 <code>toSpam_2DFg3h</code> 뭐 이런식으로 만들어지는 것이죠.<br>따라서 html에서 직접 호출하여 사용할 함수의 경우는 반드시 이름을 지정해주도록 합니다.</p>
+<figure class="highlight html"><figcaption><span>index.html</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 반드시 import 하자 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"out/production/spammaker/lib/kotlin.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"out/production/spammaker/spammaker.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">  console.log(spammaker.toSpam("동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세"))</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>다음은 index.html의 내용입니다. <code>lib/kotlin.js</code>는 그냥 무조건 import 한다고 생각하시면 됩니다.<br>두번째 script는 kotlin으로 작성된 코드를 javascript로 빌드했을 때 만들어지는 코드입니다.<br>기본적으로 프로젝트 <code>모듈명의 카멜케이스</code>로 만들어지기 때문에 모듈명에 특수문자가 들어간다면 수정을 하는게 좋겠습니다.<br>그리고 모듈명으로 객체가 만들어지기 때문에 저의 경우 <code>spammaker.toSpam(...)</code> 처럼 호출했습니다.<br>눈치채셨겠지만 위에서 설명한 <code>@JsName</code>이 바로 함수 이름이 됩니다.<br>내용이 궁금하신 분들은 <code>모듈명.js</code>를 직접 열어보시기 바랍니다.</p>
+<h2 id="실행-방법"><a href="#실행-방법" class="headerlink" title="실행 방법"></a>실행 방법</h2><p>이 다음에 뭐 어떡해야하나 난감했는데 아주 쉽더군요. 일단 빌드를 합니다.<br><img src="/2019/04/17/newtech/kotlin-to-javascript/4.png" style="width: 500px"><br><br><br>빌드를 하게 되면 <code>out</code>디렉토리에 이것저것 생깁니다. 저의경우 아래처럼 생겼습니다.<br><img src="/2019/04/17/newtech/kotlin-to-javascript/5.png" style="width: 300px"><br><br><br>그 후 실행을 하면되는데요. 방법은 아주 쉽습니다.<br>아래처럼 index.html에서 팝업메뉴를 띄워서 바로 실행할 수 있습니다.<br><img src="/2019/04/17/newtech/kotlin-to-javascript/6.png" style="width: 500px"><br>그러면 브라우저창이 나타나면서 바로 실행할 수 있습니다.<br>정말 좋은점은 바로 Debug 모드인데요. 이를 실행하면 browser 콘솔창의 내용이 intellij 콘솔창에서 나타나게 됩니다. 브레이크 포인트도 잘 먹습니다.</p>
+<h2 id="갖다-쓰기"><a href="#갖다-쓰기" class="headerlink" title="갖다 쓰기"></a>갖다 쓰기</h2><p>만들어진 out 디렉토리 하위에 있는 파일들을 복사해다가 원하는곳에 붙여넣어 사용하면 됩니다.<br>중요한 점은 위의 예시처럼 <code>두 가지 파일을 모두 import</code>해야 한다는 점입니다.</p>
+<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>사용하실 분들은 공식 문서를 잘 살펴보시길 권장해드립니다.<br>공식문서가 좀 부실하게 설명이 되있긴 하지만 도움은 됩니다. 그리고 아직 이걸 많이 안사용하는 것 같습니다. 검색해도 결과가 별로 없네요.<br>저의경우 가벼운 예제를 들었지만 kotlin 코드 상에서 DOM을 직접 조작할 수 있는 API도 있습니다.<br>필요하신 분들은 한번 파보시길 추천드립니다. </p>
+<p>kotlin은 정말 여러 분야에서 사용하기로 작정하고 나온 언어인것 같습니다.</p>
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/">javascript</a> <a class="tag tag--primary tag--small t-link" href="/tags/kotlin/">kotlin</a>
+
+            </div>
+        
+
+
+
+
+        <!--밍피디가 커스터마이징 해본 관련 글 영역-->
+        
+        
+        <!-- 끝 -->
+
+
+
+
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/18/workroom/spammaker/lib/kotlin/" data-tooltip="(제목없음)" aria-label="이전: (제목없음)">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/16/anything/20190416-132137/" data-tooltip="GitHub 블로그를 만들어보았습니다." aria-label="다음: GitHub 블로그를 만들어보았습니다.">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 밍피디. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/18/workroom/spammaker/lib/kotlin/" data-tooltip="(제목없음)" aria-label="이전: (제목없음)">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/16/anything/20190416-132137/" data-tooltip="GitHub 블로그를 만들어보았습니다." aria-label="다음: GitHub 블로그를 만들어보았습니다.">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+            <h4 id="about-card-name">밍피디</h4>
+        
+            <div id="about-card-bio"><p>잔망스러운 개발자</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>개발자</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                판교, 대한민국
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/bg.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://mingpd.github.io/2019/04/17/newtech/kotlin-to-javascript/';
+                 
+                    this.page.identifier = '2019/04/17/newtech/kotlin-to-javascript/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mingpidi';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+
+    </body>
+</html>

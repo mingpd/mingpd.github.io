@@ -1,0 +1,518 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="밍피디의 개발노트">
+    <title> - 밍피디의 개발노트</title>
+    <meta name="author" content="밍피디">
+    
+        <meta name="keywords" content="개발,developer,">
+    
+    
+        <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"// Kotlin.kotlin_module_metadata(393729, \"spammaker\", \"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\");\n","dateCreated":"2019-04-18T01:26:18+09:00","dateModified":"2019-04-18T01:26:18+09:00","datePublished":"2019-04-18T01:26:18+09:00","description":"","headline":"","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker.meta/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker.meta/"}</script>
+    <meta name="description" content="// Kotlin.kotlin_module_metadata(393729, &quot;spammaker&quot;, &quot;H4sIAAAAAAAAAJ1X23MT1xn3RZLXx7K9yECF0jTUbUOa3oySQGjTC5emjkNIipNC2/QixAYJZK0qrVPIE9hgA+FiKGCtOHsSwGAMZB0uBnGfSWcy03aGCS9MO7xsfkP6R/SlPWd3tbsipJ2p7">
+<meta name="keywords" content="개발,developer">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="밍피디의 개발노트">
+<meta property="og:url" content="https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker.meta/index.html">
+<meta property="og:site_name" content="밍피디의 개발노트">
+<meta property="og:description" content="// Kotlin.kotlin_module_metadata(393729, &quot;spammaker&quot;, &quot;H4sIAAAAAAAAAJ1X23MT1xn3RZLXx7K9yECF0jTUbUOa3oySQGjTC5emjkNIipNC2/QixAYJZK0qrVPIE9hgA+FiKGCtOHsSwGAMZB0uBnGfSWcy03aGCS9MO7xsfkP6R/SlPWd3tbsipJ2p7">
+<meta property="og:locale" content="ko">
+<meta property="og:updated_time" content="2019-04-17T16:26:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="밍피디의 개발노트">
+<meta name="twitter:description" content="// Kotlin.kotlin_module_metadata(393729, &quot;spammaker&quot;, &quot;H4sIAAAAAAAAAJ1X23MT1xn3RZLXx7K9yECF0jTUbUOa3oySQGjTC5emjkNIipNC2/QixAYJZK0qrVPIE9hgA+FiKGCtOHsSwGAMZB0uBnGfSWcy03aGCS9MO7xsfkP6R/SlPWd3tbsipJ2p7">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png">
+    
+    
+    
+    
+
+    <!-- adsense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+                                                      google_ad_client: "ca-pub-4098225824538946",
+                                                      enable_page_level_ads: true
+                                                    });
+    </script>
+
+    <link rel="canonical" href="https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker.meta/">
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120538979-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120538979-3');
+    </script>
+
+
+    
+
+    <!-- naver 검색 -->
+    <meta name="naver-site-verification" content="cc953655bf884f0df42eb141555d032a9b64c1ee">
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">밍피디의 개발노트</a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+                </a>
+                <h4 class="sidebar-profile-name">밍피디</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>잔망스러운 개발자</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/ " title="홈">
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">홈</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-아무말" title="아무말">
+                    
+                        <i class="sidebar-button-icon fa fa-calendar" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아무말</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-개발" title="개발노트">
+                    
+                        <i class="sidebar-button-icon fa fa-code" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">개발노트</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" title="아카이브">
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" title="태그">
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://cfdf.tistory.com/" target="_blank" rel="external nofollow noopener noreferrer" title="티스토리">
+                    
+                        <i class="sidebar-button-icon fab fa-tumblr" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">티스토리</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            (제목없음)
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-04-18T01:26:18+09:00">
+	
+		    4월 18, 2019
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            // Kotlin.kotlin_module_metadata(393729, "spammaker", "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");
+
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+
+
+
+
+        <!--밍피디가 커스터마이징 해본 관련 글 영역-->
+        
+        
+        <!-- 끝 -->
+
+
+
+
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/18/workroom/spammaker/" data-tooltip="스팸체 생성기" aria-label="이전: 스팸체 생성기">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/18/workroom/spammaker/spammaker/" data-tooltip="(제목없음)" aria-label="다음: (제목없음)">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker.meta/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker.meta/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker.meta/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 밍피디. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/18/workroom/spammaker/" data-tooltip="스팸체 생성기" aria-label="이전: 스팸체 생성기">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/18/workroom/spammaker/spammaker/" data-tooltip="(제목없음)" aria-label="다음: (제목없음)">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker.meta/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker.meta/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker.meta/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker.meta/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker.meta/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker.meta/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+            <h4 id="about-card-name">밍피디</h4>
+        
+            <div id="about-card-bio"><p>잔망스러운 개발자</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>개발자</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                판교, 대한민국
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/bg.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker.meta/';
+                 
+                    this.page.identifier = '2019/04/18/workroom/spammaker/spammaker.meta/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mingpidi';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+
+    </body>
+</html>

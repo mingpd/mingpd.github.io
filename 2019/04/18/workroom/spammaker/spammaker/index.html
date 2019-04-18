@@ -1,0 +1,995 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="밍피디의 개발노트">
+    <title> - 밍피디의 개발노트</title>
+    <meta name="author" content="밍피디">
+    
+        <meta name="keywords" content="개발,developer,">
+    
+    
+        <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"if (typeof kotlin === 'undefined') {\n  throw new Error(\"Error loading module 'spammaker'. Its dependency 'kotlin' was not found. Please, check whether 'kotlin' is loaded prior to 'spammaker'.\");\n}\nvar spammaker = function (_, Kotlin) {\n  'use strict';\n  var listOf = Kotlin.kotlin.collections.listOf_i5x0yv$;\n  var IntRange = Kotlin.kotlin.ranges.IntRange;\n  var Kind_CLASS = Kotlin.Kind.CLASS;\n  var Random = Kotlin.kotlin.random.Random;\n  var random = Kotlin.kotlin.ranges.random_xmiyix$;\n  var Math_0 = Math;\n  var unboxChar = Kotlin.unboxChar;\n  var toBoxedChar = Kotlin.toBoxedChar;\n  var joinToString = Kotlin.kotlin.collections.joinToString_xqrb1d$;\n  var contains = Kotlin.kotlin.text.contains_sgbm27$;\n  var toString = Kotlin.toString;\n  var contains_0 = Kotlin.kotlin.text.contains_li3zpu$;\n  var replace = Kotlin.kotlin.text.replace_680rmw$;\n  var to = Kotlin.kotlin.to_ujzrz7$;\n  var mapOf = Kotlin.kotlin.collections.mapOf_qfcya0$;\n  var Kind_INTERFACE = Kotlin.Kind.INTERFACE;\n  var throwCCE = Kotlin.throwCCE;\n  var trim = Kotlin.kotlin.text.trim_gw00vp$;\n  var Regex_init = Kotlin.kotlin.text.Regex_init_61zpoe$;\n  var CharRange = Kotlin.kotlin.ranges.CharRange;\n  var toChar = Kotlin.toChar;\n  var joinToString_0 = Kotlin.kotlin.collections.joinToString_fmv235$;\n  var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;\n  var iterator = Kotlin.kotlin.text.iterator_gw00vp$;\n  var indexOf = Kotlin.kotlin.collections.indexOf_o2f9me$;\n  var ensureNotNull = Kotlin.ensureNotNull;\n  var toInt = Kotlin.kotlin.text.toInt_pdl1vz$;\n  var spamServices;\n  function convert(input, option) {\n    var output = {v: input};\n    var tmp$;\n    tmp$ = spamServices.iterator();\n    while (tmp$.hasNext()) {\n      var element = tmp$.next();\n      output.v = element.process_bqi7sc$(output.v, option);\n    }\n    return output.v;\n  }\n  function toSpam(input) {\n    var output = {v: input};\n    var tmp$;\n    tmp$ = spamServices.iterator();\n    while (tmp$.hasNext()) {\n      var element = tmp$.next();\n      output.v = element.process_bqi7sc$(output.v);\n    }\n    return output.v;\n  }\n  function toKorean(input) {\n    var output = {v: input};\n    var tmp$;\n    tmp$ = spamServices.iterator();\n    while (tmp$.hasNext()) {\n      var element = tmp$.next();\n      output.v = element.process_bqi7sc$(output.v, new SpamOption(0, 0, 0, 50, 0, 0, 0, 0, 0, 0, false));\n    }\n    return output.v;\n  }\n  function SpamOption(hHorizontal, hDual1, hDual2, hComplex, hSpecial, sLetter, sRandom, sWhitespace, sDigit, sFullWidth, prefix) {\n    if (hHorizontal === void 0)\n      hHorizontal = 100;\n    if (hDual1 === void 0)\n      hDual1 = 100;\n    if (hDual2 === void 0)\n      hDual2 = 100;\n    if (hComplex === void 0)\n      hComplex = 20;\n    if (hSpecial === void 0)\n      hSpecial = 50;\n    if (sLetter === void 0)\n      sLetter = 100;\n    if (sRandom === void 0)\n      sRandom = 20;\n    if (sWhitespace === void 0)\n      sWhitespace = 100;\n    if (sDigit === void 0)\n      sDigit = 40;\n    if (sFullWidth === void 0)\n      sFullWidth = 100;\n    if (prefix === void 0)\n      prefix = false;\n    this.hHorizontal = hHorizontal;\n    this.hDual1 = hDual1;\n    this.hDual2 = hDual2;\n    this.hComplex = hComplex;\n    this.hSpecial = hSpecial;\n    this.sLetter = sLetter;\n    this.sRandom = sRandom;\n    this.sWhitespace = sWhitespace;\n    this.sDigit = sDigit;\n    this.sFullWidth = sFullWidth;\n    this.prefix = prefix;\n  }\n  SpamOption.prototype.enableLetterSymbolization = function () {\n    return random(new IntRange(0, 100), Random.Default) < this.sLetter;\n  };\n  SpamOption.prototype.enableHHorizontal = function () {\n    return random(new IntRange(0, 100), Random.Default) < this.hHorizontal;\n  };\n  SpamOption.prototype.enableHDual1 = function () {\n    return random(new IntRange(0, 100), Random.Default) < this.hDual1;\n  };\n  SpamOption.prototype.enableHDual2 = function () {\n    return random(new IntRange(0, 100), Random.Default) < this.hDual2;\n  };\n  SpamOption.prototype.enableHSpecial = function () {\n    return random(new IntRange(0, 100), Random.Default) < this.hSpecial;\n  };\n  SpamOption.prototype.enableHComplex = function () {\n    return random(new IntRange(0, 100), Random.Default) < this.hComplex;\n  };\n  SpamOption.prototype.enableSymbolization = function () {\n    var tmp$ = random(new IntRange(0, 100), Random.Default);\n    var a = this.sRandom;\n    return tmp$ < Math_0.min(a, 50);\n  };\n  SpamOption.prototype.enableUrlSymbolization = function () {\n    return this.sRandom > 0;\n  };\n  SpamOption.prototype.enableWhitespaceSymbolization = function () {\n    return random(new IntRange(0, 100), Random.Default) < this.sWhitespace;\n  };\n  SpamOption.prototype.enableDigitSymbolization = function () {\n    return random(new IntRange(0, 100), Random.Default) < this.sDigit;\n  };\n  SpamOption.prototype.enableFullWidth = function () {\n    return random(new IntRange(0, 100), Random.Default) < this.sFullWidth;\n  };\n  SpamOption.prototype.enableFullWidthUrl = function () {\n    return this.sFullWidth === 100;\n  };\n  SpamOption.prototype.enablePrefix = function () {\n    return this.prefix;\n  };\n  SpamOption.$metadata$ = {\n    kind: Kind_CLASS,\n    simpleName: 'SpamOption',\n    interfaces: []\n  };\n  SpamOption.prototype.component1 = function () {\n    return this.hHorizontal;\n  };\n  SpamOption.prototype.component2 = function () {\n    return this.hDual1;\n  };\n  SpamOption.prototype.component3 = function () {\n    return this.hDual2;\n  };\n  SpamOption.prototype.component4 = function () {\n    return this.hComplex;\n  };\n  SpamOption.prototype.component5 = function () {\n    return this.hSpecial;\n  };\n  SpamOption.prototype.component6 = function () {\n    return this.sLetter;\n  };\n  SpamOption.prototype.component7 = function () {\n    return this.sRandom;\n  };\n  SpamOption.prototype.component8 = function () {\n    return this.sWhitespace;\n  };\n  SpamOption.prototype.component9 = function () {\n    return this.sDigit;\n  };\n  SpamOption.prototype.component10 = function () {\n    return this.sFullWidth;\n  };\n  SpamOption.prototype.component11 = function () {\n    return this.prefix;\n  };\n  SpamOption.prototype.copy_81wilh$ = function (hHorizontal, hDual1, hDual2, hComplex, hSpecial, sLetter, sRandom, sWhitespace, sDigit, sFullWidth, prefix) {\n    return new SpamOption(hHorizontal === void 0 ? this.hHorizontal : hHorizontal, hDual1 === void 0 ? this.hDual1 : hDual1, hDual2 === void 0 ? this.hDual2 : hDual2, hComplex === void 0 ? this.hComplex : hComplex, hSpecial === void 0 ? this.hSpecial : hSpecial, sLetter === void 0 ? this.sLetter : sLetter, sRandom === void 0 ? this.sRandom : sRandom, sWhitespace === void 0 ? this.sWhitespace : sWhitespace, sDigit === void 0 ? this.sDigit : sDigit, sFullWidth === void 0 ? this.sFullWidth : sFullWidth, prefix === void 0 ? this.prefix : prefix);\n  };\n  SpamOption.prototype.toString = function () {\n    return 'SpamOption(hHorizontal=' + Kotlin.toString(this.hHorizontal) + (', hDual1=' + Kotlin.toString(this.hDual1)) + (', hDual2=' + Kotlin.toString(this.hDual2)) + (', hComplex=' + Kotlin.toString(this.hComplex)) + (', hSpecial=' + Kotlin.toString(this.hSpecial)) + (', sLetter=' + Kotlin.toString(this.sLetter)) + (', sRandom=' + Kotlin.toString(this.sRandom)) + (', sWhitespace=' + Kotlin.toString(this.sWhitespace)) + (', sDigit=' + Kotlin.toString(this.sDigit)) + (', sFullWidth=' + Kotlin.toString(this.sFullWidth)) + (', prefix=' + Kotlin.toString(this.prefix)) + ')';\n  };\n  SpamOption.prototype.hashCode = function () {\n    var result = 0;\n    result = result * 31 + Kotlin.hashCode(this.hHorizontal) | 0;\n    result = result * 31 + Kotlin.hashCode(this.hDual1) | 0;\n    result = result * 31 + Kotlin.hashCode(this.hDual2) | 0;\n    result = result * 31 + Kotlin.hashCode(this.hComplex) | 0;\n    result = result * 31 + Kotlin.hashCode(this.hSpecial) | 0;\n    result = result * 31 + Kotlin.hashCode(this.sLetter) | 0;\n    result = result * 31 + Kotlin.hashCode(this.sRandom) | 0;\n    result = result * 31 + Kotlin.hashCode(this.sWhitespace) | 0;\n    result = result * 31 + Kotlin.hashCode(this.sDigit) | 0;\n    result = result * 31 + Kotlin.hashCode(this.sFullWidth) | 0;\n    result = result * 31 + Kotlin.hashCode(this.prefix) | 0;\n    return result;\n  };\n  SpamOption.prototype.equals = function (other) {\n    return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && (Kotlin.equals(this.hHorizontal, other.hHorizontal) && Kotlin.equals(this.hDual1, other.hDual1) && Kotlin.equals(this.hDual2, other.hDual2) && Kotlin.equals(this.hComplex, other.hComplex) && Kotlin.equals(this.hSpecial, other.hSpecial) && Kotlin.equals(this.sLetter, other.sLetter) && Kotlin.equals(this.sRandom, other.sRandom) && Kotlin.equals(this.sWhitespace, other.sWhitespace) && Kotlin.equals(this.sDigit, other.sDigit) && Kotlin.equals(this.sFullWidth, other.sFullWidth) && Kotlin.equals(this.prefix, other.prefix)))));\n  };\n  function HangleService() {\n    this.specials_0 = mapOf([to('\\u314F', 'r'), to('\\u3150', 'H'), to('\\u3151', 'F'), to('\\u3163', '1'), to('\\u3131', '7'), to('\\u3134', 'L'), to('\\u3139', 'z'), to('\\u3141', '\\u25A1'), to('\\u3147', '0'), to('\\u3148', '\\u30CC')]);\n  }\n  HangleService.prototype.process_bqi7sc$$default = function (text, option) {\n    var tmp$, tmp$_0, tmp$_1, tmp$_2;\n    var result = '';\n    tmp$ = text.length;\n    for (var i = 0; i < tmp$; i++) {\n      var disassembled = disassemble(text.charCodeAt(i));\n      var disassembledAtomically = disassembleAtomically(text.charCodeAt(i));\n      if (disassembled == null || disassembledAtomically == null) {\n        result += String.fromCharCode(text.charCodeAt(i));\n        continue;\n      }\n      tmp$_1 = result;\n      if (option.enableHComplex())\n        tmp$_0 = toBoxedChar(assemble(pickStrongCho(disassembledAtomically[0][0]), unboxChar(disassembled[1]), disassembled.length === 2 ? pickComplexJong() : pickComplexJong_0(unboxChar(disassembled[2]))));\n      else if (option.enableHHorizontal() && disassembled.length === 2 && disassembledAtomically[1].length === 1 && contains('\\u314F\\u3150\\u3151\\u3152\\u3153\\u3154\\u3155\\u3156\\u3163', unboxChar(disassembled[1])))\n        tmp$_0 = joinToString(disassembledAtomically[0], '') + String.fromCharCode(unboxChar(disassembled[1]));\n      else if (option.enableHDual1() && disassembledAtomically[1].length === 2 && disassembled.length === 2)\n        tmp$_0 = toString(toBoxedChar(assemble(unboxChar(disassembled[0]), disassembledAtomically[1][0]))) + String.fromCharCode(disassembledAtomically[1][1]);\n      else if (option.enableHDual2() && disassembledAtomically[1].length === 2 && disassembled.length === 3)\n        tmp$_0 = toString(toBoxedChar(assemble(unboxChar(disassembled[0]), disassembledAtomically[1][0], unboxChar(disassembled[2])))) + String.fromCharCode(disassembledAtomically[1][1]);\n      else\n        tmp$_0 = String.fromCharCode(text.charCodeAt(i));\n      result = tmp$_1 + toString(tmp$_0);\n    }\n    tmp$_2 = this.specials_0.entries.iterator();\n    while (tmp$_2.hasNext()) {\n      var tmp$_3 = tmp$_2.next();\n      var k = tmp$_3.key;\n      var v = tmp$_3.value;\n      if (contains_0(result, k) && option.enableHSpecial())\n        result = replace(result, k, v);\n    }\n    return option.enablePrefix() ? '[Web\\uBC1C\\uC2E0]' + '\\n' + result : result;\n  };\n  HangleService.$metadata$ = {\n    kind: Kind_CLASS,\n    simpleName: 'HangleService',\n    interfaces: [SpamService]\n  };\n  function SpamService() {\n  }\n  SpamService.prototype.process_bqi7sc$ = function (text, option, callback$default) {\n    if (option === void 0)\n      option = new SpamOption();\n    return callback$default ? callback$default(text, option) : this.process_bqi7sc$$default(text, option);\n  };\n  SpamService.$metadata$ = {\n    kind: Kind_INTERFACE,\n    simpleName: 'SpamService',\n    interfaces: []\n  };\n  function SymbolizationService() {\n    this.specials_0 = mapOf([to('http://', ' \\u261E\\uC989\\uC2DC\\uC774\\uB3D9 http://'), to('https://', ' \\u261E\\uC989\\uC2DC\\uC774\\uB3D9 http://')]);\n    this.tokens_0 = mapOf([to('\\uBA85', '\\uB775'), to('\\uC4F0', '\\u4E1B'), to('\\uB178', '\\u4E0A'), to('\\uBCD1', '\\u3179'), to('\\uC751', '%'), to('\\uACF3', '\\u592C'), to('\\uCB48', '\\u5352'), to('\\uACE0', '\\u536B'), to('\\uC2A4', '\\u4EBC'), to('\\uC18C', '\\u4EDD'), to('\\uC218', '\\u3403'), to('\\uC2B4', '\\u4E1B\\u4E1B'), to('\\uC2A5', '\\u4ECA'), to('\\uC870', '\\u4E15'), to('\\uB93C', '\\u5F15'), to('18', '\\u65E7')]);\n  }\n  SymbolizationService.prototype.process_bqi7sc$$default = function (text, option) {\n    var tmp$, tmp$_0, tmp$_1, tmp$_2, tmp$_3, tmp$_4, tmp$_5;\n    var origin = text;\n    tmp$ = this.tokens_0.entries.iterator();\n    while (tmp$.hasNext()) {\n      var tmp$_6 = tmp$.next();\n      var k = tmp$_6.key;\n      var v = tmp$_6.value;\n      if (option.enableLetterSymbolization()) {\n        origin = replace(origin, k, v);\n      }\n    }\n    var result = '';\n    var $receiver = origin;\n    var tmp$_7;\n    var tmp$_8 = trim(Kotlin.isCharSequence(tmp$_7 = $receiver) ? tmp$_7 : throwCCE()).toString();\n    var split = Regex_init('\\\\h').split_905azu$(tmp$_8, 0);\n    tmp$_0 = split.iterator();\n    while (tmp$_0.hasNext()) {\n      var s = tmp$_0.next();\n      var i = 0;\n      if (isUrl(s)) {\n        if (option.enableUrlSymbolization()) {\n          var url = {v: s};\n          var tmp$_9;\n          tmp$_9 = this.specials_0.entries.iterator();\n          while (tmp$_9.hasNext()) {\n            var element = tmp$_9.next();\n            url.v = replace(url.v, element.key, element.value);\n          }\n          result += (option.enableFullWidthUrl() ? toFullWidth_0(url.v) : url.v) + randomSymbol();\n        }\n         else {\n          result += s + ' ';\n        }\n        continue;\n      }\n      while (i < s.length) {\n        tmp$_5 = result;\n        if (option.enableSymbolization())\n          tmp$_4 = randomSymbol();\n        else if (isDigit(s.charCodeAt(i)) && option.enableDigitSymbolization()) {\n          tmp$_4 = symbolDigit(s.charCodeAt((tmp$_1 = i, i = tmp$_1 + 1 | 0, tmp$_1)));\n        }\n         else if (isAlphabet(s.charCodeAt(i)) && option.enableFullWidth()) {\n          tmp$_4 = toFullWidth(s.charCodeAt((tmp$_2 = i, i = tmp$_2 + 1 | 0, tmp$_2)));\n        }\n         else {\n          tmp$_4 = toBoxedChar(s.charCodeAt((tmp$_3 = i, i = tmp$_3 + 1 | 0, tmp$_3)));\n        }\n        result = tmp$_5 + tmp$_4.toString();\n      }\n      result += option.enableWhitespaceSymbolization() ? randomSymbol() : ' ';\n    }\n    return result;\n  };\n  SymbolizationService.$metadata$ = {\n    kind: Kind_CLASS,\n    simpleName: 'SymbolizationService',\n    interfaces: [SpamService]\n  };\n  function isUrl($receiver) {\n    return Regex_init('(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]').containsMatchIn_6bul2c$($receiver);\n  }\n  function isAlphabet($receiver) {\n    return (new CharRange(65, 122)).contains_mef7kx$($receiver);\n  }\n  function isDigit($receiver) {\n    return (new CharRange(48, 57)).contains_mef7kx$($receiver);\n  }\n  function toFullWidth($receiver) {\n    return isAlphabet($receiver) || isDigit($receiver) ? String.fromCharCode(toChar($receiver + 65248)) : String.fromCharCode($receiver);\n  }\n  function toFullWidth_0($receiver) {\n    var destination = ArrayList_init($receiver.length);\n    var tmp$;\n    tmp$ = iterator($receiver);\n    while (tmp$.hasNext()) {\n      var item = unboxChar(tmp$.next());\n      destination.add_11rb$(toFullWidth(unboxChar(toBoxedChar(item))));\n    }\n    return joinToString_0(destination, '');\n  }\n  function random_0($receiver) {\n    return unboxChar($receiver.length > 0 ? $receiver[random(new IntRange(0, $receiver.length - 1 | 0), Random.Default)] : null);\n  }\n  var generalCho;\n  var generalJung;\n  var generalJong;\n  var atomicCho;\n  var atomicJung;\n  var atomicJong;\n  var duals;\n  var toStrongCho;\n  var complexJong;\n  var toComplexJong;\n  function cho(ch) {\n    return (new CharRange(44032, 55203)).contains_mef7kx$(ch) ? generalCho[(ch - 44032) / 588 | 0] : null;\n  }\n  function disassemble(ch) {\n    var tmp$;\n    if ((new CharRange(44032, 55203)).contains_mef7kx$(ch)) {\n      var i1;\n      var i2;\n      var i3 = ch - 44032;\n      i1 = i3 / 588 | 0;\n      i3 = i3 % 588;\n      i2 = i3 / 28 | 0;\n      i3 = i3 % 28;\n      tmp$ = i3 !== 0 ? [toBoxedChar(generalCho[i1]), toBoxedChar(generalJung[i2]), toBoxedChar(generalJong[i3])] : [toBoxedChar(generalCho[i1]), toBoxedChar(generalJung[i2])];\n    }\n     else\n      tmp$ = null;\n    return tmp$;\n  }\n  function disassembleAtomically(ch) {\n    var tmp$;\n    if ((new CharRange(44032, 55203)).contains_mef7kx$(ch)) {\n      var i1;\n      var i2;\n      var i3 = ch - 44032;\n      i1 = i3 / 588 | 0;\n      i3 = i3 % 588;\n      i2 = i3 / 28 | 0;\n      i3 = i3 % 28;\n      tmp$ = i3 !== 0 ? [atomicCho[i1], atomicJung[i2], atomicJong[i3]] : [atomicCho[i1], atomicJung[i2]];\n    }\n     else if ((new CharRange(12593, 12643)).contains_mef7kx$(ch))\n      tmp$ = [duals[ch - 12593]];\n    else\n      tmp$ = null;\n    return tmp$;\n  }\n  function assemble(cho, jung, jong) {\n    if (jong === void 0)\n      jong = null;\n    var tmp$;\n    if (indexOf(generalCho, cho) >= 0 && indexOf(generalJung, jung) >= 0) {\n      tmp$ = toChar(((indexOf(generalCho, cho) * 21 | 0) * 28 | 0) + (indexOf(generalJung, jung) * 28 | 0) + (jong != null ? indexOf(generalJong, jong) : 0) + 44032 | 0);\n    }\n     else\n      tmp$ = null;\n    return tmp$;\n  }\n  function pickStrongCho(cho) {\n    var tmp$, tmp$_0;\n    return unboxChar((tmp$_0 = (tmp$ = toStrongCho.get_11rb$(toBoxedChar(cho))) != null ? random_0(tmp$) : null) != null ? tmp$_0 : cho);\n  }\n  function pickComplexJong() {\n    return unboxChar(ensureNotNull(random_0(complexJong)));\n  }\n  function pickComplexJong_0(jong) {\n    var tmp$, tmp$_0;\n    return unboxChar((tmp$_0 = (tmp$ = toComplexJong.get_11rb$(toBoxedChar(jong))) != null ? random_0(tmp$) : null) != null ? tmp$_0 : jong);\n  }\n  var numbers;\n  var symbols;\n  function randomSymbol() {\n    return String.fromCharCode(symbols.charCodeAt(random(new IntRange(0, 376), Random.Default)));\n  }\n  function symbolDigit(ch) {\n    return String.fromCharCode(numbers.charCodeAt(toInt(String.fromCharCode(ch)) % 10 + (random(new IntRange(0, 4), Random.Default) * 10 | 0) | 0));\n  }\n  Object.defineProperty(_, 'spamServices', {\n    get: function () {\n      return spamServices;\n    }\n  });\n  _.toSpam = toSpam;\n  _.toKorean = toKorean;\n  _.SpamOption = SpamOption;\n  _.HangleService = HangleService;\n  _.SpamService = SpamService;\n  _.SymbolizationService = SymbolizationService;\n  _.isUrl_pdl1vz$ = isUrl;\n  _.isAlphabet_myv2d0$ = isAlphabet;\n  _.isDigit_myv2d0$ = isDigit;\n  _.toFullWidth_myv2d0$ = toFullWidth;\n  _.toFullWidth_pdl1vz$ = toFullWidth_0;\n  _.random_355ntz$ = random_0;\n  _.cho_s8itvh$ = cho;\n  _.disassemble_s8itvh$ = disassemble;\n  _.disassembleAtomically_s8itvh$ = disassembleAtomically;\n  _.assemble_p65ylq$ = assemble;\n  _.pickStrongCho_s8itvh$ = pickStrongCho;\n  _.pickComplexJong = pickComplexJong;\n  _.pickComplexJong_s8itvh$ = pickComplexJong_0;\n  Object.defineProperty(_, 'numbers', {\n    get: function () {\n      return numbers;\n    }\n  });\n  Object.defineProperty(_, 'symbols', {\n    get: function () {\n      return symbols;\n    }\n  });\n  _.randomSymbol = randomSymbol;\n  _.symbolDigit_s8itvh$ = symbolDigit;\n  HangleService.prototype.process_bqi7sc$ = SpamService.prototype.process_bqi7sc$;\n  SymbolizationService.prototype.process_bqi7sc$ = SpamService.prototype.process_bqi7sc$;\n  spamServices = listOf([new SymbolizationService(), new HangleService()]);\n  generalCho = Kotlin.charArrayOf(12593, 12594, 12596, 12599, 12600, 12601, 12609, 12610, 12611, 12613, 12614, 12615, 12616, 12617, 12618, 12619, 12620, 12621, 12622);\n  generalJung = Kotlin.charArrayOf(12623, 12624, 12625, 12626, 12627, 12628, 12629, 12630, 12631, 12632, 12633, 12634, 12635, 12636, 12637, 12638, 12639, 12640, 12641, 12642, 12643);\n  generalJong = Kotlin.charArrayOf(toChar(0), 12593, 12594, 12595, 12596, 12597, 12598, 12599, 12601, 12602, 12603, 12604, 12605, 12606, 12607, 12608, 12609, 12610, 12612, 12613, 12614, 12615, 12616, 12618, 12619, 12620, 12621, 12622);\n  atomicCho = [Kotlin.charArrayOf(12593), Kotlin.charArrayOf(12593, 12593), Kotlin.charArrayOf(12596), Kotlin.charArrayOf(12599), Kotlin.charArrayOf(12599, 12599), Kotlin.charArrayOf(12601), Kotlin.charArrayOf(12609), Kotlin.charArrayOf(12610), Kotlin.charArrayOf(12610, 12610), Kotlin.charArrayOf(12613), Kotlin.charArrayOf(12613, 12613), Kotlin.charArrayOf(12615), Kotlin.charArrayOf(12616), Kotlin.charArrayOf(12616, 12616), Kotlin.charArrayOf(12618), Kotlin.charArrayOf(12619), Kotlin.charArrayOf(12620), Kotlin.charArrayOf(12621), Kotlin.charArrayOf(12622)];\n  atomicJung = [Kotlin.charArrayOf(12623), Kotlin.charArrayOf(12624), Kotlin.charArrayOf(12625), Kotlin.charArrayOf(12626), Kotlin.charArrayOf(12627), Kotlin.charArrayOf(12628), Kotlin.charArrayOf(12629), Kotlin.charArrayOf(12630), Kotlin.charArrayOf(12631), Kotlin.charArrayOf(12631, 12623), Kotlin.charArrayOf(12631, 12624), Kotlin.charArrayOf(12631, 12643), Kotlin.charArrayOf(12635), Kotlin.charArrayOf(12636), Kotlin.charArrayOf(12636, 12627), Kotlin.charArrayOf(12636, 12628), Kotlin.charArrayOf(12636, 12643), Kotlin.charArrayOf(12640), Kotlin.charArrayOf(12641), Kotlin.charArrayOf(12641, 12643), Kotlin.charArrayOf(12643)];\n  atomicJong = [Kotlin.charArrayOf(), Kotlin.charArrayOf(12593), Kotlin.charArrayOf(12593, 12593), Kotlin.charArrayOf(12593, 12613), Kotlin.charArrayOf(12596), Kotlin.charArrayOf(12596, 12616), Kotlin.charArrayOf(12596, 12622), Kotlin.charArrayOf(12599), Kotlin.charArrayOf(12601), Kotlin.charArrayOf(12601, 12593), Kotlin.charArrayOf(12601, 12609), Kotlin.charArrayOf(12601, 12610), Kotlin.charArrayOf(12601, 12613), Kotlin.charArrayOf(12601, 12620), Kotlin.charArrayOf(12601, 12621), Kotlin.charArrayOf(12601, 12622), Kotlin.charArrayOf(12609), Kotlin.charArrayOf(12610), Kotlin.charArrayOf(12610, 12613), Kotlin.charArrayOf(12613), Kotlin.charArrayOf(12613, 12613), Kotlin.charArrayOf(12615), Kotlin.charArrayOf(12616), Kotlin.charArrayOf(12618), Kotlin.charArrayOf(12619), Kotlin.charArrayOf(12620), Kotlin.charArrayOf(12621), Kotlin.charArrayOf(12622)];\n  duals = [Kotlin.charArrayOf(12593), Kotlin.charArrayOf(12593, 12593), Kotlin.charArrayOf(12593, 12613), Kotlin.charArrayOf(12596), Kotlin.charArrayOf(12596, 12616), Kotlin.charArrayOf(12596, 12622), Kotlin.charArrayOf(12599), Kotlin.charArrayOf(12600), Kotlin.charArrayOf(12601), Kotlin.charArrayOf(12601, 12593), Kotlin.charArrayOf(12601, 12609), Kotlin.charArrayOf(12601, 12610), Kotlin.charArrayOf(12601, 12613), Kotlin.charArrayOf(12601, 12599), Kotlin.charArrayOf(12601, 12621), Kotlin.charArrayOf(12601, 12622), Kotlin.charArrayOf(12609), Kotlin.charArrayOf(12610), Kotlin.charArrayOf(12610, 12610), Kotlin.charArrayOf(12610, 12613), Kotlin.charArrayOf(12613), Kotlin.charArrayOf(12613, 12613), Kotlin.charArrayOf(12615), Kotlin.charArrayOf(12616), Kotlin.charArrayOf(12616, 12616), Kotlin.charArrayOf(12618), Kotlin.charArrayOf(12619), Kotlin.charArrayOf(12620), Kotlin.charArrayOf(12621), Kotlin.charArrayOf(12622), Kotlin.charArrayOf(12623), Kotlin.charArrayOf(12624), Kotlin.charArrayOf(12625), Kotlin.charArrayOf(12626), Kotlin.charArrayOf(12627), Kotlin.charArrayOf(12628), Kotlin.charArrayOf(12629), Kotlin.charArrayOf(12630), Kotlin.charArrayOf(12631), Kotlin.charArrayOf(12631, 12623), Kotlin.charArrayOf(12631, 12624), Kotlin.charArrayOf(12631, 12643), Kotlin.charArrayOf(12635), Kotlin.charArrayOf(12636), Kotlin.charArrayOf(12636, 12627), Kotlin.charArrayOf(12636, 12628), Kotlin.charArrayOf(12636, 12643), Kotlin.charArrayOf(12640), Kotlin.charArrayOf(12641), Kotlin.charArrayOf(12641, 12643), Kotlin.charArrayOf(12643)];\n  toStrongCho = mapOf([to(toBoxedChar(12593), Kotlin.charArrayOf(12594, 12619)), to(toBoxedChar(12599), Kotlin.charArrayOf(12600, 12620)), to(toBoxedChar(12610), Kotlin.charArrayOf(12611, 12621)), to(toBoxedChar(12613), Kotlin.charArrayOf(12614)), to(toBoxedChar(12616), Kotlin.charArrayOf(12617, 12618))]);\n  complexJong = Kotlin.charArrayOf(12595, 12597, 12598, 12602, 12603, 12604, 12605, 12606, 12607, 12608, 12612);\n  toComplexJong = mapOf([to(toBoxedChar(12593), Kotlin.charArrayOf(12594, 12595)), to(toBoxedChar(12596), Kotlin.charArrayOf(12597, 12598)), to(toBoxedChar(12601), Kotlin.charArrayOf(12603, 12604, 12605, 12606, 12607, 12608)), to(toBoxedChar(12610), Kotlin.charArrayOf(12612)), to(toBoxedChar(12613), Kotlin.charArrayOf(12614))]);\n  numbers = '0\\u2776\\u2777\\u2778\\u2779\\u277A\\u277B\\u277C\\u277D\\u277E0\\u2780\\u2781\\u2782\\u2783\\u2784\\u2785\\u2786\\u2787\\u27880\\u278A\\u278B\\u278C\\u278D\\u278E\\u278F\\u2790\\u2791\\u27920\\u4E28\\u5DF1\\u5F50\\u4E29\\u4E0267\\u65E59';\n  symbols = '\\u272F\\u273F\\u2740\\u273F\\u2741\\u262A\\u272A\\u272B\\u272C\\u272D\\u272E\\u272F\\u2730\\u273B\\u273C\\u273D\\u273E\\u2743\\u2762\\u2763\\u2765\\u2766\\u2767\\u27B3\\u27B4\\u27B5\\u27B6\\u27B7\\u27B8\\u27B9\\u27BA\\u27BB\\u27BC\\u2745\\u2746\\u10E6\\u275E\\u2764\\u2763\\u2767\\u2766\\u2729\\u272A\\u272B\\u272C\\u272D\\u272E\\u272F\\u2730\\u2731\\u2732\\u2733\\u2734\\u2735\\u2737\\u2736\\u2738\\u2739\\u273A\\u273B\\u273C\\u273D\\u273E\\u273F\\u2740\\u2741\\u2742\\u2743\\u2744\\u2745\\u2746\\u2747\\u2748\\u2749\\u274A\\u274B\\u274D\\u274F\\u2750\\u2751\\u2752\\u2756\\u2758\\u2759\\u275A\\u275B\\u275C\\u275D\\u275E\\u2761\\u2762\\u2763\\u2764\\u2765\\u2766\\u2767\\u2794\\u2798\\u2799\\u279A\\u279B\\u279C\\u279D\\u279E\\u279F\\u27A0\\u27A1\\u27A2\\u27A3\\u27A4\\u27A5\\u27A6\\u27A7\\u27A8' + '\\u27A9\\u27AA\\u27AB\\u27AC\\u27AD\\u27AE\\u27AF\\u27B1\\u27B2\\u27B3\\u27B4\\u27B5\\u27B6\\u27B7\\u27B8\\u27B9\\u27BA\\u27BB\\u27BC\\u27BD\\u27BE\\u2605\\u2606\\u2609\\u260E\\u260F\\u261C\\u261E\\u262C\\u2640\\u2642\\u2701\\u2702\\u2703\\u2704\\u2706\\u2707\\u2708\\u2709\\u270C\\u270D\\u270E\\u270F\\u2710\\u2711\\u2712\\u2609\\u260E\\u260F\\u261C\\u261E\\u262C\\u2640\\u2642\\u2654\\u2655\\u2656\\u2657\\u2658\\u2659\\u265A\\u265B\\u265C\\u265D\\u265E\\u10DA\\u265B\\u0E51\\u2727\\u0B86\\u0B87\\u0B88\\u0B8A\\u0B8E\\u0B8F\\u0B90\\u0B90\\u0B93\\u0B94\\u25CC\\u0B82 \\u0B83\\u25CC\\u0BBE \\u25CC\\u0BBF\\u25CC\\u0BD7 \\u0B99\\u0B9C\\u0B9E\\u0BA3\\u0BA8\\u0BA9\\u0BAE\\u0BAF\\u0BB1\\u0BB2\\u0BB3\\u0BB4\\u0BB5' + '\\u0BB8\\u0BB9\\u0BE7\\u0BE8\\u0BE9\\u0BEA\\u0BEB\\u0434\\u256C\\u2609\\u10E6\\u2764\\u0B90\\u25CC\\u0BBF\\u0394\\u2764\\u02C7\\u067C\\u0E51\\u06E9\\u06DE\\u06E9\\u273F\\u273E\\u270C\\u270D\\u270E\\u270F\\u2740\\u0E34\\u270C\\u2710\\u226B\\xBD\\xBF\\u272A\\u2605\\u2606\\u260E\\u260F\\u261E\\u261C\\u2710\\u2711\\u2712\\u2714\\u2715\\u2716\\u2717\\u2718\\u2719\\u271A\\u271B\\u271C\\u271D\\u271E\\u272F\\u272E\\u272C\\u272B\\u272A\\u2727\\u2726\\u2725\\u2724\\u2723\\u2722\\u2721\\u2720\\u2730\\u2731\\u2730\\u2740\\u2742\\u2744\\u2745\\u2749\\u274A\\u274B\\u2763\\u2764\\u2766\\u2667\\u2664\\u047C\\u2642\\u2640\\u266D\\u2718\\u062A\\xDC\\u273D\\u265A\\u265B\\u265C\\u265D\\u265E\\u265F\\u2654\\u2655\\u2656\\u265D\\u029A\\u025E\\u047C\\u10E6\\u2730\\u2731\\u2740\\u2741\\u2745\\u2763\\u273F\\u273E\\u2765' + '\\u262C\\u2740\\u2654\\u2656\\u2658\\u2659\\u2640\\u2642\\u25C8\\u047C\\u265A\\u265B\\u265C\\u265D\\u265E\\u265F\\u2765\\u2762\\u2729\\u272E\\u272F\\u2735\\u2749\\u2742\\u2765\\u265A\\u265B\\u03B5\\u2658\\u2659\\u03B5\\u0457\\u0437\\u2680\\u2681\\u2682\\u2683\\u2684\\u2685\\u2727\\u2665\\u2665';\n  Kotlin.defineModule('spammaker', _);\n  return _;\n}(typeof spammaker === 'undefined' ? {} : spammaker, kotlin);\n\n//# sourceMappingURL=spammaker.js.map\n","dateCreated":"2019-04-18T01:26:18+09:00","dateModified":"2019-04-18T01:26:18+09:00","datePublished":"2019-04-18T01:26:18+09:00","description":"","headline":"","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker/"}</script>
+    <meta name="description" content="if (typeof kotlin === &apos;undefined&apos;) {   throw new Error(&quot;Error loading module &apos;spammaker&apos;. Its dependency &apos;kotlin&apos; was not found. Please, check whether &apos;kotlin&apos; is loaded prior to &apos;spammaker&apos;.&quot;); } var">
+<meta name="keywords" content="개발,developer">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="밍피디의 개발노트">
+<meta property="og:url" content="https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker/index.html">
+<meta property="og:site_name" content="밍피디의 개발노트">
+<meta property="og:description" content="if (typeof kotlin === &apos;undefined&apos;) {   throw new Error(&quot;Error loading module &apos;spammaker&apos;. Its dependency &apos;kotlin&apos; was not found. Please, check whether &apos;kotlin&apos; is loaded prior to &apos;spammaker&apos;.&quot;); } var">
+<meta property="og:locale" content="ko">
+<meta property="og:updated_time" content="2019-04-17T16:26:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="밍피디의 개발노트">
+<meta name="twitter:description" content="if (typeof kotlin === &apos;undefined&apos;) {   throw new Error(&quot;Error loading module &apos;spammaker&apos;. Its dependency &apos;kotlin&apos; was not found. Please, check whether &apos;kotlin&apos; is loaded prior to &apos;spammaker&apos;.&quot;); } var">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png">
+    
+    
+    
+    
+
+    <!-- adsense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+                                                      google_ad_client: "ca-pub-4098225824538946",
+                                                      enable_page_level_ads: true
+                                                    });
+    </script>
+
+    <link rel="canonical" href="https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker/">
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120538979-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120538979-3');
+    </script>
+
+
+    
+
+    <!-- naver 검색 -->
+    <meta name="naver-site-verification" content="cc953655bf884f0df42eb141555d032a9b64c1ee">
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">밍피디의 개발노트</a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+                </a>
+                <h4 class="sidebar-profile-name">밍피디</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>잔망스러운 개발자</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/ " title="홈">
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">홈</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-아무말" title="아무말">
+                    
+                        <i class="sidebar-button-icon fa fa-calendar" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아무말</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-개발" title="개발노트">
+                    
+                        <i class="sidebar-button-icon fa fa-code" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">개발노트</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" title="아카이브">
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" title="태그">
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://cfdf.tistory.com/" target="_blank" rel="external nofollow noopener noreferrer" title="티스토리">
+                    
+                        <i class="sidebar-button-icon fab fa-tumblr" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">티스토리</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            (제목없음)
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-04-18T01:26:18+09:00">
+	
+		    4월 18, 2019
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            if (typeof kotlin === 'undefined') {
+  throw new Error("Error loading module 'spammaker'. Its dependency 'kotlin' was not found. Please, check whether 'kotlin' is loaded prior to 'spammaker'.");
+}
+var spammaker = function (_, Kotlin) {
+  'use strict';
+  var listOf = Kotlin.kotlin.collections.listOf_i5x0yv$;
+  var IntRange = Kotlin.kotlin.ranges.IntRange;
+  var Kind_CLASS = Kotlin.Kind.CLASS;
+  var Random = Kotlin.kotlin.random.Random;
+  var random = Kotlin.kotlin.ranges.random_xmiyix$;
+  var Math_0 = Math;
+  var unboxChar = Kotlin.unboxChar;
+  var toBoxedChar = Kotlin.toBoxedChar;
+  var joinToString = Kotlin.kotlin.collections.joinToString_xqrb1d$;
+  var contains = Kotlin.kotlin.text.contains_sgbm27$;
+  var toString = Kotlin.toString;
+  var contains_0 = Kotlin.kotlin.text.contains_li3zpu$;
+  var replace = Kotlin.kotlin.text.replace_680rmw$;
+  var to = Kotlin.kotlin.to_ujzrz7$;
+  var mapOf = Kotlin.kotlin.collections.mapOf_qfcya0$;
+  var Kind_INTERFACE = Kotlin.Kind.INTERFACE;
+  var throwCCE = Kotlin.throwCCE;
+  var trim = Kotlin.kotlin.text.trim_gw00vp$;
+  var Regex_init = Kotlin.kotlin.text.Regex_init_61zpoe$;
+  var CharRange = Kotlin.kotlin.ranges.CharRange;
+  var toChar = Kotlin.toChar;
+  var joinToString_0 = Kotlin.kotlin.collections.joinToString_fmv235$;
+  var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
+  var iterator = Kotlin.kotlin.text.iterator_gw00vp$;
+  var indexOf = Kotlin.kotlin.collections.indexOf_o2f9me$;
+  var ensureNotNull = Kotlin.ensureNotNull;
+  var toInt = Kotlin.kotlin.text.toInt_pdl1vz$;
+  var spamServices;
+  function convert(input, option) {
+    var output = {v: input};
+    var tmp$;
+    tmp$ = spamServices.iterator();
+    while (tmp$.hasNext()) {
+      var element = tmp$.next();
+      output.v = element.process_bqi7sc$(output.v, option);
+    }
+    return output.v;
+  }
+  function toSpam(input) {
+    var output = {v: input};
+    var tmp$;
+    tmp$ = spamServices.iterator();
+    while (tmp$.hasNext()) {
+      var element = tmp$.next();
+      output.v = element.process_bqi7sc$(output.v);
+    }
+    return output.v;
+  }
+  function toKorean(input) {
+    var output = {v: input};
+    var tmp$;
+    tmp$ = spamServices.iterator();
+    while (tmp$.hasNext()) {
+      var element = tmp$.next();
+      output.v = element.process_bqi7sc$(output.v, new SpamOption(0, 0, 0, 50, 0, 0, 0, 0, 0, 0, false));
+    }
+    return output.v;
+  }
+  function SpamOption(hHorizontal, hDual1, hDual2, hComplex, hSpecial, sLetter, sRandom, sWhitespace, sDigit, sFullWidth, prefix) {
+    if (hHorizontal === void 0)
+      hHorizontal = 100;
+    if (hDual1 === void 0)
+      hDual1 = 100;
+    if (hDual2 === void 0)
+      hDual2 = 100;
+    if (hComplex === void 0)
+      hComplex = 20;
+    if (hSpecial === void 0)
+      hSpecial = 50;
+    if (sLetter === void 0)
+      sLetter = 100;
+    if (sRandom === void 0)
+      sRandom = 20;
+    if (sWhitespace === void 0)
+      sWhitespace = 100;
+    if (sDigit === void 0)
+      sDigit = 40;
+    if (sFullWidth === void 0)
+      sFullWidth = 100;
+    if (prefix === void 0)
+      prefix = false;
+    this.hHorizontal = hHorizontal;
+    this.hDual1 = hDual1;
+    this.hDual2 = hDual2;
+    this.hComplex = hComplex;
+    this.hSpecial = hSpecial;
+    this.sLetter = sLetter;
+    this.sRandom = sRandom;
+    this.sWhitespace = sWhitespace;
+    this.sDigit = sDigit;
+    this.sFullWidth = sFullWidth;
+    this.prefix = prefix;
+  }
+  SpamOption.prototype.enableLetterSymbolization = function () {
+    return random(new IntRange(0, 100), Random.Default) < this.sLetter;
+  };
+  SpamOption.prototype.enableHHorizontal = function () {
+    return random(new IntRange(0, 100), Random.Default) < this.hHorizontal;
+  };
+  SpamOption.prototype.enableHDual1 = function () {
+    return random(new IntRange(0, 100), Random.Default) < this.hDual1;
+  };
+  SpamOption.prototype.enableHDual2 = function () {
+    return random(new IntRange(0, 100), Random.Default) < this.hDual2;
+  };
+  SpamOption.prototype.enableHSpecial = function () {
+    return random(new IntRange(0, 100), Random.Default) < this.hSpecial;
+  };
+  SpamOption.prototype.enableHComplex = function () {
+    return random(new IntRange(0, 100), Random.Default) < this.hComplex;
+  };
+  SpamOption.prototype.enableSymbolization = function () {
+    var tmp$ = random(new IntRange(0, 100), Random.Default);
+    var a = this.sRandom;
+    return tmp$ < Math_0.min(a, 50);
+  };
+  SpamOption.prototype.enableUrlSymbolization = function () {
+    return this.sRandom > 0;
+  };
+  SpamOption.prototype.enableWhitespaceSymbolization = function () {
+    return random(new IntRange(0, 100), Random.Default) < this.sWhitespace;
+  };
+  SpamOption.prototype.enableDigitSymbolization = function () {
+    return random(new IntRange(0, 100), Random.Default) < this.sDigit;
+  };
+  SpamOption.prototype.enableFullWidth = function () {
+    return random(new IntRange(0, 100), Random.Default) < this.sFullWidth;
+  };
+  SpamOption.prototype.enableFullWidthUrl = function () {
+    return this.sFullWidth === 100;
+  };
+  SpamOption.prototype.enablePrefix = function () {
+    return this.prefix;
+  };
+  SpamOption.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'SpamOption',
+    interfaces: []
+  };
+  SpamOption.prototype.component1 = function () {
+    return this.hHorizontal;
+  };
+  SpamOption.prototype.component2 = function () {
+    return this.hDual1;
+  };
+  SpamOption.prototype.component3 = function () {
+    return this.hDual2;
+  };
+  SpamOption.prototype.component4 = function () {
+    return this.hComplex;
+  };
+  SpamOption.prototype.component5 = function () {
+    return this.hSpecial;
+  };
+  SpamOption.prototype.component6 = function () {
+    return this.sLetter;
+  };
+  SpamOption.prototype.component7 = function () {
+    return this.sRandom;
+  };
+  SpamOption.prototype.component8 = function () {
+    return this.sWhitespace;
+  };
+  SpamOption.prototype.component9 = function () {
+    return this.sDigit;
+  };
+  SpamOption.prototype.component10 = function () {
+    return this.sFullWidth;
+  };
+  SpamOption.prototype.component11 = function () {
+    return this.prefix;
+  };
+  SpamOption.prototype.copy_81wilh$ = function (hHorizontal, hDual1, hDual2, hComplex, hSpecial, sLetter, sRandom, sWhitespace, sDigit, sFullWidth, prefix) {
+    return new SpamOption(hHorizontal === void 0 ? this.hHorizontal : hHorizontal, hDual1 === void 0 ? this.hDual1 : hDual1, hDual2 === void 0 ? this.hDual2 : hDual2, hComplex === void 0 ? this.hComplex : hComplex, hSpecial === void 0 ? this.hSpecial : hSpecial, sLetter === void 0 ? this.sLetter : sLetter, sRandom === void 0 ? this.sRandom : sRandom, sWhitespace === void 0 ? this.sWhitespace : sWhitespace, sDigit === void 0 ? this.sDigit : sDigit, sFullWidth === void 0 ? this.sFullWidth : sFullWidth, prefix === void 0 ? this.prefix : prefix);
+  };
+  SpamOption.prototype.toString = function () {
+    return 'SpamOption(hHorizontal=' + Kotlin.toString(this.hHorizontal) + (', hDual1=' + Kotlin.toString(this.hDual1)) + (', hDual2=' + Kotlin.toString(this.hDual2)) + (', hComplex=' + Kotlin.toString(this.hComplex)) + (', hSpecial=' + Kotlin.toString(this.hSpecial)) + (', sLetter=' + Kotlin.toString(this.sLetter)) + (', sRandom=' + Kotlin.toString(this.sRandom)) + (', sWhitespace=' + Kotlin.toString(this.sWhitespace)) + (', sDigit=' + Kotlin.toString(this.sDigit)) + (', sFullWidth=' + Kotlin.toString(this.sFullWidth)) + (', prefix=' + Kotlin.toString(this.prefix)) + ')';
+  };
+  SpamOption.prototype.hashCode = function () {
+    var result = 0;
+    result = result * 31 + Kotlin.hashCode(this.hHorizontal) | 0;
+    result = result * 31 + Kotlin.hashCode(this.hDual1) | 0;
+    result = result * 31 + Kotlin.hashCode(this.hDual2) | 0;
+    result = result * 31 + Kotlin.hashCode(this.hComplex) | 0;
+    result = result * 31 + Kotlin.hashCode(this.hSpecial) | 0;
+    result = result * 31 + Kotlin.hashCode(this.sLetter) | 0;
+    result = result * 31 + Kotlin.hashCode(this.sRandom) | 0;
+    result = result * 31 + Kotlin.hashCode(this.sWhitespace) | 0;
+    result = result * 31 + Kotlin.hashCode(this.sDigit) | 0;
+    result = result * 31 + Kotlin.hashCode(this.sFullWidth) | 0;
+    result = result * 31 + Kotlin.hashCode(this.prefix) | 0;
+    return result;
+  };
+  SpamOption.prototype.equals = function (other) {
+    return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && (Kotlin.equals(this.hHorizontal, other.hHorizontal) && Kotlin.equals(this.hDual1, other.hDual1) && Kotlin.equals(this.hDual2, other.hDual2) && Kotlin.equals(this.hComplex, other.hComplex) && Kotlin.equals(this.hSpecial, other.hSpecial) && Kotlin.equals(this.sLetter, other.sLetter) && Kotlin.equals(this.sRandom, other.sRandom) && Kotlin.equals(this.sWhitespace, other.sWhitespace) && Kotlin.equals(this.sDigit, other.sDigit) && Kotlin.equals(this.sFullWidth, other.sFullWidth) && Kotlin.equals(this.prefix, other.prefix)))));
+  };
+  function HangleService() {
+    this.specials_0 = mapOf([to('\u314F', 'r'), to('\u3150', 'H'), to('\u3151', 'F'), to('\u3163', '1'), to('\u3131', '7'), to('\u3134', 'L'), to('\u3139', 'z'), to('\u3141', '\u25A1'), to('\u3147', '0'), to('\u3148', '\u30CC')]);
+  }
+  HangleService.prototype.process_bqi7sc$$default = function (text, option) {
+    var tmp$, tmp$_0, tmp$_1, tmp$_2;
+    var result = '';
+    tmp$ = text.length;
+    for (var i = 0; i < tmp$; i++) {
+      var disassembled = disassemble(text.charCodeAt(i));
+      var disassembledAtomically = disassembleAtomically(text.charCodeAt(i));
+      if (disassembled == null || disassembledAtomically == null) {
+        result += String.fromCharCode(text.charCodeAt(i));
+        continue;
+      }
+      tmp$_1 = result;
+      if (option.enableHComplex())
+        tmp$_0 = toBoxedChar(assemble(pickStrongCho(disassembledAtomically[0][0]), unboxChar(disassembled[1]), disassembled.length === 2 ? pickComplexJong() : pickComplexJong_0(unboxChar(disassembled[2]))));
+      else if (option.enableHHorizontal() && disassembled.length === 2 && disassembledAtomically[1].length === 1 && contains('\u314F\u3150\u3151\u3152\u3153\u3154\u3155\u3156\u3163', unboxChar(disassembled[1])))
+        tmp$_0 = joinToString(disassembledAtomically[0], '') + String.fromCharCode(unboxChar(disassembled[1]));
+      else if (option.enableHDual1() && disassembledAtomically[1].length === 2 && disassembled.length === 2)
+        tmp$_0 = toString(toBoxedChar(assemble(unboxChar(disassembled[0]), disassembledAtomically[1][0]))) + String.fromCharCode(disassembledAtomically[1][1]);
+      else if (option.enableHDual2() && disassembledAtomically[1].length === 2 && disassembled.length === 3)
+        tmp$_0 = toString(toBoxedChar(assemble(unboxChar(disassembled[0]), disassembledAtomically[1][0], unboxChar(disassembled[2])))) + String.fromCharCode(disassembledAtomically[1][1]);
+      else
+        tmp$_0 = String.fromCharCode(text.charCodeAt(i));
+      result = tmp$_1 + toString(tmp$_0);
+    }
+    tmp$_2 = this.specials_0.entries.iterator();
+    while (tmp$_2.hasNext()) {
+      var tmp$_3 = tmp$_2.next();
+      var k = tmp$_3.key;
+      var v = tmp$_3.value;
+      if (contains_0(result, k) && option.enableHSpecial())
+        result = replace(result, k, v);
+    }
+    return option.enablePrefix() ? '[Web\uBC1C\uC2E0]' + '\n' + result : result;
+  };
+  HangleService.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'HangleService',
+    interfaces: [SpamService]
+  };
+  function SpamService() {
+  }
+  SpamService.prototype.process_bqi7sc$ = function (text, option, callback$default) {
+    if (option === void 0)
+      option = new SpamOption();
+    return callback$default ? callback$default(text, option) : this.process_bqi7sc$$default(text, option);
+  };
+  SpamService.$metadata$ = {
+    kind: Kind_INTERFACE,
+    simpleName: 'SpamService',
+    interfaces: []
+  };
+  function SymbolizationService() {
+    this.specials_0 = mapOf([to('http://', ' \u261E\uC989\uC2DC\uC774\uB3D9 http://'), to('https://', ' \u261E\uC989\uC2DC\uC774\uB3D9 http://')]);
+    this.tokens_0 = mapOf([to('\uBA85', '\uB775'), to('\uC4F0', '\u4E1B'), to('\uB178', '\u4E0A'), to('\uBCD1', '\u3179'), to('\uC751', '%'), to('\uACF3', '\u592C'), to('\uCB48', '\u5352'), to('\uACE0', '\u536B'), to('\uC2A4', '\u4EBC'), to('\uC18C', '\u4EDD'), to('\uC218', '\u3403'), to('\uC2B4', '\u4E1B\u4E1B'), to('\uC2A5', '\u4ECA'), to('\uC870', '\u4E15'), to('\uB93C', '\u5F15'), to('18', '\u65E7')]);
+  }
+  SymbolizationService.prototype.process_bqi7sc$$default = function (text, option) {
+    var tmp$, tmp$_0, tmp$_1, tmp$_2, tmp$_3, tmp$_4, tmp$_5;
+    var origin = text;
+    tmp$ = this.tokens_0.entries.iterator();
+    while (tmp$.hasNext()) {
+      var tmp$_6 = tmp$.next();
+      var k = tmp$_6.key;
+      var v = tmp$_6.value;
+      if (option.enableLetterSymbolization()) {
+        origin = replace(origin, k, v);
+      }
+    }
+    var result = '';
+    var $receiver = origin;
+    var tmp$_7;
+    var tmp$_8 = trim(Kotlin.isCharSequence(tmp$_7 = $receiver) ? tmp$_7 : throwCCE()).toString();
+    var split = Regex_init('\\h').split_905azu$(tmp$_8, 0);
+    tmp$_0 = split.iterator();
+    while (tmp$_0.hasNext()) {
+      var s = tmp$_0.next();
+      var i = 0;
+      if (isUrl(s)) {
+        if (option.enableUrlSymbolization()) {
+          var url = {v: s};
+          var tmp$_9;
+          tmp$_9 = this.specials_0.entries.iterator();
+          while (tmp$_9.hasNext()) {
+            var element = tmp$_9.next();
+            url.v = replace(url.v, element.key, element.value);
+          }
+          result += (option.enableFullWidthUrl() ? toFullWidth_0(url.v) : url.v) + randomSymbol();
+        }
+         else {
+          result += s + ' ';
+        }
+        continue;
+      }
+      while (i < s.length) {
+        tmp$_5 = result;
+        if (option.enableSymbolization())
+          tmp$_4 = randomSymbol();
+        else if (isDigit(s.charCodeAt(i)) && option.enableDigitSymbolization()) {
+          tmp$_4 = symbolDigit(s.charCodeAt((tmp$_1 = i, i = tmp$_1 + 1 | 0, tmp$_1)));
+        }
+         else if (isAlphabet(s.charCodeAt(i)) && option.enableFullWidth()) {
+          tmp$_4 = toFullWidth(s.charCodeAt((tmp$_2 = i, i = tmp$_2 + 1 | 0, tmp$_2)));
+        }
+         else {
+          tmp$_4 = toBoxedChar(s.charCodeAt((tmp$_3 = i, i = tmp$_3 + 1 | 0, tmp$_3)));
+        }
+        result = tmp$_5 + tmp$_4.toString();
+      }
+      result += option.enableWhitespaceSymbolization() ? randomSymbol() : ' ';
+    }
+    return result;
+  };
+  SymbolizationService.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'SymbolizationService',
+    interfaces: [SpamService]
+  };
+  function isUrl($receiver) {
+    return Regex_init('(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]').containsMatchIn_6bul2c$($receiver);
+  }
+  function isAlphabet($receiver) {
+    return (new CharRange(65, 122)).contains_mef7kx$($receiver);
+  }
+  function isDigit($receiver) {
+    return (new CharRange(48, 57)).contains_mef7kx$($receiver);
+  }
+  function toFullWidth($receiver) {
+    return isAlphabet($receiver) || isDigit($receiver) ? String.fromCharCode(toChar($receiver + 65248)) : String.fromCharCode($receiver);
+  }
+  function toFullWidth_0($receiver) {
+    var destination = ArrayList_init($receiver.length);
+    var tmp$;
+    tmp$ = iterator($receiver);
+    while (tmp$.hasNext()) {
+      var item = unboxChar(tmp$.next());
+      destination.add_11rb$(toFullWidth(unboxChar(toBoxedChar(item))));
+    }
+    return joinToString_0(destination, '');
+  }
+  function random_0($receiver) {
+    return unboxChar($receiver.length > 0 ? $receiver[random(new IntRange(0, $receiver.length - 1 | 0), Random.Default)] : null);
+  }
+  var generalCho;
+  var generalJung;
+  var generalJong;
+  var atomicCho;
+  var atomicJung;
+  var atomicJong;
+  var duals;
+  var toStrongCho;
+  var complexJong;
+  var toComplexJong;
+  function cho(ch) {
+    return (new CharRange(44032, 55203)).contains_mef7kx$(ch) ? generalCho[(ch - 44032) / 588 | 0] : null;
+  }
+  function disassemble(ch) {
+    var tmp$;
+    if ((new CharRange(44032, 55203)).contains_mef7kx$(ch)) {
+      var i1;
+      var i2;
+      var i3 = ch - 44032;
+      i1 = i3 / 588 | 0;
+      i3 = i3 % 588;
+      i2 = i3 / 28 | 0;
+      i3 = i3 % 28;
+      tmp$ = i3 !== 0 ? [toBoxedChar(generalCho[i1]), toBoxedChar(generalJung[i2]), toBoxedChar(generalJong[i3])] : [toBoxedChar(generalCho[i1]), toBoxedChar(generalJung[i2])];
+    }
+     else
+      tmp$ = null;
+    return tmp$;
+  }
+  function disassembleAtomically(ch) {
+    var tmp$;
+    if ((new CharRange(44032, 55203)).contains_mef7kx$(ch)) {
+      var i1;
+      var i2;
+      var i3 = ch - 44032;
+      i1 = i3 / 588 | 0;
+      i3 = i3 % 588;
+      i2 = i3 / 28 | 0;
+      i3 = i3 % 28;
+      tmp$ = i3 !== 0 ? [atomicCho[i1], atomicJung[i2], atomicJong[i3]] : [atomicCho[i1], atomicJung[i2]];
+    }
+     else if ((new CharRange(12593, 12643)).contains_mef7kx$(ch))
+      tmp$ = [duals[ch - 12593]];
+    else
+      tmp$ = null;
+    return tmp$;
+  }
+  function assemble(cho, jung, jong) {
+    if (jong === void 0)
+      jong = null;
+    var tmp$;
+    if (indexOf(generalCho, cho) >= 0 && indexOf(generalJung, jung) >= 0) {
+      tmp$ = toChar(((indexOf(generalCho, cho) * 21 | 0) * 28 | 0) + (indexOf(generalJung, jung) * 28 | 0) + (jong != null ? indexOf(generalJong, jong) : 0) + 44032 | 0);
+    }
+     else
+      tmp$ = null;
+    return tmp$;
+  }
+  function pickStrongCho(cho) {
+    var tmp$, tmp$_0;
+    return unboxChar((tmp$_0 = (tmp$ = toStrongCho.get_11rb$(toBoxedChar(cho))) != null ? random_0(tmp$) : null) != null ? tmp$_0 : cho);
+  }
+  function pickComplexJong() {
+    return unboxChar(ensureNotNull(random_0(complexJong)));
+  }
+  function pickComplexJong_0(jong) {
+    var tmp$, tmp$_0;
+    return unboxChar((tmp$_0 = (tmp$ = toComplexJong.get_11rb$(toBoxedChar(jong))) != null ? random_0(tmp$) : null) != null ? tmp$_0 : jong);
+  }
+  var numbers;
+  var symbols;
+  function randomSymbol() {
+    return String.fromCharCode(symbols.charCodeAt(random(new IntRange(0, 376), Random.Default)));
+  }
+  function symbolDigit(ch) {
+    return String.fromCharCode(numbers.charCodeAt(toInt(String.fromCharCode(ch)) % 10 + (random(new IntRange(0, 4), Random.Default) * 10 | 0) | 0));
+  }
+  Object.defineProperty(_, 'spamServices', {
+    get: function () {
+      return spamServices;
+    }
+  });
+  _.toSpam = toSpam;
+  _.toKorean = toKorean;
+  _.SpamOption = SpamOption;
+  _.HangleService = HangleService;
+  _.SpamService = SpamService;
+  _.SymbolizationService = SymbolizationService;
+  _.isUrl_pdl1vz$ = isUrl;
+  _.isAlphabet_myv2d0$ = isAlphabet;
+  _.isDigit_myv2d0$ = isDigit;
+  _.toFullWidth_myv2d0$ = toFullWidth;
+  _.toFullWidth_pdl1vz$ = toFullWidth_0;
+  _.random_355ntz$ = random_0;
+  _.cho_s8itvh$ = cho;
+  _.disassemble_s8itvh$ = disassemble;
+  _.disassembleAtomically_s8itvh$ = disassembleAtomically;
+  _.assemble_p65ylq$ = assemble;
+  _.pickStrongCho_s8itvh$ = pickStrongCho;
+  _.pickComplexJong = pickComplexJong;
+  _.pickComplexJong_s8itvh$ = pickComplexJong_0;
+  Object.defineProperty(_, 'numbers', {
+    get: function () {
+      return numbers;
+    }
+  });
+  Object.defineProperty(_, 'symbols', {
+    get: function () {
+      return symbols;
+    }
+  });
+  _.randomSymbol = randomSymbol;
+  _.symbolDigit_s8itvh$ = symbolDigit;
+  HangleService.prototype.process_bqi7sc$ = SpamService.prototype.process_bqi7sc$;
+  SymbolizationService.prototype.process_bqi7sc$ = SpamService.prototype.process_bqi7sc$;
+  spamServices = listOf([new SymbolizationService(), new HangleService()]);
+  generalCho = Kotlin.charArrayOf(12593, 12594, 12596, 12599, 12600, 12601, 12609, 12610, 12611, 12613, 12614, 12615, 12616, 12617, 12618, 12619, 12620, 12621, 12622);
+  generalJung = Kotlin.charArrayOf(12623, 12624, 12625, 12626, 12627, 12628, 12629, 12630, 12631, 12632, 12633, 12634, 12635, 12636, 12637, 12638, 12639, 12640, 12641, 12642, 12643);
+  generalJong = Kotlin.charArrayOf(toChar(0), 12593, 12594, 12595, 12596, 12597, 12598, 12599, 12601, 12602, 12603, 12604, 12605, 12606, 12607, 12608, 12609, 12610, 12612, 12613, 12614, 12615, 12616, 12618, 12619, 12620, 12621, 12622);
+  atomicCho = [Kotlin.charArrayOf(12593), Kotlin.charArrayOf(12593, 12593), Kotlin.charArrayOf(12596), Kotlin.charArrayOf(12599), Kotlin.charArrayOf(12599, 12599), Kotlin.charArrayOf(12601), Kotlin.charArrayOf(12609), Kotlin.charArrayOf(12610), Kotlin.charArrayOf(12610, 12610), Kotlin.charArrayOf(12613), Kotlin.charArrayOf(12613, 12613), Kotlin.charArrayOf(12615), Kotlin.charArrayOf(12616), Kotlin.charArrayOf(12616, 12616), Kotlin.charArrayOf(12618), Kotlin.charArrayOf(12619), Kotlin.charArrayOf(12620), Kotlin.charArrayOf(12621), Kotlin.charArrayOf(12622)];
+  atomicJung = [Kotlin.charArrayOf(12623), Kotlin.charArrayOf(12624), Kotlin.charArrayOf(12625), Kotlin.charArrayOf(12626), Kotlin.charArrayOf(12627), Kotlin.charArrayOf(12628), Kotlin.charArrayOf(12629), Kotlin.charArrayOf(12630), Kotlin.charArrayOf(12631), Kotlin.charArrayOf(12631, 12623), Kotlin.charArrayOf(12631, 12624), Kotlin.charArrayOf(12631, 12643), Kotlin.charArrayOf(12635), Kotlin.charArrayOf(12636), Kotlin.charArrayOf(12636, 12627), Kotlin.charArrayOf(12636, 12628), Kotlin.charArrayOf(12636, 12643), Kotlin.charArrayOf(12640), Kotlin.charArrayOf(12641), Kotlin.charArrayOf(12641, 12643), Kotlin.charArrayOf(12643)];
+  atomicJong = [Kotlin.charArrayOf(), Kotlin.charArrayOf(12593), Kotlin.charArrayOf(12593, 12593), Kotlin.charArrayOf(12593, 12613), Kotlin.charArrayOf(12596), Kotlin.charArrayOf(12596, 12616), Kotlin.charArrayOf(12596, 12622), Kotlin.charArrayOf(12599), Kotlin.charArrayOf(12601), Kotlin.charArrayOf(12601, 12593), Kotlin.charArrayOf(12601, 12609), Kotlin.charArrayOf(12601, 12610), Kotlin.charArrayOf(12601, 12613), Kotlin.charArrayOf(12601, 12620), Kotlin.charArrayOf(12601, 12621), Kotlin.charArrayOf(12601, 12622), Kotlin.charArrayOf(12609), Kotlin.charArrayOf(12610), Kotlin.charArrayOf(12610, 12613), Kotlin.charArrayOf(12613), Kotlin.charArrayOf(12613, 12613), Kotlin.charArrayOf(12615), Kotlin.charArrayOf(12616), Kotlin.charArrayOf(12618), Kotlin.charArrayOf(12619), Kotlin.charArrayOf(12620), Kotlin.charArrayOf(12621), Kotlin.charArrayOf(12622)];
+  duals = [Kotlin.charArrayOf(12593), Kotlin.charArrayOf(12593, 12593), Kotlin.charArrayOf(12593, 12613), Kotlin.charArrayOf(12596), Kotlin.charArrayOf(12596, 12616), Kotlin.charArrayOf(12596, 12622), Kotlin.charArrayOf(12599), Kotlin.charArrayOf(12600), Kotlin.charArrayOf(12601), Kotlin.charArrayOf(12601, 12593), Kotlin.charArrayOf(12601, 12609), Kotlin.charArrayOf(12601, 12610), Kotlin.charArrayOf(12601, 12613), Kotlin.charArrayOf(12601, 12599), Kotlin.charArrayOf(12601, 12621), Kotlin.charArrayOf(12601, 12622), Kotlin.charArrayOf(12609), Kotlin.charArrayOf(12610), Kotlin.charArrayOf(12610, 12610), Kotlin.charArrayOf(12610, 12613), Kotlin.charArrayOf(12613), Kotlin.charArrayOf(12613, 12613), Kotlin.charArrayOf(12615), Kotlin.charArrayOf(12616), Kotlin.charArrayOf(12616, 12616), Kotlin.charArrayOf(12618), Kotlin.charArrayOf(12619), Kotlin.charArrayOf(12620), Kotlin.charArrayOf(12621), Kotlin.charArrayOf(12622), Kotlin.charArrayOf(12623), Kotlin.charArrayOf(12624), Kotlin.charArrayOf(12625), Kotlin.charArrayOf(12626), Kotlin.charArrayOf(12627), Kotlin.charArrayOf(12628), Kotlin.charArrayOf(12629), Kotlin.charArrayOf(12630), Kotlin.charArrayOf(12631), Kotlin.charArrayOf(12631, 12623), Kotlin.charArrayOf(12631, 12624), Kotlin.charArrayOf(12631, 12643), Kotlin.charArrayOf(12635), Kotlin.charArrayOf(12636), Kotlin.charArrayOf(12636, 12627), Kotlin.charArrayOf(12636, 12628), Kotlin.charArrayOf(12636, 12643), Kotlin.charArrayOf(12640), Kotlin.charArrayOf(12641), Kotlin.charArrayOf(12641, 12643), Kotlin.charArrayOf(12643)];
+  toStrongCho = mapOf([to(toBoxedChar(12593), Kotlin.charArrayOf(12594, 12619)), to(toBoxedChar(12599), Kotlin.charArrayOf(12600, 12620)), to(toBoxedChar(12610), Kotlin.charArrayOf(12611, 12621)), to(toBoxedChar(12613), Kotlin.charArrayOf(12614)), to(toBoxedChar(12616), Kotlin.charArrayOf(12617, 12618))]);
+  complexJong = Kotlin.charArrayOf(12595, 12597, 12598, 12602, 12603, 12604, 12605, 12606, 12607, 12608, 12612);
+  toComplexJong = mapOf([to(toBoxedChar(12593), Kotlin.charArrayOf(12594, 12595)), to(toBoxedChar(12596), Kotlin.charArrayOf(12597, 12598)), to(toBoxedChar(12601), Kotlin.charArrayOf(12603, 12604, 12605, 12606, 12607, 12608)), to(toBoxedChar(12610), Kotlin.charArrayOf(12612)), to(toBoxedChar(12613), Kotlin.charArrayOf(12614))]);
+  numbers = '0\u2776\u2777\u2778\u2779\u277A\u277B\u277C\u277D\u277E0\u2780\u2781\u2782\u2783\u2784\u2785\u2786\u2787\u27880\u278A\u278B\u278C\u278D\u278E\u278F\u2790\u2791\u27920\u4E28\u5DF1\u5F50\u4E29\u4E0267\u65E59';
+  symbols = '\u272F\u273F\u2740\u273F\u2741\u262A\u272A\u272B\u272C\u272D\u272E\u272F\u2730\u273B\u273C\u273D\u273E\u2743\u2762\u2763\u2765\u2766\u2767\u27B3\u27B4\u27B5\u27B6\u27B7\u27B8\u27B9\u27BA\u27BB\u27BC\u2745\u2746\u10E6\u275E\u2764\u2763\u2767\u2766\u2729\u272A\u272B\u272C\u272D\u272E\u272F\u2730\u2731\u2732\u2733\u2734\u2735\u2737\u2736\u2738\u2739\u273A\u273B\u273C\u273D\u273E\u273F\u2740\u2741\u2742\u2743\u2744\u2745\u2746\u2747\u2748\u2749\u274A\u274B\u274D\u274F\u2750\u2751\u2752\u2756\u2758\u2759\u275A\u275B\u275C\u275D\u275E\u2761\u2762\u2763\u2764\u2765\u2766\u2767\u2794\u2798\u2799\u279A\u279B\u279C\u279D\u279E\u279F\u27A0\u27A1\u27A2\u27A3\u27A4\u27A5\u27A6\u27A7\u27A8' + '\u27A9\u27AA\u27AB\u27AC\u27AD\u27AE\u27AF\u27B1\u27B2\u27B3\u27B4\u27B5\u27B6\u27B7\u27B8\u27B9\u27BA\u27BB\u27BC\u27BD\u27BE\u2605\u2606\u2609\u260E\u260F\u261C\u261E\u262C\u2640\u2642\u2701\u2702\u2703\u2704\u2706\u2707\u2708\u2709\u270C\u270D\u270E\u270F\u2710\u2711\u2712\u2609\u260E\u260F\u261C\u261E\u262C\u2640\u2642\u2654\u2655\u2656\u2657\u2658\u2659\u265A\u265B\u265C\u265D\u265E\u10DA\u265B\u0E51\u2727\u0B86\u0B87\u0B88\u0B8A\u0B8E\u0B8F\u0B90\u0B90\u0B93\u0B94\u25CC\u0B82 \u0B83\u25CC\u0BBE \u25CC\u0BBF\u25CC\u0BD7 \u0B99\u0B9C\u0B9E\u0BA3\u0BA8\u0BA9\u0BAE\u0BAF\u0BB1\u0BB2\u0BB3\u0BB4\u0BB5' + '\u0BB8\u0BB9\u0BE7\u0BE8\u0BE9\u0BEA\u0BEB\u0434\u256C\u2609\u10E6\u2764\u0B90\u25CC\u0BBF\u0394\u2764\u02C7\u067C\u0E51\u06E9\u06DE\u06E9\u273F\u273E\u270C\u270D\u270E\u270F\u2740\u0E34\u270C\u2710\u226B\xBD\xBF\u272A\u2605\u2606\u260E\u260F\u261E\u261C\u2710\u2711\u2712\u2714\u2715\u2716\u2717\u2718\u2719\u271A\u271B\u271C\u271D\u271E\u272F\u272E\u272C\u272B\u272A\u2727\u2726\u2725\u2724\u2723\u2722\u2721\u2720\u2730\u2731\u2730\u2740\u2742\u2744\u2745\u2749\u274A\u274B\u2763\u2764\u2766\u2667\u2664\u047C\u2642\u2640\u266D\u2718\u062A\xDC\u273D\u265A\u265B\u265C\u265D\u265E\u265F\u2654\u2655\u2656\u265D\u029A\u025E\u047C\u10E6\u2730\u2731\u2740\u2741\u2745\u2763\u273F\u273E\u2765' + '\u262C\u2740\u2654\u2656\u2658\u2659\u2640\u2642\u25C8\u047C\u265A\u265B\u265C\u265D\u265E\u265F\u2765\u2762\u2729\u272E\u272F\u2735\u2749\u2742\u2765\u265A\u265B\u03B5\u2658\u2659\u03B5\u0457\u0437\u2680\u2681\u2682\u2683\u2684\u2685\u2727\u2665\u2665';
+  Kotlin.defineModule('spammaker', _);
+  return _;
+}(typeof spammaker === 'undefined' ? {} : spammaker, kotlin);
+
+//# sourceMappingURL=spammaker.js.map
+
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+
+
+
+
+        <!--밍피디가 커스터마이징 해본 관련 글 영역-->
+        
+        
+        <!-- 끝 -->
+
+
+
+
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/18/workroom/spammaker/spammaker.meta/" data-tooltip="(제목없음)" aria-label="이전: (제목없음)">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/18/workroom/spammaker/lib/kotlin.meta/" data-tooltip="(제목없음)" aria-label="다음: (제목없음)">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 밍피디. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/18/workroom/spammaker/spammaker.meta/" data-tooltip="(제목없음)" aria-label="이전: (제목없음)">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/18/workroom/spammaker/lib/kotlin.meta/" data-tooltip="(제목없음)" aria-label="다음: (제목없음)">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+            <h4 id="about-card-name">밍피디</h4>
+        
+            <div id="about-card-bio"><p>잔망스러운 개발자</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>개발자</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                판교, 대한민국
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/bg.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://mingpd.github.io/2019/04/18/workroom/spammaker/spammaker/';
+                 
+                    this.page.identifier = '2019/04/18/workroom/spammaker/spammaker/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mingpidi';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+
+    </body>
+</html>
