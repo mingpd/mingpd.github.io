@@ -3,18 +3,18 @@
   xmlns:atom="http://www.w3.org/2005/Atom"
   xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>밍피디</title>
+    <title>밍피디의 개발노트</title>
     <link>https://mingpd.github.io/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
     
-    <description>잔망스러운 개발자, 밍피디</description>
-    <pubDate>Tue, 16 Apr 2019 13:00:02 GMT</pubDate>
+    <description>잔망스러운 개발노트</description>
+    <pubDate>Thu, 18 Apr 2019 00:20:58 GMT</pubDate>
     <generator>http://hexo.io/</generator>
     
     <item>
       <title>GitHub 블로그를 만들어보았습니다.</title>
-      <link>https://mingpd.github.io/2019/04/16/daily/20190416-132137/</link>
-      <guid>https://mingpd.github.io/2019/04/16/daily/20190416-132137/</guid>
+      <link>https://mingpd.github.io/2019/04/16/anything/20190416-132137/</link>
+      <guid>https://mingpd.github.io/2019/04/16/anything/20190416-132137/</guid>
       <pubDate>Tue, 16 Apr 2019 04:21:37 GMT</pubDate>
       <description>
       
@@ -24,7 +24,7 @@
       
       <content:encoded><![CDATA[<!-- excerpt --><br>Hexo 기반 블로그를 만들어보았습니다.<br><code>github.io</code>를 너무 갖고싶어서 만들어보았습니다.<br>부족한 설명이지만 나름 정리를 해두었으니 필요하신분들은 참고해주세요.</p>]]></content:encoded>
       
-      <comments>https://mingpd.github.io/2019/04/16/daily/20190416-132137/#disqus_thread</comments>
+      <comments>https://mingpd.github.io/2019/04/16/anything/20190416-132137/#disqus_thread</comments>
     </item>
     
     <item>
