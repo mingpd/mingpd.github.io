@@ -1958,7 +1958,8 @@ a.fancybox {
     .post .post-content img {
       display: block;
       width: auto;
-      max-width: 100%; }
+      max-width: 100%;
+      border: 1px solid; }
     .post .post-content :not(blockquote):not(li):not(.alert) > p {
       margin: 1.5em 0 0 0; }
     .post .post-content li p {
