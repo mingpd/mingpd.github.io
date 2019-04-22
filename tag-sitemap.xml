@@ -3,14 +3,28 @@
 
 
     <url>
-        <loc>https://mingpd.github.io/tags/%EA%B4%91%EA%B3%A0%EC%B2%B4/</loc>
-        <lastmod>2019-04-19T02:48:05.979Z</lastmod>
+        <loc>https://mingpd.github.io/tags/jpa/</loc>
+        <lastmod>2019-04-22T02:11:42.963Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>https://mingpd.github.io/tags/%EC%8A%A4%ED%8C%B8%EC%B2%B4/</loc>
+        <loc>https://mingpd.github.io/tags/%EB%A9%B4%EC%A0%91/</loc>
+        <lastmod>2019-04-22T02:11:42.963Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://mingpd.github.io/tags/java/</loc>
+        <lastmod>2019-04-22T02:11:42.963Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://mingpd.github.io/tags/kotlin/</loc>
         <lastmod>2019-04-19T02:48:05.979Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -24,7 +38,14 @@
     </url>
 
     <url>
-        <loc>https://mingpd.github.io/tags/kotlin/</loc>
+        <loc>https://mingpd.github.io/tags/%EA%B4%91%EA%B3%A0%EC%B2%B4/</loc>
+        <lastmod>2019-04-19T02:48:05.979Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://mingpd.github.io/tags/%EC%8A%A4%ED%8C%B8%EC%B2%B4/</loc>
         <lastmod>2019-04-19T02:48:05.979Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -46,13 +67,6 @@
 
     <url>
         <loc>https://mingpd.github.io/tags/stream/</loc>
-        <lastmod>2019-04-16T09:46:31.605Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://mingpd.github.io/tags/java/</loc>
         <lastmod>2019-04-16T09:46:31.605Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>

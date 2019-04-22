@@ -1,0 +1,594 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="밍피디의 개발노트">
+    <title>기술면접에 나올법한 질문들 1 - 밍피디의 개발노트</title>
+    <meta name="author" content="밍피디">
+    
+        <meta name="keywords" content="개발,developer,">
+    
+    
+        <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"\njava, synchronized 키워드의 의미는 무엇인가요?둘 이상의 쓰레드가 공동의 자원을 공유할 때, 한 쓰레드가 그 자원을 수정하는데 다른 쓰레드가 동시에 수정하면 문제가 발생할 수 있습니다.이 때 사용하는 것이 synchronized 키워드이며 method 혹은 블럭에 사용 가능합니다.synchronized는 method 와 블럭을 통해 설정 가능하며 해당 구역에 쓰레드 접근시 락을 획득하여 구간을 빠져 나올때 까지 다른 쓰레드 접근을 막는 매커니즘입니다.Java의 동기화 -Synchronized 키워드의 사용 참고\njava, ConcurrentHashMap과 HashTable 의 차이는 무엇인가요?HashTable은 동기화를 위해 synchronized 키워드를 이용해서 메소드 전체에 락을 걸고,ConcurrentHashMap 에서는 내부적으로 여러 개의 세그먼트를 두고 각 세그먼트마다 별도의 락을 가지고 있습니다.이로 인하여 ConcurrentHashMap 의 성능이 월등히 좋습니다.\njava, Integer와 Atomic&lt;Integer>의 차이는 무엇인가요?Atomic 자료형은 synchronized 키워드가 없이도 Thread-safe 함을 보장합니다.이 데이터 타입은 compare &amp; swap (CAS) 연산을 직접 이용하는데요.간단히 설명하자면, 값을 변경할 때 자신이 읽었던 변수의 값을 기억하고있다가 변경 직전에 변수의 메모리 내의 값을 확인하여 이전에 기억해놓은 값과 같은 경우에만 처리하고 그렇지 않은경우는 무산시키는 방법입니다.CPU 차원에서 하드웨적으로 지원하는 연산이기 때문에 굉장히 빠릅니다. 따라서 병렬적으로 사용될 변수에는 Atomic 자료형을 사용하는게 좋습니다.\njava, Generic이란 무엇이며 사용 시 어떤 이점이 있나요?클래스의 타입을 파라미터로 만든 것 입니다. Java 1.5부터 추가되었으며 &lt;TYPE> 문법을 이용합니다.이는 컴파일 타임에 구체적인 타입이 결정되도록 함으로써 runtime exception을 예방할 수 있습니다.또 객체를 꺼내 사용할 시 형변환을 통한 타입을 맞출 필요가 없어 코드를 간결하게 줄일 수 있습니다.\njava, 변수의 3가지 타입에 대해 설명해주세요.클래스 변수(static variable), 인스턴스 변수(instance variable), 지역 변수(local variable)가 있습니다.클래스 변수는 클래스의 모든 인스턴스에서 공유하는 변수로서 클래스가 메모리에 올라갈 때 static 영역에 생성됩니다.인스턴스 변수는 인스턴스가 new 키워드로 생성될 때 생성됩니다. heap 영역에 생성되며 Garbage collector가 내부 알고리즘에 의해 주기적으로 해제해줍니다.지역 변수는 메서드 안에서 선언되고 메서드가 종료되면 소멸하여 사용할 수 없습니다. stack 영역에 저장됩니다.\njpa, @Transactional 사용시 전파(propergation) 속성 7가지는 무엇인가요?\nREQUIRED : 부모 트랜잭션 내에서 실행하며 부모 트랜잭션이 없을 경우 새로운 트랜잭션을 생성\nREQUIRES_NEW : 부모 트랜잭션을 무시하고 무조건 새로운 트랜잭션이 생성\nSUPPORT : 부모 트랜잭션 내에서 실행하며 부모 트랜잭션이 없을 경우 nontransactionally로 실행\nMANDATORY : 부모 트랜잭션 내에서 실행되며 부모 트랜잭션이 없을 경우 예외가 발생\nNOT_SUPPORT : nontransactionally로 실행하며 부모 트랜잭션 내에서 실행될 경우 일시 정지\nNEVER : nontransactionally로 실행되며 부모 트랜잭션이 존재한다면 예외가 발생\nNESTED : 해당 메서드가 부모 트랜잭션에서 진행될 경우 별개로 커밋되거나 롤백될 수 있음. 둘러싼 트랜잭션이 없을 경우 REQUIRED와 동일하게 작동\n\n여기서 주로 1, 2번 정도만 주로 사용되므로 두가지만 알아도 무난할듯 합니다.\njpa, OSIV란 무엇인가요?Open Session In View 의 줄임말로서 JPA 영속성 컨텍스트를 뷰 렌더링 시점까지 오픈된 채로유지하는 패턴을 의미합니다.뷰 렌더링 시점에 lazy 로딩이 필요한 객체의 경우 트랜젝션이 종료되어 LazyInitializationException이 발생하는 경우가 있는데요.이를 방지하고자 영속성 컨텍스트만 뷰 시점까지 유지하는 것 입니다.트랜잭션을 뷰 렌더링 시점까지 유지하는 방법도 있지만 이는 JDBC 커넥션의 점유 시간이 길어지는 단점이 있습니다. OSIV의 경우 하이버네이트 세션만 오픈할 뿐 트랜잭션은 시작하지 않도록 하여 이 단점을 해결하였습니다.이것 관련하여, 뷰 렌더링 시점에 엔티티의 값을 수정해도 flush 되지 않아 반영이 되지 않습니다.","dateCreated":"2019-04-22T11:30:00+09:00","dateModified":"2019-04-22T11:11:42+09:00","datePublished":"2019-04-22T11:30:00+09:00","description":"면접 때 나올 법한 소소한 질문들 생각해봅시다.꼭 면접 목적이 아니라도 알아두면 좋은 내용들입니다.","headline":"기술면접에 나올법한 질문들 1","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/04/22/interview/interview-1/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/04/22/interview/interview-1/","keywords":"java, 면접, jpa"}</script>
+    <meta name="description" content="면접 때 나올 법한 소소한 질문들 생각해봅시다.꼭 면접 목적이 아니라도 알아두면 좋은 내용들입니다.">
+<meta name="keywords" content="java,면접,jpa">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="기술면접에 나올법한 질문들 1">
+<meta property="og:url" content="https://mingpd.github.io/2019/04/22/interview/interview-1/index.html">
+<meta property="og:site_name" content="밍피디의 개발노트">
+<meta property="og:description" content="면접 때 나올 법한 소소한 질문들 생각해봅시다.꼭 면접 목적이 아니라도 알아두면 좋은 내용들입니다.">
+<meta property="og:locale" content="ko">
+<meta property="og:updated_time" content="2019-04-22T02:11:42.963Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="기술면접에 나올법한 질문들 1">
+<meta name="twitter:description" content="면접 때 나올 법한 소소한 질문들 생각해봅시다.꼭 면접 목적이 아니라도 알아두면 좋은 내용들입니다.">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png">
+    
+    
+    
+    
+
+    <!-- adsense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+                                                      google_ad_client: "ca-pub-4098225824538946",
+                                                      enable_page_level_ads: true
+                                                    });
+    </script>
+
+    <link rel="canonical" href="https://mingpd.github.io/2019/04/22/interview/interview-1/">
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120538979-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120538979-3');
+    </script>
+
+
+    
+
+    <!-- naver 검색 -->
+    <meta name="naver-site-verification" content="cc953655bf884f0df42eb141555d032a9b64c1ee">
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">밍피디의 개발노트</a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+                </a>
+                <h4 class="sidebar-profile-name">밍피디</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>잔망스러운 개발자</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/ " title="홈">
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">홈</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-아무말" title="아무말">
+                    
+                        <i class="sidebar-button-icon fa fa-calendar" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아무말</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-개발" title="개발노트">
+                    
+                        <i class="sidebar-button-icon fa fa-code" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">개발노트</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" title="아카이브">
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" title="태그">
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://cfdf.tistory.com/" target="_blank" rel="external nofollow noopener noreferrer" title="티스토리">
+                    
+                        <i class="sidebar-button-icon fab fa-tumblr" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">티스토리</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+
+        <!--sidebar adsense-->
+        <table id="sidebar-ad">
+            <tr>
+                <td align="center">
+                    <!-- 깃헙 사이드바 -->
+                    <ins class="adsbygoogle" style="display:inline-block;width:160px;height:600px" data-ad-client="ca-pub-4098225824538946" data-ad-slot="8206283886"></ins>
+                    <script>
+                      (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </td>
+            </tr>
+        </table>
+
+        <!--sidebar adsense-->
+        <table id="sidebar-ad-small">
+            <tr>
+                <td align="center">
+                    <!-- 깃헙 사이드바 작은거 -->
+                    <ins class="adsbygoogle" style="display:inline-block;width:180px;height:150px" data-ad-client="ca-pub-4098225824538946" data-ad-slot="8036755313"></ins>
+                    <script>
+                      (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            기술면접에 나올법한 질문들 1
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-04-22T11:30:00+09:00">
+	
+		    4월 22, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/개발/">개발</a>, <a class="category-link" href="/categories/개발/면접준비/">면접준비</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- 반응형 상단 -->
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="4494484212" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+
+            <!-- excerpt --><br><h1 id="table-of-contents">목차</h1><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#java-synchronized-키워드의-의미는-무엇인가요"><span class="toc-text">java, synchronized 키워드의 의미는 무엇인가요?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#java-ConcurrentHashMap과-HashTable-의-차이는-무엇인가요"><span class="toc-text">java, ConcurrentHashMap과 HashTable 의 차이는 무엇인가요?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#java-Integer와-Atomic-lt-Integer-의-차이는-무엇인가요"><span class="toc-text">java, Integer와 Atomic&lt;Integer&gt;의 차이는 무엇인가요?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#java-Generic이란-무엇이며-사용-시-어떤-이점이-있나요"><span class="toc-text">java, Generic이란 무엇이며 사용 시 어떤 이점이 있나요?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#java-변수의-3가지-타입에-대해-설명해주세요"><span class="toc-text">java, 변수의 3가지 타입에 대해 설명해주세요.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jpa-Transactional-사용시-전파-propergation-속성-7가지는-무엇인가요"><span class="toc-text">jpa, @Transactional 사용시 전파(propergation) 속성 7가지는 무엇인가요?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jpa-OSIV란-무엇인가요"><span class="toc-text">jpa, OSIV란 무엇인가요?</span></a></li></ol><p></p>
+<h3 id="java-synchronized-키워드의-의미는-무엇인가요"><a href="#java-synchronized-키워드의-의미는-무엇인가요" class="headerlink" title="java, synchronized 키워드의 의미는 무엇인가요?"></a>java, synchronized 키워드의 의미는 무엇인가요?</h3><p>둘 이상의 쓰레드가 공동의 자원을 공유할 때, 한 쓰레드가 그 자원을 수정하는데 다른 쓰레드가 동시에 수정하면 문제가 발생할 수 있습니다.<br>이 때 사용하는 것이 synchronized 키워드이며 method 혹은 블럭에 사용 가능합니다.<br>synchronized는 method 와 블럭을 통해 설정 가능하며 해당 구역에 쓰레드 접근시 락을 획득하여 구간을 빠져 나올때 까지 다른 쓰레드 접근을 막는 매커니즘입니다.<br><a href="https://tourspace.tistory.com/54" rel="external nofollow noopener noreferrer" target="_blank">Java의 동기화 -Synchronized 키워드의 사용</a> 참고</p>
+<h3 id="java-ConcurrentHashMap과-HashTable-의-차이는-무엇인가요"><a href="#java-ConcurrentHashMap과-HashTable-의-차이는-무엇인가요" class="headerlink" title="java, ConcurrentHashMap과 HashTable 의 차이는 무엇인가요?"></a>java, ConcurrentHashMap과 HashTable 의 차이는 무엇인가요?</h3><p>HashTable은 동기화를 위해 synchronized 키워드를 이용해서 메소드 전체에 락을 걸고,<br>ConcurrentHashMap 에서는 내부적으로 여러 개의 <code>세그먼트</code>를 두고 각 <code>세그먼트</code>마다 별도의 락을 가지고 있습니다.<br>이로 인하여 ConcurrentHashMap 의 성능이 월등히 좋습니다.</p>
+<h3 id="java-Integer와-Atomic-lt-Integer-의-차이는-무엇인가요"><a href="#java-Integer와-Atomic-lt-Integer-의-차이는-무엇인가요" class="headerlink" title="java, Integer와 Atomic&lt;Integer>의 차이는 무엇인가요?"></a>java, Integer와 Atomic&lt;Integer>의 차이는 무엇인가요?</h3><p>Atomic 자료형은 synchronized 키워드가 없이도 Thread-safe 함을 보장합니다.<br>이 데이터 타입은 compare &amp; swap (<code>CAS</code>) 연산을 직접 이용하는데요.<br>간단히 설명하자면, 값을 변경할 때 자신이 읽었던 변수의 값을 기억하고있다가 변경 직전에 변수의 메모리 내의 값을 확인하여 이전에 기억해놓은 값과 같은 경우에만 처리하고 그렇지 않은경우는 무산시키는 방법입니다.<br>CPU 차원에서 하드웨적으로 지원하는 연산이기 때문에 굉장히 빠릅니다. 따라서 병렬적으로 사용될 변수에는 Atomic 자료형을 사용하는게 좋습니다.</p>
+<h3 id="java-Generic이란-무엇이며-사용-시-어떤-이점이-있나요"><a href="#java-Generic이란-무엇이며-사용-시-어떤-이점이-있나요" class="headerlink" title="java, Generic이란 무엇이며 사용 시 어떤 이점이 있나요?"></a>java, Generic이란 무엇이며 사용 시 어떤 이점이 있나요?</h3><p>클래스의 타입을 파라미터로 만든 것 입니다. Java 1.5부터 추가되었으며 &lt;TYPE> 문법을 이용합니다.<br>이는 컴파일 타임에 구체적인 타입이 결정되도록 함으로써 <code>runtime exception을 예방</code>할 수 있습니다.<br>또 객체를 꺼내 사용할 시 형변환을 통한 타입을 맞출 필요가 없어 코드를 간결하게 줄일 수 있습니다.</p>
+<h3 id="java-변수의-3가지-타입에-대해-설명해주세요"><a href="#java-변수의-3가지-타입에-대해-설명해주세요" class="headerlink" title="java, 변수의 3가지 타입에 대해 설명해주세요."></a>java, 변수의 3가지 타입에 대해 설명해주세요.</h3><p>클래스 변수(static variable), 인스턴스 변수(instance variable), 지역 변수(local variable)가 있습니다.<br>클래스 변수는 클래스의 모든 인스턴스에서 공유하는 변수로서 클래스가 메모리에 올라갈 때 static 영역에 생성됩니다.<br>인스턴스 변수는 인스턴스가 new 키워드로 생성될 때 생성됩니다. heap 영역에 생성되며 Garbage collector가 내부 알고리즘에 의해 주기적으로 해제해줍니다.<br>지역 변수는 메서드 안에서 선언되고 메서드가 종료되면 소멸하여 사용할 수 없습니다. stack 영역에 저장됩니다.</p>
+<h3 id="jpa-Transactional-사용시-전파-propergation-속성-7가지는-무엇인가요"><a href="#jpa-Transactional-사용시-전파-propergation-속성-7가지는-무엇인가요" class="headerlink" title="jpa, @Transactional 사용시 전파(propergation) 속성 7가지는 무엇인가요?"></a>jpa, @Transactional 사용시 전파(propergation) 속성 7가지는 무엇인가요?</h3><ol>
+<li>REQUIRED : 부모 트랜잭션 내에서 실행하며 부모 트랜잭션이 없을 경우 새로운 트랜잭션을 생성</li>
+<li>REQUIRES_NEW : 부모 트랜잭션을 무시하고 무조건 새로운 트랜잭션이 생성</li>
+<li>SUPPORT : 부모 트랜잭션 내에서 실행하며 부모 트랜잭션이 없을 경우 nontransactionally로 실행</li>
+<li>MANDATORY : 부모 트랜잭션 내에서 실행되며 부모 트랜잭션이 없을 경우 예외가 발생</li>
+<li>NOT_SUPPORT : nontransactionally로 실행하며 부모 트랜잭션 내에서 실행될 경우 일시 정지</li>
+<li>NEVER : nontransactionally로 실행되며 부모 트랜잭션이 존재한다면 예외가 발생</li>
+<li>NESTED : 해당 메서드가 부모 트랜잭션에서 진행될 경우 별개로 커밋되거나 롤백될 수 있음. 둘러싼 트랜잭션이 없을 경우 REQUIRED와 동일하게 작동</li>
+</ol>
+<p>여기서 주로 1, 2번 정도만 주로 사용되므로 두가지만 알아도 무난할듯 합니다.</p>
+<h3 id="jpa-OSIV란-무엇인가요"><a href="#jpa-OSIV란-무엇인가요" class="headerlink" title="jpa, OSIV란 무엇인가요?"></a>jpa, OSIV란 무엇인가요?</h3><p>Open Session In View 의 줄임말로서 JPA 영속성 컨텍스트를 뷰 렌더링 시점까지 오픈된 채로유지하는 패턴을 의미합니다.<br>뷰 렌더링 시점에 lazy 로딩이 필요한 객체의 경우 트랜젝션이 종료되어 LazyInitializationException이 발생하는 경우가 있는데요.<br>이를 방지하고자 영속성 컨텍스트만 뷰 시점까지 유지하는 것 입니다.<br>트랜잭션을 뷰 렌더링 시점까지 유지하는 방법도 있지만 이는 JDBC 커넥션의 점유 시간이 길어지는 단점이 있습니다. OSIV의 경우 하이버네이트 세션만 오픈할 뿐 트랜잭션은 시작하지 않도록 하여 이 단점을 해결하였습니다.<br>이것 관련하여, 뷰 렌더링 시점에 엔티티의 값을 수정해도 flush 되지 않아 반영이 되지 않습니다.</p>
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        <!-- 티스토리 반응형 하단 -->
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="7607910329" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/java/">java</a> <a class="tag tag--primary tag--small t-link" href="/tags/jpa/">jpa</a> <a class="tag tag--primary tag--small t-link" href="/tags/면접/">면접</a>
+
+            </div>
+        
+
+
+
+
+        <!--밍피디가 커스터마이징 해본 관련 글 영역-->
+        
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">관련 글</span><br>
+                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-checked-to-unchecked/" title="java, checked excepton을 아름답게 unchecked exception으로 바꾸기" rel="bookmark">java, checked excepton을 아름답게 unchecked exception으로 바꾸기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-google-api/" title="java, google api 이용하기" rel="bookmark">java, google api 이용하기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/31/develop/java-orelse-orelseget/" title="java, optional의 orElse와 orElseGet의 차이" rel="bookmark">java, optional의 orElse와 orElseGet의 차이</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/03/develop/java-stream-npe/" title="java, stream api에서 NPE 발생 주의" rel="bookmark">java, stream api에서 NPE 발생 주의</a></h3></div></li></ul>
+            </div>
+        
+        <!-- 끝 -->
+
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/18/newtech/kotlin-to-javascript/" data-tooltip="kotlin to javascript (client side)" aria-label="다음: kotlin to javascript (client side)">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/22/interview/interview-1/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/22/interview/interview-1/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/22/interview/interview-1/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+
+
+        <!-- 티스토리 관련 글 바로 밑 -->
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="9147579474" data-ad-format="link" data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+
+
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 밍피디. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/18/newtech/kotlin-to-javascript/" data-tooltip="kotlin to javascript (client side)" aria-label="다음: kotlin to javascript (client side)">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/22/interview/interview-1/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/22/interview/interview-1/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/22/interview/interview-1/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/04/22/interview/interview-1/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/04/22/interview/interview-1/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/04/22/interview/interview-1/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+            <h4 id="about-card-name">밍피디</h4>
+        
+            <div id="about-card-bio"><p>잔망스러운 개발자</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>개발자</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                판교, 대한민국
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/bg.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://mingpd.github.io/2019/04/22/interview/interview-1/';
+                 
+                    this.page.identifier = '2019/04/22/interview/interview-1/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mingpidi';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+
+    </body>
+</html>
