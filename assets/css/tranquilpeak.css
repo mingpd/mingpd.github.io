@@ -1327,7 +1327,8 @@ blockquote {
 
 @media only screen and (min-width: 1024px) {
   #sidebar-ad {
-    width: 100%; }
+    width: 100%;
+    margin-top: 20px; }
   #sidebar-ad-small {
     display: none; } }
 
@@ -1339,9 +1340,9 @@ blockquote {
 
 @media only screen and (max-width: 767px) {
   #sidebar-ad {
-    display: none; }
+    width: 100%; }
   #sidebar-ad-small {
-    width: 100%; } }
+    display: none; } }
 
 .alert {
   position: relative;
