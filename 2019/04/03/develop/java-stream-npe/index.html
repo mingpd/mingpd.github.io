@@ -17,7 +17,7 @@
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"java stream api를 많이 사용하실텐데요.예상치 못하게 NullPointerException 발생을 맞이하는 경우가 있어서 정리해보고자 합니다.\n예시12SimpleEntry&lt;String, String&gt; keyValue = new SimpleEntry(\"test\", null);System.out.println(keyValue.getValue());\nSimpleEntry는 java.util의 key-value를 담을 수 있는 클래스입니다.(HashMap에서 사용하는 그것)\n위를 실행하면 어떤 결과가 나올까요?네. 예상하신것 처럼 null입니다.\n12345678SimpleEntry&lt;String, String&gt; keyValue = new SimpleEntry&lt;&gt;(\"test\", null);List&lt;SimpleEntry&lt;String, String&gt;&gt; list = Arrays.asList(keyValue);Object aNull = list.stream()\t\t.map(e -&gt; e.getValue())\t\t.findAny()\t\t.orElse(\"널이에요\");        System.out.println(aNull);\n그렇다면 위의 예시의 결과는 뭘까요?\n훗..list는 SimpleEntry 1개로 이루어진 리스트이고그 list에서 stream api를 이용하는데거기서 e.getValue()를 호출했고, 그게 null이니orElse를 타게되므로 “널이에요”가 출력되겠지?\n\n하지만 결과는 그렇지 않습니다.\n12345Exception in thread &quot;main&quot; java.lang.NullPointerException\tat java.util.Objects.requireNonNull(Objects.java:203)\tat java.util.Optional.&lt;init&gt;(Optional.java:96)\tat java.util.Optional.of(Optional.java:108)    ...\n???\n\nStream.java를 읽어봅시다.\nStream.java의 findAny 선언 부분인데요. 위와같은 설명이 써있습니다.findFirst도 동일하게 NPE를 발생시킵니다.\n그럼 아래와 같은 상황은 어떨까요?\n12345678List&lt;SimpleEntry&lt;String, String&gt;&gt; list = Arrays.asList(\tnew SimpleEntry&lt;&gt;(\"test2\", \"notnull\"), new SimpleEntry&lt;&gt;(\"test\", null));    Object aNull = list.stream()\t\t.map(e -&gt; e.getValue())\t\t.findAny()\t\t.orElse(\"널이에요\");System.out.println(aNull);\n이 상황에도 NPE가 발생될까요?아닙니다. null을 취하지 않으면 발생하지 않습니다.(위를 findFirst()로 변경해도 동일합니다.)\n그럼 아래처럼 filter를 추가하면 어떻게 될까요?\n12345678910List&lt;SimpleEntry&lt;String, String&gt;&gt; list = Arrays.asList(\tnew SimpleEntry&lt;&gt;(\"test2\", \"notnull\"), new SimpleEntry&lt;&gt;(\"test\", null));    Object aNull = list.stream()\t\t// 필터추가\t\t.filter(e -&gt; \"test\".equalsIgnoreCase(e.getKey()))\t\t.map(e -&gt; e.getValue())\t\t.findAny()\t\t.orElse(\"널이에요\");System.out.println(aNull);\n위의 경우 null을 취하는 상황이 되므로 역시 NPE가 발생됩니다.\n마치며이 역시 별거 아닌것 같지만버그는 항상 사소한것 부터 오는것이므로 조심합시다.","dateCreated":"2019-04-03T13:51:00+09:00","dateModified":"2019-04-26T13:20:46+09:00","datePublished":"2019-04-03T13:51:00+09:00","description":"java stream api를 많이 사용하실텐데요.예상치 못하게 NullPointerException 발생을 맞이하는 경우가 있어서 정리해보고자 합니다.","headline":"java, stream api에서 NPE 발생 주의","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/04/03/develop/java-stream-npe/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/04/03/develop/java-stream-npe/","keywords":"java, stream"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"java stream api를 많이 사용하실텐데요.예상치 못하게 NullPointerException 발생을 맞이하는 경우가 있어서 정리해보고자 합니다.\n예시12SimpleEntry&lt;String, String&gt; keyValue = new SimpleEntry(\"test\", null);System.out.println(keyValue.getValue());\nSimpleEntry는 java.util의 key-value를 담을 수 있는 클래스입니다.(HashMap에서 사용하는 그것)\n위를 실행하면 어떤 결과가 나올까요?네. 예상하신것 처럼 null입니다.\n12345678SimpleEntry&lt;String, String&gt; keyValue = new SimpleEntry&lt;&gt;(\"test\", null);List&lt;SimpleEntry&lt;String, String&gt;&gt; list = Arrays.asList(keyValue);Object aNull = list.stream()\t\t.map(e -&gt; e.getValue())\t\t.findAny()\t\t.orElse(\"널이에요\");        System.out.println(aNull);\n그렇다면 위의 예시의 결과는 뭘까요?\n훗..list는 SimpleEntry 1개로 이루어진 리스트이고그 list에서 stream api를 이용하는데거기서 e.getValue()를 호출했고, 그게 null이니orElse를 타게되므로 “널이에요”가 출력되겠지?\n\n하지만 결과는 그렇지 않습니다.\n12345Exception in thread &quot;main&quot; java.lang.NullPointerException\tat java.util.Objects.requireNonNull(Objects.java:203)\tat java.util.Optional.&lt;init&gt;(Optional.java:96)\tat java.util.Optional.of(Optional.java:108)    ...\n???\n\n\n    (adsbygoogle = window.adsbygoogle || []).push({});\n\n\nStream.java를 읽어봅시다.\nStream.java의 findAny 선언 부분인데요. 위와같은 설명이 써있습니다.findFirst도 동일하게 NPE를 발생시킵니다.\n그럼 아래와 같은 상황은 어떨까요?\n12345678List&lt;SimpleEntry&lt;String, String&gt;&gt; list = Arrays.asList(\tnew SimpleEntry&lt;&gt;(\"test2\", \"notnull\"), new SimpleEntry&lt;&gt;(\"test\", null));    Object aNull = list.stream()\t\t.map(e -&gt; e.getValue())\t\t.findAny()\t\t.orElse(\"널이에요\");System.out.println(aNull);\n이 상황에도 NPE가 발생될까요?아닙니다. null을 취하지 않으면 발생하지 않습니다.(위를 findFirst()로 변경해도 동일합니다.)\n그럼 아래처럼 filter를 추가하면 어떻게 될까요?\n12345678910List&lt;SimpleEntry&lt;String, String&gt;&gt; list = Arrays.asList(\tnew SimpleEntry&lt;&gt;(\"test2\", \"notnull\"), new SimpleEntry&lt;&gt;(\"test\", null));    Object aNull = list.stream()\t\t// 필터추가\t\t.filter(e -&gt; \"test\".equalsIgnoreCase(e.getKey()))\t\t.map(e -&gt; e.getValue())\t\t.findAny()\t\t.orElse(\"널이에요\");System.out.println(aNull);\n위의 경우 null을 취하는 상황이 되므로 역시 NPE가 발생됩니다.\n마치며이 역시 별거 아닌것 같지만버그는 항상 사소한것 부터 오는것이므로 조심합시다.","dateCreated":"2019-04-03T13:51:00+09:00","dateModified":"2019-04-26T13:43:53+09:00","datePublished":"2019-04-03T13:51:00+09:00","description":"java stream api를 많이 사용하실텐데요.예상치 못하게 NullPointerException 발생을 맞이하는 경우가 있어서 정리해보고자 합니다.","headline":"java, stream api에서 NPE 발생 주의","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/04/03/develop/java-stream-npe/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/04/03/develop/java-stream-npe/","keywords":"java, stream"}</script>
     <meta name="description" content="java stream api를 많이 사용하실텐데요.예상치 못하게 NullPointerException 발생을 맞이하는 경우가 있어서 정리해보고자 합니다.">
 <meta name="keywords" content="java,stream">
 <meta property="og:type" content="blog">
@@ -27,7 +27,7 @@
 <meta property="og:description" content="java stream api를 많이 사용하실텐데요.예상치 못하게 NullPointerException 발생을 맞이하는 경우가 있어서 정리해보고자 합니다.">
 <meta property="og:locale" content="ko">
 <meta property="og:image" content="https://mingpd.github.io/2019/04/03/develop/java-stream-npe/1.png">
-<meta property="og:updated_time" content="2019-04-26T04:20:46.556Z">
+<meta property="og:updated_time" content="2019-04-26T04:43:53.158Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java, stream api에서 NPE 발생 주의">
 <meta name="twitter:description" content="java stream api를 많이 사용하실텐데요.예상치 못하게 NullPointerException 발생을 맞이하는 경우가 있어서 정리해보고자 합니다.">
@@ -202,7 +202,11 @@
                     <!--<ins class="adsbygoogle"-->
                          <!--style="display:inline-block;width:160px;height:600px"-->
                          <!--data-ad-client="ca-pub-4098225824538946"-->
-                         <!--data-ad-slot="2729007176"></ins>-->
+                         <!--data-ad-slot="2729007176"></ins>
+                         <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                     -->
                 </td>
             </tr>
         </table>
@@ -213,6 +217,9 @@
                 <td align="center">
                     <!-- 깃헙 사이드바 작은거 -->
                     <ins class="adsbygoogle" style="display:inline-block;width:180px;height:150px" data-ad-client="ca-pub-4098225824538946" data-ad-slot="8036755313"></ins>
+                    <script>
+                      (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
                 </td>
             </tr>
         </table>
@@ -261,6 +268,9 @@
 
             <!-- 깃헙 포스트 상단 -->
             <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="7955259608" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
 
             <!-- excerpt --><br><h1 id="table-of-contents">목차</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#예시"><span class="toc-text">예시</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Stream-java를-읽어봅시다"><span class="toc-text">Stream.java를 읽어봅시다.</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#마치며"><span class="toc-text">마치며</span></a></li></ol><br>java stream api를 많이 사용하실텐데요.<br>예상치 못하게 NullPointerException 발생을 맞이하는 경우가 있어서 정리해보고자 합니다.<p></p>
 <h2 id="예시"><a href="#예시" class="headerlink" title="예시"></a>예시</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SimpleEntry&lt;String, String&gt; keyValue = <span class="keyword">new</span> SimpleEntry(<span class="string">"test"</span>, <span class="keyword">null</span>);</span><br><span class="line">System.out.println(keyValue.getValue());</span><br></pre></td></tr></table></figure>
@@ -274,6 +284,10 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.NullPointerException</span><br><span class="line">	at java.util.Objects.requireNonNull(Objects.java:203)</span><br><span class="line">	at java.util.Optional.&lt;init&gt;(Optional.java:96)</span><br><span class="line">	at java.util.Optional.of(Optional.java:108)</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
 <p>???</p>
 <p><ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4098225824538946" data-ad-slot="4972027138"></ins></p>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 <h2 id="Stream-java를-읽어봅시다"><a href="#Stream-java를-읽어봅시다" class="headerlink" title="Stream.java를 읽어봅시다."></a>Stream.java를 읽어봅시다.</h2><img src="/2019/04/03/develop/java-stream-npe/1.png">
 <p>Stream.java의 findAny 선언 부분인데요. 위와같은 설명이 써있습니다.<br>findFirst도 동일하게 NPE를 발생시킵니다.</p>
 <p>그럼 아래와 같은 상황은 어떨까요?</p>
@@ -293,6 +307,9 @@
 
         <!-- 깃헙 포스트 하단 -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="3850517151" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
 
         
             <div class="post-footer-tags">
@@ -311,7 +328,7 @@
         
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">관련 글</span><br>
-                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-checked-to-unchecked/" title="java, checked excepton을 아름답게 unchecked exception으로 바꾸기" rel="bookmark">java, checked excepton을 아름답게 unchecked exception으로 바꾸기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-google-api/" title="java, google api 이용하기" rel="bookmark">java, google api 이용하기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/31/develop/java-orelse-orelseget/" title="java, optional의 orElse와 orElseGet의 차이" rel="bookmark">java, optional의 orElse와 orElseGet의 차이</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/22/interview/interview-1/" title="기술면접에 나올법한 질문들 1" rel="bookmark">기술면접에 나올법한 질문들 1</a></h3></div></li></ul>
+                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/22/interview/interview-1/" title="기술면접에 나올법한 질문들 1" rel="bookmark">기술면접에 나올법한 질문들 1</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-checked-to-unchecked/" title="java, checked excepton을 아름답게 unchecked exception으로 바꾸기" rel="bookmark">java, checked excepton을 아름답게 unchecked exception으로 바꾸기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/31/develop/java-orelse-orelseget/" title="java, optional의 orElse와 orElseGet의 차이" rel="bookmark">java, optional의 orElse와 orElseGet의 차이</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-google-api/" title="java, google api 이용하기" rel="bookmark">java, google api 이용하기</a></h3></div></li></ul>
             </div>
         
         <!-- 끝 -->
@@ -396,6 +413,9 @@
 
         <!-- 깃헙 관련글 밑 -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="4860470205" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
 
         
             

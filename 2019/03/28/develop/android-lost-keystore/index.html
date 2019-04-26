@@ -17,7 +17,7 @@
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"\n누누히 말씀드렸던것 처럼 저는 서버개발자입니다만최근 안드로이드에 관심이 생겨서 병맛 앱 한가지를 출시할 예정입니다.바로 아이디어노트에서 소개했던 “스팸체 생성기” 입니다.(사실 무료서버 사용기간이 얼마 안남아서 앱으로라도 만들어두려 합니다.)\n그런데 참.. 안드로이드는 처음 겪다보니 해매는 일이 한두가지가 아닙니다.다른 블로그를 참고하면서 앱 등록 절차를 진행중인데요.테스트로 apk를 한번 올리고 나서그때 사용했던 keystore.jks 를 날려버리고 말았습니다.(이게 이렇게 중요한 것인지 몰랐네요)\n\n아무 생각없이 테스트로 여기에 App Bundle 업로드 했는데 삭제도 안되고..다른 keystore 로 서명된 App Bundle은 이전 버전과 싸인이 안맞다고 업로드도 안되고 말이죠.낭패네요.\n물론 구글 플레이 콘솔에서 앱 자체를 삭제해버리고 새로 등록하는 방법도 있겠습니다만그러면 패키지명을 변경하고 새로 빌드해야합니다.그러긴 쫌 그렇고.. 뭐 급한것도 아니니 keystore 서명 바꿔달라고 찡찡대봐야겠습니다.\n새로운 keystore 파일을 만들자12사실 https://developer.android.com/studio/publish/app-signing 여기 가면더 잘 설명되어있습니다.\n\n무튼 keystore를 새로 만들어야 할것 같습니다.android studio 에서 Build - Generate Signed Bundle / APK 항목으로 들어가봅시다.\n\nkey를 지정하는 화면인데.. Create New로 새로 만들어야겠습니다.\n\n뭐 사용자한테 보여지는게 아닌것 같으니 대충 기입하고 완료합시다.또 잃어버리지 않게 안전하게 파일을 잘 갖다두어요.\n\n구글에게 찡찡대기Google Play 앱 서명 사용일단 여기에 잘 설명된 내용임을 밝힙니다.\n\n일단 저 스스로 해결할 순 없는것 같습니다. 준비물과 함께 구글에 요청을 하면되는데요.upload_certificate.pem 파일을 첨부하라고 하네요.저희가 앞서 만든것은 keystore.jks 인데 말이죠.\n그것에 대한 설명은 저 섹션 바로 윗줄에 설명되어있습니다.요약하면 아래와 같은데요.\n1$ keytool -export -rfc -keystore upload-keystore.jks -alias upload -file upload_certificate.pem\n아까 만들어준 jks 파일의 경로를 잘 기입해서 위 명령을 실행하면됩니다.주의 할 점은 -alias upload 라고 되어있는 이 부분인데요.위에서 keystore.jks 를 생성할 때 기입했던 alias 정보를 정확히 넣으면 됩니다.(위에서 key0 라고 써놨던 그 부분)\n일반적인 문제 - Play Console 고객센터\n그 후 “지원팀에게 문의하여 키를 재설정하도록” 부분 링크를 누르거나위 링크로 직접 들어갑니다.여기서 upload_certificate.pem 을 첨부하고 구구절절히 사연을 적으면 되겠습니다.주의할 점은 개발자 계정, 앱 패키지 명을 정확히 적어줘야 한다는 것입니다.영업일 기준 2일 정도 소요된다고 하니 잘못 입력해서 빠꾸 맞는 일이 없도록 합시다.\n약 30시간 정도 후 답장 도착다행히 주말이 오기전에 답이 도착하였습니다.더 다행인것은 한국어로 도착다는 점 입니다. (한국인 담당자가 계신것 같아요.)\n두 개의 메일이 도착했습니다.하나는 접수 되었다는 안내메일이고요. 하나는 담당자 이름으로 처리되었다는 메일이 왔습니다.생각보다 빠르게 처리해주셔서 놀랐습니다.\n그러나 매우 안타깝게, 처리와 별개로 실제 업로드 가능한 시각은 며칠 뒤였습니다.\n확인 차원에서 업로드를 시도해보았습니다. 역시 안되더군요.그래도 그냥 안된다고 하는게 아니라 메일에서 안내된것과 동일한 안내메시지를 리턴해줘서 감동받았습니다.\n19. 3. 31. 오전 10:36 이후 ..다행히 별 탈없이 업로드가 잘 되었습니다.며칠 시간을 버리긴 했지만 가이드대로 하면 구글측에서 처리를 잘 해주네요.\n마치며역시 안하던 짓을 하려니 좀 어렵네요. 정신을 똑바로 차려야겠습니다.","dateCreated":"2019-03-28T19:43:00+09:00","dateModified":"2019-04-26T13:20:46+09:00","datePublished":"2019-03-28T19:43:00+09:00","description":"테스트로 apk를 한번 올리고 나서 그때 사용했던 keystore.jks 를 날려버리고 말았습니다.","headline":"android, 앱 출시하려는데 keystore 잃어버렸을 때","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/","keywords":"android, keystore"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"\n누누히 말씀드렸던것 처럼 저는 서버개발자입니다만최근 안드로이드에 관심이 생겨서 병맛 앱 한가지를 출시할 예정입니다.바로 아이디어노트에서 소개했던 “스팸체 생성기” 입니다.(사실 무료서버 사용기간이 얼마 안남아서 앱으로라도 만들어두려 합니다.)\n그런데 참.. 안드로이드는 처음 겪다보니 해매는 일이 한두가지가 아닙니다.다른 블로그를 참고하면서 앱 등록 절차를 진행중인데요.테스트로 apk를 한번 올리고 나서그때 사용했던 keystore.jks 를 날려버리고 말았습니다.(이게 이렇게 중요한 것인지 몰랐네요)\n\n아무 생각없이 테스트로 여기에 App Bundle 업로드 했는데 삭제도 안되고..다른 keystore 로 서명된 App Bundle은 이전 버전과 싸인이 안맞다고 업로드도 안되고 말이죠.낭패네요.\n물론 구글 플레이 콘솔에서 앱 자체를 삭제해버리고 새로 등록하는 방법도 있겠습니다만그러면 패키지명을 변경하고 새로 빌드해야합니다.그러긴 쫌 그렇고.. 뭐 급한것도 아니니 keystore 서명 바꿔달라고 찡찡대봐야겠습니다.\n새로운 keystore 파일을 만들자12사실 https://developer.android.com/studio/publish/app-signing 여기 가면더 잘 설명되어있습니다.\n\n무튼 keystore를 새로 만들어야 할것 같습니다.android studio 에서 Build - Generate Signed Bundle / APK 항목으로 들어가봅시다.\n\nkey를 지정하는 화면인데.. Create New로 새로 만들어야겠습니다.\n\n뭐 사용자한테 보여지는게 아닌것 같으니 대충 기입하고 완료합시다.또 잃어버리지 않게 안전하게 파일을 잘 갖다두어요.\n\n\n    (adsbygoogle = window.adsbygoogle || []).push({});\n\n\n구글에게 찡찡대기Google Play 앱 서명 사용일단 여기에 잘 설명된 내용임을 밝힙니다.\n\n일단 저 스스로 해결할 순 없는것 같습니다. 준비물과 함께 구글에 요청을 하면되는데요.upload_certificate.pem 파일을 첨부하라고 하네요.저희가 앞서 만든것은 keystore.jks 인데 말이죠.\n그것에 대한 설명은 저 섹션 바로 윗줄에 설명되어있습니다.요약하면 아래와 같은데요.\n1$ keytool -export -rfc -keystore upload-keystore.jks -alias upload -file upload_certificate.pem\n아까 만들어준 jks 파일의 경로를 잘 기입해서 위 명령을 실행하면됩니다.주의 할 점은 -alias upload 라고 되어있는 이 부분인데요.위에서 keystore.jks 를 생성할 때 기입했던 alias 정보를 정확히 넣으면 됩니다.(위에서 key0 라고 써놨던 그 부분)\n일반적인 문제 - Play Console 고객센터\n그 후 “지원팀에게 문의하여 키를 재설정하도록” 부분 링크를 누르거나위 링크로 직접 들어갑니다.여기서 upload_certificate.pem 을 첨부하고 구구절절히 사연을 적으면 되겠습니다.주의할 점은 개발자 계정, 앱 패키지 명을 정확히 적어줘야 한다는 것입니다.영업일 기준 2일 정도 소요된다고 하니 잘못 입력해서 빠꾸 맞는 일이 없도록 합시다.\n약 30시간 정도 후 답장 도착다행히 주말이 오기전에 답이 도착하였습니다.더 다행인것은 한국어로 도착다는 점 입니다. (한국인 담당자가 계신것 같아요.)\n두 개의 메일이 도착했습니다.하나는 접수 되었다는 안내메일이고요. 하나는 담당자 이름으로 처리되었다는 메일이 왔습니다.생각보다 빠르게 처리해주셔서 놀랐습니다.\n그러나 매우 안타깝게, 처리와 별개로 실제 업로드 가능한 시각은 며칠 뒤였습니다.\n확인 차원에서 업로드를 시도해보았습니다. 역시 안되더군요.그래도 그냥 안된다고 하는게 아니라 메일에서 안내된것과 동일한 안내메시지를 리턴해줘서 감동받았습니다.\n19. 3. 31. 오전 10:36 이후 ..다행히 별 탈없이 업로드가 잘 되었습니다.며칠 시간을 버리긴 했지만 가이드대로 하면 구글측에서 처리를 잘 해주네요.\n마치며역시 안하던 짓을 하려니 좀 어렵네요. 정신을 똑바로 차려야겠습니다.","dateCreated":"2019-03-28T19:43:00+09:00","dateModified":"2019-04-26T13:43:53+09:00","datePublished":"2019-03-28T19:43:00+09:00","description":"테스트로 apk를 한번 올리고 나서 그때 사용했던 keystore.jks 를 날려버리고 말았습니다.","headline":"android, 앱 출시하려는데 keystore 잃어버렸을 때","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/","keywords":"android, keystore"}</script>
     <meta name="description" content="테스트로 apk를 한번 올리고 나서 그때 사용했던 keystore.jks 를 날려버리고 말았습니다.">
 <meta name="keywords" content="android,keystore">
 <meta property="og:type" content="blog">
@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/6.png">
 <meta property="og:image" content="https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/7.png">
 <meta property="og:image" content="https://mingpd.github.io/2019/03/28/develop/android-lost-keystore/8.png">
-<meta property="og:updated_time" content="2019-04-26T04:20:46.578Z">
+<meta property="og:updated_time" content="2019-04-26T04:43:53.188Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android, 앱 출시하려는데 keystore 잃어버렸을 때">
 <meta name="twitter:description" content="테스트로 apk를 한번 올리고 나서 그때 사용했던 keystore.jks 를 날려버리고 말았습니다.">
@@ -209,7 +209,11 @@
                     <!--<ins class="adsbygoogle"-->
                          <!--style="display:inline-block;width:160px;height:600px"-->
                          <!--data-ad-client="ca-pub-4098225824538946"-->
-                         <!--data-ad-slot="2729007176"></ins>-->
+                         <!--data-ad-slot="2729007176"></ins>
+                         <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                     -->
                 </td>
             </tr>
         </table>
@@ -220,6 +224,9 @@
                 <td align="center">
                     <!-- 깃헙 사이드바 작은거 -->
                     <ins class="adsbygoogle" style="display:inline-block;width:180px;height:150px" data-ad-client="ca-pub-4098225824538946" data-ad-slot="8036755313"></ins>
+                    <script>
+                      (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
                 </td>
             </tr>
         </table>
@@ -268,6 +275,9 @@
 
             <!-- 깃헙 포스트 상단 -->
             <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="7955259608" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
 
             <!-- excerpt --><br><h1 id="table-of-contents">목차</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#새로운-keystore-파일을-만들자"><span class="toc-text">새로운 keystore 파일을 만들자</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#구글에게-찡찡대기"><span class="toc-text">구글에게 찡찡대기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#약-30시간-정도-후-답장-도착"><span class="toc-text">약 30시간 정도 후 답장 도착</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#19-3-31-오전-10-36-이후"><span class="toc-text">19. 3. 31. 오전 10:36 이후 ..</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#마치며"><span class="toc-text">마치며</span></a></li></ol><p></p>
 <p>누누히 말씀드렸던것 처럼 저는 서버개발자입니다만<br>최근 안드로이드에 관심이 생겨서 병맛 앱 한가지를 출시할 예정입니다.<br>바로 아이디어노트에서 소개했던 “스팸체 생성기” 입니다.<br>(사실 무료서버 사용기간이 얼마 안남아서 앱으로라도 만들어두려 합니다.)</p>
@@ -283,6 +293,10 @@
 <img src="/2019/03/28/develop/android-lost-keystore/4.png">
 <p>뭐 사용자한테 보여지는게 아닌것 같으니 대충 기입하고 완료합시다.<br>또 잃어버리지 않게 안전하게 파일을 잘 갖다두어요.</p>
 <p><ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4098225824538946" data-ad-slot="4972027138"></ins></p>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 <h2 id="구글에게-찡찡대기"><a href="#구글에게-찡찡대기" class="headerlink" title="구글에게 찡찡대기"></a>구글에게 찡찡대기</h2><p><a href="https://support.google.com/googleplay/android-developer/answer/7384423?hl=ko" rel="external nofollow noopener noreferrer" target="_blank">Google Play 앱 서명 사용</a><br>일단 여기에 잘 설명된 내용임을 밝힙니다.</p>
 <img src="/2019/03/28/develop/android-lost-keystore/5.png">
 <p>일단 저 스스로 해결할 순 없는것 같습니다. 준비물과 함께 구글에 요청을 하면되는데요.<br>upload_certificate.pem 파일을 첨부하라고 하네요.<br>저희가 앞서 만든것은 keystore.jks 인데 말이죠.</p>
@@ -307,6 +321,9 @@
 
         <!-- 깃헙 포스트 하단 -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="3850517151" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
 
         
             <div class="post-footer-tags">
@@ -410,6 +427,9 @@
 
         <!-- 깃헙 관련글 밑 -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="4860470205" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
 
         
             
