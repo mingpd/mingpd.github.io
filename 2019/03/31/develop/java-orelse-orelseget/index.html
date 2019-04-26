@@ -17,7 +17,7 @@
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"java8의 optional api 많이들 사용하실텐데요.어찌보면 당연하지만 햇갈리는 내용에 대해 다뤄보겠습니다.orElse와 orElseGet의 차이입니다.  \n귀찮으신분들을 위해 요약을 먼저 하자면\norElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.\n\n예시123456String username = \"이름\";String result1 = Optional.ofNullable(username).orElse(\"no name\");System.out.println(result1);String result2 = Optional.ofNullable(username).orElseGet(() -&gt; \"no name\");System.out.println(result2);\n위 두 println의 결과는 무엇일까요?네 당연하게도 “이름” 입니다.왜냐면 username != null 이기 때문이죠.  \n12String username = null;//.. 이하 동일\n그럼 위처럼 username == null 이면?네. 당연하게도 둘다 “no name” 입니다.  \n그럼 같은거 아냐?아닙니다. 아래의 경우를 생각해봅시다.  \n123456789101112public void ohMyGod() &#123;\tString username = null;\tString result1 = Optional.ofNullable(username).orElse(getDefaultName());\tSystem.out.println(result1);\tString result2 = Optional.ofNullable(username).orElseGet(() -&gt; getDefaultName());\tSystem.out.println(result2);&#125;private String getDefaultName() &#123;\treturn \"no name\";&#125;\n이 경우에 결과는 어떻게 될까요?네. 둘다 “no name” 입니다. 결과는 같지만 여긴 굉장한 차이가 있습니다.orElse의 경우는 “값”을 취합니다.orElseGet은 “Supplier”를 취하죠.  \n위의 예시는 아래 코드로 다시 쓰여질 수 있습니다.\n12345678String username = null;String defaultName = getDefaultName(); // 여기가 다릅니다.String result1 = Optional.ofNullable(username).orElse(defaultName);System.out.println(result1);Supplier&lt;String&gt; supplier = () -&gt; getDefaultName(); // 여기요.String result2 = Optional.ofNullable(username).orElseGet(supplier);System.out.println(result2);\n아시겠나요? \norElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.\n\n위의 예시에서는 ‘그래서 뭐?’ 라고 생각하시겠지만 아래의 경우를 한 번 봅시다.실제 이것 때문에 장애를 낼 뻔한 적이 있습니다.  \n큰 일 날 뻔한 사례123456789public User findByUsername(String name) &#123;\treturn userRepository.findByName(name).orElse(createUserWithName(name));&#125;private User createUserWithName(String name) &#123;\tUser newUser = new User();\tnewUser.setName(name)\treturn userRepository.save(user);&#125;\n(대충 이런 상황이었습니다.)만약 user 테이블의 name이 unique였다면?  \n네. 맞습니다. 장애입니다. 왜냐면 아래랑 같기 때문이죠.  \n12345678910public User findByUsername(String name) &#123;\tUser newUser = createUserWithName(name); // ㅠㅠ\treturn userRepository.findByName(name).orElse(newUser);&#125;private User createUserWithName(String name) &#123;\tUser newUser = new User();\tnewUser.setName(name)\treturn userRepository.save(user);&#125;\n이해가 되시나요?\n마치며참 당연한건데 햇갈리는 경우가 있습니다.버그는 정말 사소한것에서 부터 옵니다. 조심합시다.","dateCreated":"2019-03-31T18:06:21+09:00","dateModified":"2019-04-16T11:27:52+09:00","datePublished":"2019-03-31T18:06:21+09:00","description":"orElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.","headline":"java, optional의 orElse와 orElseGet의 차이","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/31/develop/java-orelse-orelseget/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/31/develop/java-orelse-orelseget/","keywords":"java"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"java8의 optional api 많이들 사용하실텐데요.어찌보면 당연하지만 햇갈리는 내용에 대해 다뤄보겠습니다.orElse와 orElseGet의 차이입니다.  \n귀찮으신분들을 위해 요약을 먼저 하자면\norElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.\n\n예시123456String username = \"이름\";String result1 = Optional.ofNullable(username).orElse(\"no name\");System.out.println(result1);String result2 = Optional.ofNullable(username).orElseGet(() -&gt; \"no name\");System.out.println(result2);\n위 두 println의 결과는 무엇일까요?네 당연하게도 “이름” 입니다.왜냐면 username != null 이기 때문이죠.  \n12String username = null;//.. 이하 동일\n그럼 위처럼 username == null 이면?네. 당연하게도 둘다 “no name” 입니다.  \n그럼 같은거 아냐?아닙니다. 아래의 경우를 생각해봅시다.  \n123456789101112public void ohMyGod() &#123;\tString username = null;\tString result1 = Optional.ofNullable(username).orElse(getDefaultName());\tSystem.out.println(result1);\tString result2 = Optional.ofNullable(username).orElseGet(() -&gt; getDefaultName());\tSystem.out.println(result2);&#125;private String getDefaultName() &#123;\treturn \"no name\";&#125;\n이 경우에 결과는 어떻게 될까요?네. 둘다 “no name” 입니다. 결과는 같지만 여긴 굉장한 차이가 있습니다.orElse의 경우는 “값”을 취합니다.orElseGet은 “Supplier”를 취하죠.  \n위의 예시는 아래 코드로 다시 쓰여질 수 있습니다.\n12345678String username = null;String defaultName = getDefaultName(); // 여기가 다릅니다.String result1 = Optional.ofNullable(username).orElse(defaultName);System.out.println(result1);Supplier&lt;String&gt; supplier = () -&gt; getDefaultName(); // 여기요.String result2 = Optional.ofNullable(username).orElseGet(supplier);System.out.println(result2);\n아시겠나요? \norElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.\n\n위의 예시에서는 ‘그래서 뭐?’ 라고 생각하시겠지만 아래의 경우를 한 번 봅시다.실제 이것 때문에 장애를 낼 뻔한 적이 있습니다.  \n\n큰 일 날 뻔한 사례123456789public User findByUsername(String name) &#123;\treturn userRepository.findByName(name).orElse(createUserWithName(name));&#125;private User createUserWithName(String name) &#123;\tUser newUser = new User();\tnewUser.setName(name)\treturn userRepository.save(user);&#125;\n(대충 이런 상황이었습니다.)만약 user 테이블의 name이 unique였다면?  \n네. 맞습니다. 장애입니다. 왜냐면 아래랑 같기 때문이죠.  \n12345678910public User findByUsername(String name) &#123;\tUser newUser = createUserWithName(name); // ㅠㅠ\treturn userRepository.findByName(name).orElse(newUser);&#125;private User createUserWithName(String name) &#123;\tUser newUser = new User();\tnewUser.setName(name)\treturn userRepository.save(user);&#125;\n이해가 되시나요?\n마치며참 당연한건데 햇갈리는 경우가 있습니다.버그는 정말 사소한것에서 부터 옵니다. 조심합시다.","dateCreated":"2019-03-31T18:06:21+09:00","dateModified":"2019-04-26T13:20:46+09:00","datePublished":"2019-03-31T18:06:21+09:00","description":"orElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.","headline":"java, optional의 orElse와 orElseGet의 차이","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/31/develop/java-orelse-orelseget/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/31/develop/java-orelse-orelseget/","keywords":"java"}</script>
     <meta name="description" content="orElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.">
 <meta name="keywords" content="java">
 <meta property="og:type" content="blog">
@@ -26,7 +26,7 @@
 <meta property="og:site_name" content="밍피디의 개발노트">
 <meta property="og:description" content="orElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.">
 <meta property="og:locale" content="ko">
-<meta property="og:updated_time" content="2019-04-16T02:27:52.233Z">
+<meta property="og:updated_time" content="2019-04-26T04:20:46.605Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java, optional의 orElse와 orElseGet의 차이">
 <meta name="twitter:description" content="orElse는 null이던말던 항상 불립니다.orElseGet은 null일 때만 불립니다.">
@@ -201,9 +201,6 @@
                          <!--style="display:inline-block;width:160px;height:600px"-->
                          <!--data-ad-client="ca-pub-4098225824538946"-->
                          <!--data-ad-slot="2729007176"></ins>-->
-                    <!--<script>-->
-                      <!--(adsbygoogle = window.adsbygoogle || []).push({});-->
-                    <!--</script>-->
                 </td>
             </tr>
         </table>
@@ -212,19 +209,8 @@
         <table id="sidebar-ad-small">
             <tr>
                 <td align="center">
-                    <!--<ins class="kakao_ad_area" style="display:none;"-->
-                         <!--data-ad-unit    = "DAN-qhted8vc5oa8"-->
-                         <!--data-ad-width   = "160"-->
-                         <!--data-ad-height  = "600"></ins>-->
-
                     <!-- 깃헙 사이드바 작은거 -->
-                    <!--<ins class="adsbygoogle"-->
-                         <!--style="display:inline-block;width:180px;height:150px"-->
-                         <!--data-ad-client="ca-pub-4098225824538946"-->
-                         <!--data-ad-slot="8036755313"></ins>-->
-                    <!--<script>-->
-                      <!--(adsbygoogle = window.adsbygoogle || []).push({});-->
-                    <!--</script>-->
+                    <ins class="adsbygoogle" style="display:inline-block;width:180px;height:150px" data-ad-client="ca-pub-4098225824538946" data-ad-slot="8036755313"></ins>
                 </td>
             </tr>
         </table>
@@ -268,14 +254,11 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-
+            <!-- 애드센스 승인때까지만 애드핏 -->
             <ins class="kakao_ad_area" style="display:none;" data-ad-unit="DAN-s0xsk85wsmyc" data-ad-width="728" data-ad-height="90"></ins>
 
             <!-- 깃헙 포스트 상단 -->
             <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="7955259608" data-ad-format="auto" data-full-width-responsive="true"></ins>
-            <script>
-              (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
 
             <!-- excerpt --><br><h1 id="table-of-contents">목차</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#예시"><span class="toc-text">예시</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#큰-일-날-뻔한-사례"><span class="toc-text">큰 일 날 뻔한 사례</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#마치며"><span class="toc-text">마치며</span></a></li></ol><br>java8의 optional api 많이들 사용하실텐데요.<br>어찌보면 당연하지만 햇갈리는 내용에 대해 다뤄보겠습니다.<br>orElse와 orElseGet의 차이입니다.  <p></p>
 <p>귀찮으신분들을 위해 요약을 먼저 하자면</p>
@@ -294,6 +277,7 @@
 <blockquote><p>orElse는 null이던말던 항상 불립니다.<br>orElseGet은 null일 때만 불립니다.</p>
 </blockquote>
 <p>위의 예시에서는 ‘그래서 뭐?’ 라고 생각하시겠지만 아래의 경우를 한 번 봅시다.<br>실제 이것 때문에 장애를 낼 뻔한 적이 있습니다.  </p>
+<p><ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4098225824538946" data-ad-slot="4972027138"></ins></p>
 <h2 id="큰-일-날-뻔한-사례"><a href="#큰-일-날-뻔한-사례" class="headerlink" title="큰 일 날 뻔한 사례"></a>큰 일 날 뻔한 사례</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> User <span class="title">findByUsername</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> userRepository.findByName(name).orElse(createUserWithName(name));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> User <span class="title">createUserWithName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">	User newUser = <span class="keyword">new</span> User();</span><br><span class="line">	newUser.setName(name)</span><br><span class="line">	<span class="keyword">return</span> userRepository.save(user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>(대충 이런 상황이었습니다.)<br>만약 user 테이블의 name이 unique였다면?  </p>
 <p>네. 맞습니다. 장애입니다. 왜냐면 아래랑 같기 때문이죠.  </p>
@@ -310,9 +294,6 @@
 
         <!-- 깃헙 포스트 하단 -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="3850517151" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
 
         
             <div class="post-footer-tags">
@@ -416,9 +397,6 @@
 
         <!-- 깃헙 관련글 밑 -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="4860470205" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
 
         
             

@@ -17,7 +17,7 @@
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"\nchecked exception과 unchecked exception이 대체 뭐고, 무슨 차이가 있는지에 대한 내용은 과감히 생략합니다.\n그냥 RuntimeException으로 감싸면 되는거 아냐?맞습니다.\n1234567public List&lt;List&lt;Object&gt;&gt; getSheetValues(String spreadSheetId, String sheetName, String range) &#123;    try &#123;        return sheets.spreadsheets().values().get(spreadSheetId, sheetName + \"!\" + range).execute().getValues();    &#125; catch (IOException e) &#123;        throw new RuntimeException(e);    &#125;&#125;\n(앞서 포스팅했던 구글API 관련하여 구글시트API의 실 사용 예입니다.)네 저러면 되죠. 하지만 한 클래스에 저런류의 메소드가 아주 많다면?보기 싫어집니다. 저만 그런건진 모르겠습니다만 { } 이 많아지는게 참 거슬립니다.또 중복되는 코드가 많아지는데 저것을 공통화 하기도 참 애매한 현실이 너무 싫습니다.\n1234567data.stream().map(p -&gt; &#123;    try &#123;        someCheckedExceptionThrow(p);    &#125; catch (Exception e) &#123;        throw new RuntimeException(e)    &#125;&#125;).collect(Collectors.toList());\n아니면 이런상황을 생각해봅시다.stream.map을 수행할때 checked exception을 발생시키는 메소드를 태워야할 때..정말 보기만 해도 화가 솟구칩니다.좋은 방법이 없을까 찾아보던 찰나…\nthrowable-interfaceshttps://github.com/StefanLiebenberg/throwable-interfaces\n이런 솔루션을 발견했습니다.쉽게말해서 java8의 java.util.function 안에 있는 FunctionInterface들에 Throwable 처리를 해준 라이브러리입니다.작동 방식이 궁금하시면 저 깃헙 코드를 참고해주시면 되고요.제가 위에 든 예시에 이 라이브러리르 적용했을때 어떻게 되는지 보겠습니다.\n12345public List&lt;List&lt;Object&gt;&gt; getSheetValues(String spreadSheetId, String sheetName, String range) &#123;    return SupplierWithThrowable.castSupplierWithThrowable(        () -&gt; sheets.spreadsheets().values().get(spreadSheetId, sheetName + \"!\" + range).execute().getValues()    ).get();&#125;\n위의 예시입니다. try - catch 블럭이 사라졌습니다.\n123data.stream()    .map(FunctionWithThrowable.castFunctionWithThrowable(p -&gt; someCheckedExceptionThrow(p))    .collect(Collectors.toList());\n아래 예시입니다. 역시 사라졌습니다.그런데 메소드가 더 길어져서 불편하다고요..?static import를 사용해서 앞에 class 명은 떼버릴 수 있습니다.그리고 한 클래스에 저런 try-catch 블록이 계속 중복되는 코드를 넣어야 할땐 훨씬 깔끔해 보일 수 있습니다.\n마치며공식이 아닌 서드파티 개발자의 라이브러리 사용하기 vs 그냥 try - catch 사용하기머릿속에서 이 두가치관이 싸우고 있지만 거기서 조금이나마 이기는쪽을 선택하시길 바랍니다.","dateCreated":"2019-03-12T11:59:00+09:00","dateModified":"2019-04-15T13:11:07+09:00","datePublished":"2019-03-12T11:59:00+09:00","description":"그냥 RuntimeException으로 감싸면 되는거 아냐?맞습니다.","headline":"java, checked excepton을 아름답게 unchecked exception으로 바꾸기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/12/develop/java-checked-to-unchecked/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/12/develop/java-checked-to-unchecked/","keywords":"java"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"\nchecked exception과 unchecked exception이 대체 뭐고, 무슨 차이가 있는지에 대한 내용은 과감히 생략합니다.\n그냥 RuntimeException으로 감싸면 되는거 아냐?맞습니다.\n1234567public List&lt;List&lt;Object&gt;&gt; getSheetValues(String spreadSheetId, String sheetName, String range) &#123;    try &#123;        return sheets.spreadsheets().values().get(spreadSheetId, sheetName + \"!\" + range).execute().getValues();    &#125; catch (IOException e) &#123;        throw new RuntimeException(e);    &#125;&#125;\n(앞서 포스팅했던 구글API 관련하여 구글시트API의 실 사용 예입니다.)네 저러면 되죠. 하지만 한 클래스에 저런류의 메소드가 아주 많다면?보기 싫어집니다. 저만 그런건진 모르겠습니다만 { } 이 많아지는게 참 거슬립니다.또 중복되는 코드가 많아지는데 저것을 공통화 하기도 참 애매한 현실이 너무 싫습니다.\n1234567data.stream().map(p -&gt; &#123;    try &#123;        someCheckedExceptionThrow(p);    &#125; catch (Exception e) &#123;        throw new RuntimeException(e)    &#125;&#125;).collect(Collectors.toList());\n아니면 이런상황을 생각해봅시다.stream.map을 수행할때 checked exception을 발생시키는 메소드를 태워야할 때..정말 보기만 해도 화가 솟구칩니다.좋은 방법이 없을까 찾아보던 찰나…\n\nthrowable-interfaceshttps://github.com/StefanLiebenberg/throwable-interfaces\n이런 솔루션을 발견했습니다.쉽게말해서 java8의 java.util.function 안에 있는 FunctionInterface들에 Throwable 처리를 해준 라이브러리입니다.작동 방식이 궁금하시면 저 깃헙 코드를 참고해주시면 되고요.제가 위에 든 예시에 이 라이브러리르 적용했을때 어떻게 되는지 보겠습니다.\n12345public List&lt;List&lt;Object&gt;&gt; getSheetValues(String spreadSheetId, String sheetName, String range) &#123;    return SupplierWithThrowable.castSupplierWithThrowable(        () -&gt; sheets.spreadsheets().values().get(spreadSheetId, sheetName + \"!\" + range).execute().getValues()    ).get();&#125;\n위의 예시입니다. try - catch 블럭이 사라졌습니다.\n123data.stream()    .map(FunctionWithThrowable.castFunctionWithThrowable(p -&gt; someCheckedExceptionThrow(p))    .collect(Collectors.toList());\n아래 예시입니다. 역시 사라졌습니다.그런데 메소드가 더 길어져서 불편하다고요..?static import를 사용해서 앞에 class 명은 떼버릴 수 있습니다.그리고 한 클래스에 저런 try-catch 블록이 계속 중복되는 코드를 넣어야 할땐 훨씬 깔끔해 보일 수 있습니다.\n마치며공식이 아닌 서드파티 개발자의 라이브러리 사용하기 vs 그냥 try - catch 사용하기머릿속에서 이 두가치관이 싸우고 있지만 거기서 조금이나마 이기는쪽을 선택하시길 바랍니다.","dateCreated":"2019-03-12T11:59:00+09:00","dateModified":"2019-04-26T13:20:46+09:00","datePublished":"2019-03-12T11:59:00+09:00","description":"그냥 RuntimeException으로 감싸면 되는거 아냐?맞습니다.","headline":"java, checked excepton을 아름답게 unchecked exception으로 바꾸기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/03/12/develop/java-checked-to-unchecked/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/03/12/develop/java-checked-to-unchecked/","keywords":"java"}</script>
     <meta name="description" content="그냥 RuntimeException으로 감싸면 되는거 아냐?맞습니다.">
 <meta name="keywords" content="java">
 <meta property="og:type" content="blog">
@@ -26,7 +26,7 @@
 <meta property="og:site_name" content="밍피디의 개발노트">
 <meta property="og:description" content="그냥 RuntimeException으로 감싸면 되는거 아냐?맞습니다.">
 <meta property="og:locale" content="ko">
-<meta property="og:updated_time" content="2019-04-15T04:11:07.977Z">
+<meta property="og:updated_time" content="2019-04-26T04:20:46.537Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java, checked excepton을 아름답게 unchecked exception으로 바꾸기">
 <meta name="twitter:description" content="그냥 RuntimeException으로 감싸면 되는거 아냐?맞습니다.">
@@ -201,9 +201,6 @@
                          <!--style="display:inline-block;width:160px;height:600px"-->
                          <!--data-ad-client="ca-pub-4098225824538946"-->
                          <!--data-ad-slot="2729007176"></ins>-->
-                    <!--<script>-->
-                      <!--(adsbygoogle = window.adsbygoogle || []).push({});-->
-                    <!--</script>-->
                 </td>
             </tr>
         </table>
@@ -212,19 +209,8 @@
         <table id="sidebar-ad-small">
             <tr>
                 <td align="center">
-                    <!--<ins class="kakao_ad_area" style="display:none;"-->
-                         <!--data-ad-unit    = "DAN-qhted8vc5oa8"-->
-                         <!--data-ad-width   = "160"-->
-                         <!--data-ad-height  = "600"></ins>-->
-
                     <!-- 깃헙 사이드바 작은거 -->
-                    <!--<ins class="adsbygoogle"-->
-                         <!--style="display:inline-block;width:180px;height:150px"-->
-                         <!--data-ad-client="ca-pub-4098225824538946"-->
-                         <!--data-ad-slot="8036755313"></ins>-->
-                    <!--<script>-->
-                      <!--(adsbygoogle = window.adsbygoogle || []).push({});-->
-                    <!--</script>-->
+                    <ins class="adsbygoogle" style="display:inline-block;width:180px;height:150px" data-ad-client="ca-pub-4098225824538946" data-ad-slot="8036755313"></ins>
                 </td>
             </tr>
         </table>
@@ -268,14 +254,11 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-
+            <!-- 애드센스 승인때까지만 애드핏 -->
             <ins class="kakao_ad_area" style="display:none;" data-ad-unit="DAN-s0xsk85wsmyc" data-ad-width="728" data-ad-height="90"></ins>
 
             <!-- 깃헙 포스트 상단 -->
             <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="7955259608" data-ad-format="auto" data-full-width-responsive="true"></ins>
-            <script>
-              (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
 
             <!-- excerpt --><br><h1 id="table-of-contents">목차</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#그냥-RuntimeException으로-감싸면-되는거-아냐"><span class="toc-text">그냥 RuntimeException으로 감싸면 되는거 아냐?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#throwable-interfaces"><span class="toc-text">throwable-interfaces</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#마치며"><span class="toc-text">마치며</span></a></li></ol><p></p>
 <p>checked exception과 unchecked exception이 대체 뭐고, 무슨 차이가 있는지에 대한 내용은 과감히 생략합니다.</p>
@@ -284,6 +267,7 @@
 <p>(앞서 포스팅했던 구글API 관련하여 구글시트API의 실 사용 예입니다.)<br>네 저러면 되죠. 하지만 한 클래스에 저런류의 메소드가 아주 많다면?<br>보기 싫어집니다. 저만 그런건진 모르겠습니다만 { } 이 많아지는게 참 거슬립니다.<br>또 중복되는 코드가 많아지는데 저것을 공통화 하기도 참 애매한 현실이 너무 싫습니다.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">data.stream().map(p -&gt; &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        someCheckedExceptionThrow(p);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
 <p>아니면 이런상황을 생각해봅시다.<br>stream.map을 수행할때 checked exception을 발생시키는 메소드를 태워야할 때..<br>정말 보기만 해도 화가 솟구칩니다.<br>좋은 방법이 없을까 찾아보던 찰나…</p>
+<p><ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4098225824538946" data-ad-slot="4972027138"></ins></p>
 <h2 id="throwable-interfaces"><a href="#throwable-interfaces" class="headerlink" title="throwable-interfaces"></a>throwable-interfaces</h2><p><a href="https://github.com/StefanLiebenberg/throwable-interfaces" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/StefanLiebenberg/throwable-interfaces</a></p>
 <p>이런 솔루션을 발견했습니다.<br>쉽게말해서 java8의 java.util.function 안에 있는 FunctionInterface들에 Throwable 처리를 해준 라이브러리입니다.<br>작동 방식이 궁금하시면 저 깃헙 코드를 참고해주시면 되고요.<br>제가 위에 든 예시에 이 라이브러리르 적용했을때 어떻게 되는지 보겠습니다.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;List&lt;Object&gt;&gt; getSheetValues(String spreadSheetId, String sheetName, String range) &#123;</span><br><span class="line">    <span class="keyword">return</span> SupplierWithThrowable.castSupplierWithThrowable(</span><br><span class="line">        () -&gt; sheets.spreadsheets().values().get(spreadSheetId, sheetName + <span class="string">"!"</span> + range).execute().getValues()</span><br><span class="line">    ).get();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -301,9 +285,6 @@
 
         <!-- 깃헙 포스트 하단 -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="3850517151" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
 
         
             <div class="post-footer-tags">
@@ -322,7 +303,7 @@
         
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">관련 글</span><br>
-                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-google-api/" title="java, google api 이용하기" rel="bookmark">java, google api 이용하기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/31/develop/java-orelse-orelseget/" title="java, optional의 orElse와 orElseGet의 차이" rel="bookmark">java, optional의 orElse와 orElseGet의 차이</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/03/develop/java-stream-npe/" title="java, stream api에서 NPE 발생 주의" rel="bookmark">java, stream api에서 NPE 발생 주의</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/22/interview/interview-1/" title="기술면접에 나올법한 질문들 1" rel="bookmark">기술면접에 나올법한 질문들 1</a></h3></div></li></ul>
+                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-google-api/" title="java, google api 이용하기" rel="bookmark">java, google api 이용하기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/03/develop/java-stream-npe/" title="java, stream api에서 NPE 발생 주의" rel="bookmark">java, stream api에서 NPE 발생 주의</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/31/develop/java-orelse-orelseget/" title="java, optional의 orElse와 orElseGet의 차이" rel="bookmark">java, optional의 orElse와 orElseGet의 차이</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/22/interview/interview-1/" title="기술면접에 나올법한 질문들 1" rel="bookmark">기술면접에 나올법한 질문들 1</a></h3></div></li></ul>
             </div>
         
         <!-- 끝 -->
@@ -407,9 +388,6 @@
 
         <!-- 깃헙 관련글 밑 -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="4860470205" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
 
         
             
