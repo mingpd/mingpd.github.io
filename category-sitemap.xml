@@ -8,14 +8,21 @@
     </url>
 
     <url>
-        <loc>https://mingpd.github.io/categories/%EA%B0%9C%EB%B0%9C/hexo/</loc>
-        <lastmod>2019-04-26T04:43:53.211Z</lastmod>
+        <loc>https://mingpd.github.io/categories/%EA%B0%9C%EB%B0%9C/%EC%9E%91%EC%97%85%EC%8B%A4/</loc>
+        <lastmod>2019-04-29T07:37:19.497Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://mingpd.github.io/categories/%EA%B0%9C%EB%B0%9C/</loc>
+        <lastmod>2019-04-29T07:37:19.497Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://mingpd.github.io/categories/%EA%B0%9C%EB%B0%9C/hexo/</loc>
         <lastmod>2019-04-26T04:43:53.211Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -38,13 +45,6 @@
     <url>
         <loc>https://mingpd.github.io/categories/%EA%B0%9C%EB%B0%9C/%EB%A9%B4%EC%A0%91%EC%A4%80%EB%B9%84/</loc>
         <lastmod>2019-04-26T04:43:53.167Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://mingpd.github.io/categories/%EA%B0%9C%EB%B0%9C/%EC%9E%91%EC%97%85%EC%8B%A4/</loc>
-        <lastmod>2019-04-26T04:43:53.141Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
