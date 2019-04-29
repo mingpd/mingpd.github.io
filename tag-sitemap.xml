@@ -87,6 +87,13 @@
     </url>
 
     <url>
+        <loc>https://mingpd.github.io/tags/%EC%8A%A4%ED%8C%B8%EC%B2%B4/</loc>
+        <lastmod>2019-04-26T04:43:53.162Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://mingpd.github.io/tags/%ED%95%9C%EA%B8%80/</loc>
         <lastmod>2019-04-26T04:43:53.162Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -95,13 +102,6 @@
 
     <url>
         <loc>https://mingpd.github.io/tags/%EC%9C%A0%EB%8B%88%EC%BD%94%EB%93%9C/</loc>
-        <lastmod>2019-04-26T04:43:53.162Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://mingpd.github.io/tags/%EC%8A%A4%ED%8C%B8%EC%B2%B4/</loc>
         <lastmod>2019-04-26T04:43:53.162Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
