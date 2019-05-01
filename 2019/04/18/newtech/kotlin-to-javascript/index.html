@@ -17,9 +17,9 @@
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"kotlin으로 작성된 코드를 javascript로 바꾸는 방법을 알아봅니다.작업실 카테고리에 스팸체 생성기를 올려두었는데요.원래 kotlin 기반의 Spring boot로 짜여진 코드였습니다. 그런데 spring boot를 돌리던 heroku 무료 사용 가능 기간(1000시간)이 도래하여 서버가 내려갈 위기에 처했습니다.별건 아니지만 재밌는 작품이어서 버리긴 좀 아깝고.. js로 포팅해서 이 블로그에 넣을 생각을 하던 찰나에 이런 문서를 발견했습니다.\nKotlin to JavaScriptKotlin to JavaScript 문서를 보니 대충 감이 오는데요.kotlin에서 공식적으로 javascript로 빌드하는 기능을 제공한다고 합니다.web browser에서 돌릴 수 있는 형태(client side)와 nodejs 등 에서 돌릴 수 있는 형태도(server side) 지원합니다. 저의경우 GitHub 블로그에서 돌릴것이므로 client side 형태로 빌드해보겠습니다.\n문서에 의하면 방법은 세가지입니다. \n\ngradle을 이용\nmaven을 이용\n그냥 intellij만 이용\n\n저의 경우 간단하게 끝내고 싶어서 intellij에서 바로 빌드하는 방법을 사용했습니다.하지만 실 서비스에서 제대로 관리하신다면 gradle 혹은 maven 프로젝트 설정을 추천합니다.\n개발 방법프로젝트를 만들건데요. Kotlin을 선택합니다. 그리고 오른쪽에서 JS | IDEA를 선택합니다.\n여긴 이름만 잘 지어서 Finish 합니다.\n그 후 src 하위에 kotlin 코드를 넣습니다. 꼭 main이 있어야 할 필요는 없습니다.참고로 다른 프로젝트에서 kotlin 코드를 가져온 경우 빨간줄이 많을 수 있으니 다시 체크해봐야합니다.package 구조가 다르다보니 이 부분에서 꼬이는 경우가 많더군요.저의경우 아래와 같은 프로젝트 구조가 되었습니다.\n간단히 Main.kt와 index.html만 살펴보겠습니다.\nMain.kt1234567891011val spamServices = listOf(SymbolizationService(), HangleService())@JsName(\"toSpam\")   // 중요fun toSpam(input: String): String &#123;    var output = input    spamServices.forEach &#123;        output = it.process(output)    &#125;    return output&#125;// ... 후략\n스팸체 생성기의 진입 포인트입니다.그냥 똑같이 kotlin 코드를 작성하면 되는데요. @JsName 어노테이션이 중요합니다.이는 javascript로 빌드 되었을 때 function의 이름을 지정하는 역할을 합니다.저 어노테이션이 없으면 kotlin 코드의 함수이름_임의문자 형태로 function이 만들어집니다.위 예시에서 어노테이션이 없을경우 toSpam_2DFg3h 뭐 이런식으로 만들어지는 것이죠.따라서 html에서 직접 호출하여 사용할 함수의 경우는 반드시 이름을 지정해주도록 합니다.\nindex.html12345678910111213&lt;!DOCTYPE html&gt;&lt;html lang=\"en\"&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;&lt;!-- 반드시 import 하자 --&gt;&lt;script type=\"text/javascript\" src=\"out/production/spammaker/lib/kotlin.js\"&gt;&lt;/script&gt;&lt;script type=\"text/javascript\" src=\"out/production/spammaker/spammaker.js\"&gt;&lt;/script&gt;&lt;script&gt;  console.log(spammaker.toSpam(\"동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세\"))&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;\n다음은 index.html의 내용입니다. lib/kotlin.js는 그냥 무조건 import 한다고 생각하시면 됩니다.두번째 script는 kotlin으로 작성된 코드를 javascript로 빌드했을 때 만들어지는 코드입니다.기본적으로 프로젝트 모듈명의 카멜케이스로 만들어지기 때문에 모듈명에 특수문자가 들어간다면 수정을 하는게 좋겠습니다.그리고 모듈명으로 객체가 만들어지기 때문에 저의 경우 spammaker.toSpam(...) 처럼 호출했습니다.눈치채셨겠지만 위에서 설명한 @JsName이 바로 함수 이름이 됩니다.내용이 궁금하신 분들은 모듈명.js를 직접 열어보시기 바랍니다.\n\n\n    (adsbygoogle = window.adsbygoogle || []).push({});\n\n\n실행 방법이 다음에 뭐 어떡해야하나 난감했는데 아주 쉽더군요. 일단 빌드를 합니다.빌드를 하게 되면 out디렉토리에 이것저것 생깁니다. 저의경우 아래처럼 생겼습니다.그 후 실행을 하면되는데요. 방법은 아주 쉽습니다.아래처럼 index.html에서 팝업메뉴를 띄워서 바로 실행할 수 있습니다.그러면 브라우저창이 나타나면서 바로 실행할 수 있습니다.정말 좋은점은 바로 Debug 모드인데요. 이를 실행하면 browser 콘솔창의 내용이 intellij 콘솔창에서 나타나게 됩니다. 브레이크 포인트도 잘 먹습니다.\n갖다 쓰기만들어진 out 디렉토리 하위에 있는 파일들을 복사해다가 원하는곳에 붙여넣어 사용하면 됩니다.중요한 점은 위의 예시처럼 두 가지 파일을 모두 import해야 한다는 점입니다.\n마치며사용하실 분들은 공식 문서를 잘 살펴보시길 권장해드립니다.공식문서가 좀 부실하게 설명이 되있긴 하지만 도움은 됩니다. 그리고 아직 이걸 많이 안사용하는 것 같습니다. 검색해도 결과가 별로 없네요.저의경우 가벼운 예제를 들었지만 kotlin 코드 상에서 DOM을 직접 조작할 수 있는 API도 있습니다.필요하신 분들은 한번 파보시길 추천드립니다. \nkotlin은 정말 여러 분야에서 사용하기로 작정하고 나온 언어인것 같습니다.","dateCreated":"2019-04-18T14:27:30+09:00","dateModified":"2019-04-26T13:43:53+09:00","datePublished":"2019-04-18T14:27:30+09:00","description":"kotlin으로 작성된 코드를 javascript로 바꾸는 방법을 알아봅니다.","headline":"kotlin to javascript (client side)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/04/18/newtech/kotlin-to-javascript/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/04/18/newtech/kotlin-to-javascript/","keywords":"kotlin, javascript"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"kotlin으로 작성된 코드를 javascript로 바꾸는 방법을 알아봅니다.작업실 카테고리에 스팸체 생성기를 올려두었는데요.원래 kotlin 기반의 Spring boot로 짜여진 코드였습니다. 그런데 spring boot를 돌리던 heroku 무료 사용 가능 기간(1000시간)이 도래하여 서버가 내려갈 위기에 처했습니다.별건 아니지만 재밌는 작품이어서 버리긴 좀 아깝고.. js로 포팅해서 이 블로그에 넣을 생각을 하던 찰나에 이런 문서를 발견했습니다.\nKotlin to JavaScriptKotlin to JavaScript 문서를 보니 대충 감이 오는데요.kotlin에서 공식적으로 javascript로 빌드하는 기능을 제공한다고 합니다.web browser에서 돌릴 수 있는 형태(client side)와 nodejs 등 에서 돌릴 수 있는 형태도(server side) 지원합니다. 저의경우 GitHub 블로그에서 돌릴것이므로 client side 형태로 빌드해보겠습니다.\n문서에 의하면 방법은 세가지입니다. \n\ngradle을 이용\nmaven을 이용\n그냥 intellij만 이용\n\n저의 경우 간단하게 끝내고 싶어서 intellij에서 바로 빌드하는 방법을 사용했습니다.하지만 실 서비스에서 제대로 관리하신다면 gradle 혹은 maven 프로젝트 설정을 추천합니다.\n개발 방법프로젝트를 만들건데요. Kotlin을 선택합니다. 그리고 오른쪽에서 JS | IDEA를 선택합니다.\n여긴 이름만 잘 지어서 Finish 합니다.\n그 후 src 하위에 kotlin 코드를 넣습니다. 꼭 main이 있어야 할 필요는 없습니다.참고로 다른 프로젝트에서 kotlin 코드를 가져온 경우 빨간줄이 많을 수 있으니 다시 체크해봐야합니다.package 구조가 다르다보니 이 부분에서 꼬이는 경우가 많더군요.저의경우 아래와 같은 프로젝트 구조가 되었습니다.\n간단히 Main.kt와 index.html만 살펴보겠습니다.\nMain.kt1234567891011val spamServices = listOf(SymbolizationService(), HangleService())@JsName(\"toSpam\")   // 중요fun toSpam(input: String): String &#123;    var output = input    spamServices.forEach &#123;        output = it.process(output)    &#125;    return output&#125;// ... 후략\n스팸체 생성기의 진입 포인트입니다.그냥 똑같이 kotlin 코드를 작성하면 되는데요. @JsName 어노테이션이 중요합니다.이는 javascript로 빌드 되었을 때 function의 이름을 지정하는 역할을 합니다.저 어노테이션이 없으면 kotlin 코드의 함수이름_임의문자 형태로 function이 만들어집니다.위 예시에서 어노테이션이 없을경우 toSpam_2DFg3h 뭐 이런식으로 만들어지는 것이죠.따라서 html에서 직접 호출하여 사용할 함수의 경우는 반드시 이름을 지정해주도록 합니다.\nindex.html12345678910111213&lt;!DOCTYPE html&gt;&lt;html lang=\"en\"&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;&lt;!-- 반드시 import 하자 --&gt;&lt;script type=\"text/javascript\" src=\"out/production/spammaker/lib/kotlin.js\"&gt;&lt;/script&gt;&lt;script type=\"text/javascript\" src=\"out/production/spammaker/spammaker.js\"&gt;&lt;/script&gt;&lt;script&gt;  console.log(spammaker.toSpam(\"동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세\"))&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;\n다음은 index.html의 내용입니다. lib/kotlin.js는 그냥 무조건 import 한다고 생각하시면 됩니다.두번째 script는 kotlin으로 작성된 코드를 javascript로 빌드했을 때 만들어지는 코드입니다.기본적으로 프로젝트 모듈명의 카멜케이스로 만들어지기 때문에 모듈명에 특수문자가 들어간다면 수정을 하는게 좋겠습니다.그리고 모듈명으로 객체가 만들어지기 때문에 저의 경우 spammaker.toSpam(...) 처럼 호출했습니다.눈치채셨겠지만 위에서 설명한 @JsName이 바로 함수 이름이 됩니다.내용이 궁금하신 분들은 모듈명.js를 직접 열어보시기 바랍니다.\n\n\n    (adsbygoogle = window.adsbygoogle || []).push({});\n\n\n실행 방법이 다음에 뭐 어떡해야하나 난감했는데 아주 쉽더군요. 일단 빌드를 합니다.빌드를 하게 되면 out디렉토리에 이것저것 생깁니다. 저의경우 아래처럼 생겼습니다.그 후 실행을 하면되는데요. 방법은 아주 쉽습니다.아래처럼 index.html에서 팝업메뉴를 띄워서 바로 실행할 수 있습니다.그러면 브라우저창이 나타나면서 바로 실행할 수 있습니다.정말 좋은점은 바로 Debug 모드인데요. 이를 실행하면 browser 콘솔창의 내용이 intellij 콘솔창에서 나타나게 됩니다. 브레이크 포인트도 잘 먹습니다.\n갖다 쓰기만들어진 out 디렉토리 하위에 있는 파일들을 복사해다가 원하는곳에 붙여넣어 사용하면 됩니다.중요한 점은 위의 예시처럼 두 가지 파일을 모두 import해야 한다는 점입니다.\n마치며사용하실 분들은 공식 문서를 잘 살펴보시길 권장해드립니다.공식문서가 좀 부실하게 설명이 되있긴 하지만 도움은 됩니다. 그리고 아직 이걸 많이 안사용하는 것 같습니다. 검색해도 결과가 별로 없네요.저의경우 가벼운 예제를 들었지만 kotlin 코드 상에서 DOM을 직접 조작할 수 있는 API도 있습니다.필요하신 분들은 한번 파보시길 추천드립니다. \nkotlin은 정말 여러 분야에서 사용하기로 작정하고 나온 언어인것 같습니다.","dateCreated":"2019-04-18T14:27:30+09:00","dateModified":"2019-04-26T13:43:53+09:00","datePublished":"2019-04-18T14:27:30+09:00","description":"kotlin으로 작성된 코드를 javascript로 바꾸는 방법을 알아봅니다.","headline":"kotlin to javascript (client side)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/04/18/newtech/kotlin-to-javascript/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/04/18/newtech/kotlin-to-javascript/","keywords":"javascript, kotlin"}</script>
     <meta name="description" content="kotlin으로 작성된 코드를 javascript로 바꾸는 방법을 알아봅니다.">
-<meta name="keywords" content="kotlin,javascript">
+<meta name="keywords" content="javascript,kotlin">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="kotlin to javascript (client side)">
 <meta property="og:url" content="https://mingpd.github.io/2019/04/18/newtech/kotlin-to-javascript/index.html">
@@ -200,7 +200,10 @@
         <table id="sidebar-ad">
             <tr>
                 <td align="center">
-                    <ins class="kakao_ad_area" style="display:none;" data-ad-unit="DAN-qhted8vc5oa8" data-ad-width="160" data-ad-height="600"></ins>
+                    <!--<ins class="kakao_ad_area" style="display:none;"-->
+                         <!--data-ad-unit    = "DAN-qhted8vc5oa8"-->
+                         <!--data-ad-width   = "160"-->
+                         <!--data-ad-height  = "600"></ins>-->
 
                     <!-- adsense 승인이 안나서 일단은 위 애드핏으로 -->
                     <!-- 깃헙 사이드바 대형 -->
@@ -217,17 +220,20 @@
         </table>
 
         <!--sidebar adsense-->
-        <table id="sidebar-ad-small">
-            <tr>
-                <td align="center">
-                    <!-- 깃헙 사이드바 소형 -->
-                    <ins class="adsbygoogle" style="display:inline-block;width:180px;height:150px" data-ad-client="ca-pub-4098225824538946" data-ad-slot="9168779678"></ins>
-                    <script>
-                      (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-                </td>
-            </tr>
-        </table>
+        <!--<table id="sidebar-ad-small">-->
+            <!--<tr>-->
+                <!--<td align="center">-->
+                    <!--&lt;!&ndash; 깃헙 사이드바 소형 &ndash;&gt;-->
+                    <!--<ins class="adsbygoogle"-->
+                         <!--style="display:inline-block;width:180px;height:150px"-->
+                         <!--data-ad-client="ca-pub-4098225824538946"-->
+                         <!--data-ad-slot="9168779678"></ins>-->
+                    <!--<script>-->
+                      <!--(adsbygoogle = window.adsbygoogle || []).push({});-->
+                    <!--</script>-->
+                <!--</td>-->
+            <!--</tr>-->
+        <!--</table>-->
 
     </div>
 </nav>
@@ -269,7 +275,10 @@
     <div class="post-content markdown">
         <div class="main-content-wrap">
             <!-- 애드센스 승인때까지만 애드핏 -->
-            <ins class="kakao_ad_area" style="display:none;" data-ad-unit="DAN-s0xsk85wsmyc" data-ad-width="320" data-ad-height="100"></ins>
+            <!--<ins class="kakao_ad_area" style="display:none;"-->
+                 <!--data-ad-unit    = "DAN-s0xsk85wsmyc"-->
+                 <!--data-ad-width   = "320"-->
+                 <!--data-ad-height  = "100"></ins>-->
 
             <!-- 깃헙 포스트 -->
             <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="7955259608" data-ad-format="auto" data-full-width-responsive="true"></ins>
@@ -309,7 +318,10 @@
     </div>
     <div id="post-footer" class="post-footer main-content-wrap">
         <!-- 애드센스 승인때까지만 애드핏 -->
-        <ins class="kakao_ad_area" style="display:none;" data-ad-unit="DAN-uvbe2t908uno" data-ad-width="320" data-ad-height="100"></ins>
+        <!--<ins class="kakao_ad_area" style="display:none;"-->
+             <!--data-ad-unit    = "DAN-uvbe2t908uno"-->
+             <!--data-ad-width   = "320"-->
+             <!--data-ad-height  = "100"></ins>-->
 
         <!-- 깃헙 포스트 -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="7955259608" data-ad-format="auto" data-full-width-responsive="true"></ins>
@@ -418,10 +430,15 @@
 
 
         <!-- 깃헙 관련글 밑 -->
-        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="4860470205" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
+        <!--<ins class="adsbygoogle"-->
+             <!--style="display:block"-->
+             <!--data-ad-client="ca-pub-4098225824538946"-->
+             <!--data-ad-slot="4860470205"-->
+             <!--data-ad-format="auto"-->
+             <!--data-full-width-responsive="true"></ins>-->
+        <!--<script>-->
+          <!--(adsbygoogle = window.adsbygoogle || []).push({});-->
+        <!--</script>-->
 
         
             
