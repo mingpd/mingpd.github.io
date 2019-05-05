@@ -1325,35 +1325,25 @@ blockquote {
   #sidebar {
     display: none; } }
 
-/*
-@media only screen and (min-width : 1024px) {
-    #sidebar-ad {
-        width: 100%;
-        margin-top: 20px;
-    }
+@media only screen and (min-width: 1024px) {
+  #sidebar-ad {
+    width: 100%;
+    margin-top: 20px; }
+  #sidebar-ad-small {
+    display: none; } }
 
-    #sidebar-ad-small {
-        display: none;
-    }
-}
-*/
 @media only screen and (min-width: 768px) and (max-width: 1023px) {
   #sidebar-ad {
     display: none; }
   #sidebar-ad-small {
     display: none; } }
 
-/*
-@media only screen and (max-width : 767px) {
-    #sidebar-ad {
-        display: none;
-    }
+@media only screen and (max-width: 767px) {
+  #sidebar-ad {
+    display: none; }
+  #sidebar-ad-small {
+    width: 100%; } }
 
-    #sidebar-ad-small {
-        width: 100%;
-    }
-}
-*/
 .alert {
   position: relative;
   text-align: left;
