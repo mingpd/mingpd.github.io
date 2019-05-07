@@ -8,7 +8,7 @@
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
     
     <description>잔망스러운 개발노트</description>
-    <pubDate>Sun, 05 May 2019 02:24:55 GMT</pubDate>
+    <pubDate>Tue, 07 May 2019 00:27:27 GMT</pubDate>
     <generator>http://hexo.io/</generator>
     
     <item>
@@ -22,7 +22,7 @@
       
       </description>
       
-      <content:encoded><![CDATA[<!-- excerpt --><p>Github은 개발 블로그로만 사용중입니다.</p><p>개발이 아닌 가벼운 글들은 다른 매체로도 송고 중이니 궁금하신분들은 아래를 참고해주세요.<br>티스토리 <a href="https://cfdf.tistory.com" rel="external nofollow noopener noreferrer" target="_blank">https://cfdf.tistory.com</a><br>브런치 <a href="https://brunch.co.kr/@mingus" rel="external nofollow noopener noreferrer" target="_blank">https://brunch.co.kr/@mingus</a></p><p>Hexo 기반 블로그를 만들어보았습니다.<br><code>github.io</code>를 너무 갖고싶어서 만들어보았습니다.<br>부족한 설명이지만 나름 정리를 해두었으니 필요하신분들은 참고해주세요.</p>]]></content:encoded>
+      <content:encoded><![CDATA[<!-- excerpt --><p>Github은 개발 블로그로만 사용중입니다.</p><p>개발이 아닌 가벼운 글들은 다른 매체로도 송고 중이니 궁금하신분들은 아래를 참고해주세요.<br>티스토리 <a href="https://cfdf.tistory.com" rel="external nofollow noopener noreferrer" target="_blank">https://cfdf.tistory.com</a><br>브런치 <a href="https://brunch.co.kr/@mingus" rel="external nofollow noopener noreferrer" target="_blank">https://brunch.co.kr/@mingus</a></p>]]></content:encoded>
       
       <comments>https://mingpd.github.io/2019/05/05/anything/20190505-112100/#disqus_thread</comments>
     </item>
