@@ -1,0 +1,634 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="밍피디의 개발노트">
+    <title>ionic framework, 소개 및 프로젝트 생성 - 밍피디의 개발노트</title>
+    <meta name="author" content="밍피디">
+    
+        <meta name="keywords" content="개발,developer,">
+    
+    
+        <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"\n\nIonic framework?설명이 길면 노잼이니 매우 간단히 설명하겠습니다.js, html, css 등의 프론트엔드 기술로 하이브리드 앱을 만들 수 있는 Apache Cordova라는 프레임워크가 있는데요. 이것을 Angular 기반으로 개발할 수 있도록 만든 프레임워크가 바로 Ionic framework 입니다.더 자세한 설명은 잘 설명 되어있는 아래 링크로 대체하겠습니다.What is Ionic Framework?ionic 프레임워크 소개\n각 플랫폼 native api를 사용하지 않고 js, html, css등으로 앱을 개발하면 어떤 장점이 있을까요?개발을 한 벌만 하고 여러 플랫폼으로 내보낼 수 있기 때문에 개발 공수가 덜 듭니다.특히, 개발자가 angular에 능하다면 훨씬 더 \n당연히 단점도 있습니다. 아무래도 고수준의 디바이스 제어는 사용이 제한될 수 밖에 없습니다.물론 제가 ionic에 대해 모든걸 알고 있지는 못하여 어느수준까지 사용 가능한지는 모르겠습니다만native api 보다는 기술이나 성능에 제약이 있을 수 밖에 없습니다.\nionic과 항상 같이 얘기되는 것이 React Native 입니다. 이 둘에 대한 비교는 아래 링크로 대체합니다.Ionic Vs. React Native, 어떤 프레임워크가 크로스 플랫폼 모바일 앱 개발에 좋을까(NativeScript라는 것도 있는것 같은데 이건 잘 모르겠네요.)\n따라서 개발에 착수하기 전 꼭 본인이 설계한 서비스의 스펙이ionic으로 충분 할 것인지에 대해선 반드시 검토해볼 필요가 있습니다.\n\n뭐 당연한 얘기일진 모르겠으나 무료/유료냐에 따른 서포트 차이는 있습니다.\nAngular?Angular에서 더 자세한 정보를 얻을 수 있습니다.\n간단히 설명하면, 웹 프레임 워크입니다. 제가 잘 아는 프론트엔드 개발자에게 물어보니 React보다는 Angular를 선호한다고 하네요.React나 Vue는 뷰 레벨의 템플릿을 잘 쓸 수 있게 해주는 솔루션인것 같은 느낌인데 반해 Angular는 그냥 모든게 다 들어있습니다. 마치 서버사이드로 치면 Spring 같다고 할까요.그래서 오히려 서버 개발자들에게 Angular를 권하면 더 잘 따라오시는것 같습니다. 개인적으론 개발 패턴도 Spring과 비슷하다고 느꼈습니다.\n물론 진입장벽이 꽤 있습니다. 일단 typescript로 개발을 해야하기 때문에 javascript에 익숙한 분들은 약간의 혼란이 있을 수 있습니다.그리고 프레임워크이다보니 그 라이프사이클이나 컴포넌트, 패턴 등을 잘 익혀서 그에 맞게 꽂아줘야 합니다. 그 개념을 익히는것에 대한 부담도 있습니다.단, 위에서 말씀드린것 처럼 Spring 같은 느낌이 있어서 서버 개발자들이 오히려 쉽게 습득할 수도 있습니다.\n\n\n     (adsbygoogle = window.adsbygoogle || []).push({});\n\n\n\n준비물\nnodejs\niOS 빌드 시엔 xcode.\nxcode 설치가 잘 안되면 링크를 참고하여 깨끗히 삭제한 후 Xcode. Xcode 깨끗이 삭제하는 방법\nsafe mode로 부팅하여 다시 설치합니다.\n참고로 safe mode는 컴터를 끄고 다시 켤때 shift를 누르고 있으면 됩니다.\n자세한 건 여길 참고합니다. iOS Setup\n\n\nAndroid 빌드 시엔 Android Studio.\nJDK 8, Gradle 등도 같이 설치\n자세한 건 여길 참고합니다. Android Setup\n\n\n\n프로젝트 생성하고 띄우기설명이 많으면 재미없으니 바로 프로젝트를 생성해보겠습니다. 자세히 알고싶으면 이 링크를 참고하세요. Installing Ionic$ npm install -g ionic $ sudo npm install -g ionic  # sudo 권한이 필요한 경우# tab 기반 어플리케이션$ ionic start myApp tabs# .... 뭐 알아서 잘 설치 됨..# 아래를 물어보는데 저는 필요없어서 n ? Install the free Ionic Appflow SDK and connect your app? (Y/n) n # ...[INFO] Next Steps:       - Go to your newly created project: cd ./myApp       - Run ionic serve within the app directory to see your app       - Build features and components: https://ion.link/scaffolding-docs       - Get Ionic DevApp for easy device testing: https://ion.link/devapp$ cd ./myApp$ ionic serve&gt; ng run app:serve --host=0.0.0.0 --port=8100# .. 뭐 이것 저것 안내 로그..[INFO] Development server running!       Local: http://localhost:8100       External: http://xxx.xxx.xxx.xxx:8100       Use Ctrl+C to quit this process[INFO] Browser window opened to http://localhost:8100!# .. 뭐 이것저것 뜸..[ng] ℹ ｢wdm｣: Compiled successfully.\n뭐 이렇게 알아서 이것저것 해주더니 브라우저가 자동으로 열리는데요. 아래처럼 기본 탭 구성의 브라우저가 뜹니다.http://localhost:8100로 서빙되며 탭뷰가 붙은 앱이 떴습니다.이 처럼 웹으로 빌드 되기 때문에 브라우저로 확인이 가능하고요. 나중에 다루겠지만 Ionic DevApp을 통해 폰에서도 확인이 가능합니다.\n코드 구조 살펴보기\n대충 이렇게 생겼고요. 저흰 src 밑에서 작업하면 됩니다.디렉토리에서 대충 감이 오겠지만 tabs가 tab1, tab2, tab3을 라우팅 해주는 구조입니다.그래도 궁금하니 tabs/tabs.router.module.ts를 열어보겠습니다.\ntabs.router.module.ts123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657import &#123; NgModule &#125; from '@angular/core';import &#123; RouterModule, Routes &#125; from '@angular/router';import &#123; TabsPage &#125; from './tabs.page';const routes: Routes = [  &#123;    path: 'tabs',    component: TabsPage,    children: [      &#123;        path: 'tab1',        children: [          &#123;            path: '',            loadChildren: '../tab1/tab1.module#Tab1PageModule'          &#125;        ]      &#125;,      &#123;        path: 'tab2',        children: [          &#123;            path: '',            loadChildren: '../tab2/tab2.module#Tab2PageModule'          &#125;        ]      &#125;,      &#123;        path: 'tab3',        children: [          &#123;            path: '',            loadChildren: '../tab3/tab3.module#Tab3PageModule'          &#125;        ]      &#125;,      &#123;        path: '',        redirectTo: '/tabs/tab1',        pathMatch: 'full'      &#125;    ]  &#125;,  &#123;    path: '',    redirectTo: '/tabs/tab1',    pathMatch: 'full'  &#125;];@NgModule(&#123;  imports: [    RouterModule.forChild(routes)  ],  exports: [RouterModule]&#125;)export class TabsPageRoutingModule &#123;&#125;\n보시다시피 뭐 특별한게 있는건 아니고요. angular routing 형태로 만들면 됩니다.\ntabs.page.html1234567891011121314151617181920&lt;ion-tabs&gt;  &lt;ion-tab-bar slot=\"bottom\"&gt;    &lt;ion-tab-button tab=\"tab1\"&gt;      &lt;ion-icon name=\"flash\"&gt;&lt;/ion-icon&gt;      &lt;ion-label&gt;Tab One&lt;/ion-label&gt;    &lt;/ion-tab-button&gt;    &lt;ion-tab-button tab=\"tab2\"&gt;      &lt;ion-icon name=\"apps\"&gt;&lt;/ion-icon&gt;      &lt;ion-label&gt;Tab Two&lt;/ion-label&gt;    &lt;/ion-tab-button&gt;    &lt;ion-tab-button tab=\"tab3\"&gt;      &lt;ion-icon name=\"send\"&gt;&lt;/ion-icon&gt;      &lt;ion-label&gt;Tab Three&lt;/ion-label&gt;    &lt;/ion-tab-button&gt;  &lt;/ion-tab-bar&gt;&lt;/ion-tabs&gt;\n뷰에서는 ionic이 제공되는 디렉티브를 이용하면 됩니다. 탭의 경우 위와같이 만들어져 있네요.뭐 꼭 위처럼 안만들어도 되지만 예시가 이렇게 나와있으니 이 형식을 따르면 좋을것 같습니다.\n각 플랫폼에서 실행하기이 링크에서 자세히 설명되어 있습니다만 Running on iOS, Running on Android 아주 간단하게 적겠습니다.\n\niOS\n12$ ionic cordova prepare ios$ ionic cordova run ios -l\n\nAndroid\n12$ ionic cordova prepare android$ ionic cordova run android -l\n\n\n마치며초기 세팅에 대해서만 알아보았습니다. 자세한것들은 공식 문서를 참고하면 됩니다. Ionic Framework근데 공식 문서에 항목들은 잘 정리된거 같은데 예시는 좀 부족한것 같네요. 그런데 iOS와 Android에서 보여주는 look의 차이까지 잘 보여주는 점은 장점입니다.시간날 때마다 간단한 앱을 만들 수 있는 공부를 할 계획인데요. 아는게 생길때마다 포스팅 해보도록 하겠습니다.","dateCreated":"2019-05-15T13:21:17+09:00","dateModified":"2019-05-15T13:21:44+09:00","datePublished":"2019-05-15T13:21:17+09:00","description":"js, html, css 등의 프론트엔드 기술로 하이브리드 앱을 만들 수 있는 Apache Cordova라는 프레임워크가 있는데요.이것을 Angular 기반으로 개발할 수 있도록 만든 프레임워크가 바로 Ionic framework 입니다.","headline":"ionic framework, 소개 및 프로젝트 생성","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/05/15/develop/ionic-1/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/05/15/develop/ionic-1/","keywords":"ionic"}</script>
+    <meta name="description" content="js, html, css 등의 프론트엔드 기술로 하이브리드 앱을 만들 수 있는 Apache Cordova라는 프레임워크가 있는데요.이것을 Angular 기반으로 개발할 수 있도록 만든 프레임워크가 바로 Ionic framework 입니다.">
+<meta name="keywords" content="ionic">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="ionic framework, 소개 및 프로젝트 생성">
+<meta property="og:url" content="https://mingpd.github.io/2019/05/15/develop/ionic-1/index.html">
+<meta property="og:site_name" content="밍피디의 개발노트">
+<meta property="og:description" content="js, html, css 등의 프론트엔드 기술로 하이브리드 앱을 만들 수 있는 Apache Cordova라는 프레임워크가 있는데요.이것을 Angular 기반으로 개발할 수 있도록 만든 프레임워크가 바로 Ionic framework 입니다.">
+<meta property="og:locale" content="ko">
+<meta property="og:image" content="https://mingpd.github.io/2019/05/15/develop/ionic-1/1.png">
+<meta property="og:image" content="https://mingpd.github.io/2019/05/15/develop/ionic-1/2.png">
+<meta property="og:image" content="https://mingpd.github.io/2019/05/15/develop/ionic-1/3.png">
+<meta property="og:updated_time" content="2019-05-15T04:21:44.864Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ionic framework, 소개 및 프로젝트 생성">
+<meta name="twitter:description" content="js, html, css 등의 프론트엔드 기술로 하이브리드 앱을 만들 수 있는 Apache Cordova라는 프레임워크가 있는데요.이것을 Angular 기반으로 개발할 수 있도록 만든 프레임워크가 바로 Ionic framework 입니다.">
+<meta name="twitter:image" content="https://mingpd.github.io/2019/05/15/develop/ionic-1/1.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png">
+    
+    
+    
+    
+
+    <!-- adsense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+                                                      google_ad_client: "ca-pub-4098225824538946",
+                                                      enable_page_level_ads: true
+                                                    });
+    </script>
+
+    <!-- adfit -->
+    <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+
+    <link rel="canonical" href="https://mingpd.github.io/2019/05/15/develop/ionic-1/">
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120538979-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120538979-3');
+    </script>
+
+
+    
+
+    <!-- naver 검색 -->
+    <meta name="naver-site-verification" content="cc953655bf884f0df42eb141555d032a9b64c1ee">
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">밍피디의 개발노트</a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+                </a>
+                <h4 class="sidebar-profile-name">밍피디</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>잔망스러운 개발자</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/ " title="홈">
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">홈</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-아무말" title="아무말">
+                    
+                        <i class="sidebar-button-icon fa fa-calendar" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아무말</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-개발" title="개발노트">
+                    
+                        <i class="sidebar-button-icon fa fa-code" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">개발노트</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" title="아카이브">
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" title="태그">
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://cfdf.tistory.com/" target="_blank" rel="external nofollow noopener noreferrer" title="티스토리">
+                    
+                        <i class="sidebar-button-icon fab fa-tumblr" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">티스토리</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+
+        <!--sidebar adsense-->
+        <table id="sidebar-ad">
+            <tr>
+                <td align="center">
+                    <!-- 깃헙 사이드바 대형 -->
+                    <ins class="adsbygoogle" style="display:inline-block;width:160px;height:600px" data-ad-client="ca-pub-4098225824538946" data-ad-slot="2729007176"></ins>
+                         <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                </td>
+            </tr>
+        </table>
+
+        <!--sidebar adsense-->
+        <table id="sidebar-ad-small">
+            <tr>
+                <td align="center">
+                    <!-- 깃헙 사이드바 소형 -->
+                    <ins class="adsbygoogle" style="display:inline-block;width:180px;height:150px" data-ad-client="ca-pub-4098225824538946" data-ad-slot="9168779678"></ins>
+                    <script>
+                      (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            ionic framework, 소개 및 프로젝트 생성
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-05-15T13:21:17+09:00">
+	
+		    5월 15, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/개발/">개발</a>, <a class="category-link" href="/categories/개발/ionic/">ionic</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- 깃헙 포스트 -->
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="7955259608" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+
+            <!-- excerpt -->
+<h1 id="table-of-contents">목차</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ionic-framework"><span class="toc-text">Ionic framework?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Angular"><span class="toc-text">Angular?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#준비물"><span class="toc-text">준비물</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#프로젝트-생성하고-띄우기"><span class="toc-text">프로젝트 생성하고 띄우기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#코드-구조-살펴보기"><span class="toc-text">코드 구조 살펴보기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#각-플랫폼에서-실행하기"><span class="toc-text">각 플랫폼에서 실행하기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#마치며"><span class="toc-text">마치며</span></a></li></ol>
+<h2 id="Ionic-framework"><a href="#Ionic-framework" class="headerlink" title="Ionic framework?"></a>Ionic framework?</h2><p>설명이 길면 노잼이니 매우 간단히 설명하겠습니다.<br>js, html, css 등의 프론트엔드 기술로 하이브리드 앱을 만들 수 있는 Apache Cordova라는 프레임워크가 있는데요. 이것을 Angular 기반으로 개발할 수 있도록 만든 프레임워크가 바로 Ionic framework 입니다.<br>더 자세한 설명은 잘 설명 되어있는 아래 링크로 대체하겠습니다.<br><a href="https://ionicframework.com/docs/intro" rel="external nofollow noopener noreferrer" target="_blank">What is Ionic Framework?</a><br><a href="https://ithub.tistory.com/70" rel="external nofollow noopener noreferrer" target="_blank">ionic 프레임워크 소개</a></p>
+<p>각 플랫폼 native api를 사용하지 않고 js, html, css등으로 앱을 개발하면 어떤 장점이 있을까요?<br>개발을 한 벌만 하고 여러 플랫폼으로 내보낼 수 있기 때문에 개발 공수가 덜 듭니다.<br>특히, 개발자가 angular에 능하다면 훨씬 더 </p>
+<p>당연히 단점도 있습니다. 아무래도 고수준의 디바이스 제어는 사용이 제한될 수 밖에 없습니다.<br>물론 제가 ionic에 대해 모든걸 알고 있지는 못하여 어느수준까지 사용 가능한지는 모르겠습니다만<br>native api 보다는 기술이나 성능에 제약이 있을 수 밖에 없습니다.</p>
+<p>ionic과 항상 같이 얘기되는 것이 React Native 입니다. 이 둘에 대한 비교는 아래 링크로 대체합니다.<br><a href="https://imcreator.tistory.com/142" rel="external nofollow noopener noreferrer" target="_blank">Ionic Vs. React Native, 어떤 프레임워크가 크로스 플랫폼 모바일 앱 개발에 좋을까</a><br>(NativeScript라는 것도 있는것 같은데 이건 잘 모르겠네요.)</p>
+<p>따라서 개발에 착수하기 전 꼭 본인이 설계한 서비스의 스펙이<br>ionic으로 충분 할 것인지에 대해선 반드시 검토해볼 필요가 있습니다.</p>
+<img src="/2019/05/15/develop/ionic-1/1.png">
+<p>뭐 당연한 얘기일진 모르겠으나 무료/유료냐에 따른 서포트 차이는 있습니다.</p>
+<h2 id="Angular"><a href="#Angular" class="headerlink" title="Angular?"></a>Angular?</h2><p><a href="https://angular.io/" rel="external nofollow noopener noreferrer" target="_blank">Angular</a>에서 더 자세한 정보를 얻을 수 있습니다.</p>
+<p>간단히 설명하면, 웹 프레임 워크입니다. 제가 잘 아는 프론트엔드 개발자에게 물어보니 React보다는 Angular를 선호한다고 하네요.<br>React나 Vue는 뷰 레벨의 템플릿을 잘 쓸 수 있게 해주는 솔루션인것 같은 느낌인데 반해 Angular는 그냥 모든게 다 들어있습니다. 마치 서버사이드로 치면 Spring 같다고 할까요.<br>그래서 오히려 서버 개발자들에게 Angular를 권하면 더 잘 따라오시는것 같습니다. 개인적으론 개발 패턴도 Spring과 비슷하다고 느꼈습니다.</p>
+<p>물론 진입장벽이 꽤 있습니다. 일단 typescript로 개발을 해야하기 때문에 javascript에 익숙한 분들은 약간의 혼란이 있을 수 있습니다.<br>그리고 프레임워크이다보니 그 라이프사이클이나 컴포넌트, 패턴 등을 잘 익혀서 그에 맞게 꽂아줘야 합니다. 그 개념을 익히는것에 대한 부담도 있습니다.<br>단, 위에서 말씀드린것 처럼 Spring 같은 느낌이 있어서 서버 개발자들이 오히려 쉽게 습득할 수도 있습니다.</p>
+<p><ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4098225824538946" data-ad-slot="4972027138"></ins></p>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="준비물"><a href="#준비물" class="headerlink" title="준비물"></a>준비물</h2><ul>
+<li>nodejs</li>
+<li>iOS 빌드 시엔 xcode.<ul>
+<li>xcode 설치가 잘 안되면 링크를 참고하여 깨끗히 삭제한 후 <a href="https://devmjun.github.io/archive/Reduce-StorageInMac" rel="external nofollow noopener noreferrer" target="_blank">Xcode. Xcode 깨끗이 삭제하는 방법</a></li>
+<li>safe mode로 부팅하여 다시 설치합니다.</li>
+<li>참고로 safe mode는 컴터를 끄고 다시 켤때 shift를 누르고 있으면 됩니다.</li>
+<li>자세한 건 여길 참고합니다. <a href="https://ionicframework.com/docs/installation/ios" rel="external nofollow noopener noreferrer" target="_blank">iOS Setup</a></li>
+</ul>
+</li>
+<li>Android 빌드 시엔 Android Studio.<ul>
+<li>JDK 8, Gradle 등도 같이 설치</li>
+<li>자세한 건 여길 참고합니다. <a href="https://ionicframework.com/docs/installation/android" rel="external nofollow noopener noreferrer" target="_blank">Android Setup</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="프로젝트-생성하고-띄우기"><a href="#프로젝트-생성하고-띄우기" class="headerlink" title="프로젝트 생성하고 띄우기"></a>프로젝트 생성하고 띄우기</h2><p>설명이 많으면 재미없으니 바로 프로젝트를 생성해보겠습니다. 자세히 알고싶으면 이 링크를 참고하세요. <a href="https://ionicframework.com/docs/installation/cli" rel="external nofollow noopener noreferrer" target="_blank">Installing Ionic</a><br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ npm install -g ionic </span><br><span class="line">$ sudo npm install -g ionic  <span class="comment"># sudo 권한이 필요한 경우</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># tab 기반 어플리케이션</span></span><br><span class="line">$ ionic start myApp tabs</span><br><span class="line"><span class="comment"># .... 뭐 알아서 잘 설치 됨..</span></span><br><span class="line"><span class="comment"># 아래를 물어보는데 저는 필요없어서 n </span></span><br><span class="line">? Install the free Ionic Appflow SDK and connect your app? (Y/n) n </span><br><span class="line"><span class="comment"># ...</span></span><br><span class="line">[INFO] Next Steps:</span><br><span class="line">       - Go to your newly created project: <span class="built_in">cd</span> ./myApp</span><br><span class="line">       - Run ionic serve within the app directory to see your app</span><br><span class="line">       - Build features and components: https://ion.link/scaffolding-docs</span><br><span class="line">       - Get Ionic DevApp <span class="keyword">for</span> easy device testing: https://ion.link/devapp</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">cd</span> ./myApp</span><br><span class="line">$ ionic serve</span><br><span class="line"></span><br><span class="line">&gt; ng run app:serve --host=0.0.0.0 --port=8100</span><br><span class="line"><span class="comment"># .. 뭐 이것 저것 안내 로그..</span></span><br><span class="line"></span><br><span class="line">[INFO] Development server running!</span><br><span class="line"></span><br><span class="line">       Local: http://localhost:8100</span><br><span class="line">       External: http://xxx.xxx.xxx.xxx:8100</span><br><span class="line"></span><br><span class="line">       Use Ctrl+C to quit this process</span><br><span class="line"></span><br><span class="line">[INFO] Browser window opened to http://localhost:8100!</span><br><span class="line"></span><br><span class="line"><span class="comment"># .. 뭐 이것저것 뜸..</span></span><br><span class="line">[ng] ℹ ｢wdm｣: Compiled successfully.</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>뭐 이렇게 알아서 이것저것 해주더니 브라우저가 자동으로 열리는데요. 아래처럼 기본 탭 구성의 브라우저가 뜹니다.<br><img src="/2019/05/15/develop/ionic-1/2.png"><br><a href="http://localhost:8100" rel="external nofollow noopener noreferrer" target="_blank">http://localhost:8100</a>로 서빙되며 탭뷰가 붙은 앱이 떴습니다.<br>이 처럼 웹으로 빌드 되기 때문에 브라우저로 확인이 가능하고요. 나중에 다루겠지만 <a href="https://ionicframework.com/docs/appflow/devapp" rel="external nofollow noopener noreferrer" target="_blank">Ionic DevApp</a>을 통해 폰에서도 확인이 가능합니다.</p>
+<h2 id="코드-구조-살펴보기"><a href="#코드-구조-살펴보기" class="headerlink" title="코드 구조 살펴보기"></a>코드 구조 살펴보기</h2><img src="/2019/05/15/develop/ionic-1/3.png">
+<p>대충 이렇게 생겼고요. 저흰 src 밑에서 작업하면 됩니다.<br>디렉토리에서 대충 감이 오겠지만 tabs가 tab1, tab2, tab3을 라우팅 해주는 구조입니다.<br>그래도 궁금하니 tabs/tabs.router.module.ts를 열어보겠습니다.</p>
+<figure class="highlight typescript"><figcaption><span>tabs.router.module.ts</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; NgModule &#125; <span class="keyword">from</span> <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; RouterModule, Routes &#125; <span class="keyword">from</span> <span class="string">'@angular/router'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; TabsPage &#125; <span class="keyword">from</span> <span class="string">'./tabs.page'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> routes: Routes = [</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">'tabs'</span>,</span><br><span class="line">    component: TabsPage,</span><br><span class="line">    children: [</span><br><span class="line">      &#123;</span><br><span class="line">        path: <span class="string">'tab1'</span>,</span><br><span class="line">        children: [</span><br><span class="line">          &#123;</span><br><span class="line">            path: <span class="string">''</span>,</span><br><span class="line">            loadChildren: <span class="string">'../tab1/tab1.module#Tab1PageModule'</span></span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        path: <span class="string">'tab2'</span>,</span><br><span class="line">        children: [</span><br><span class="line">          &#123;</span><br><span class="line">            path: <span class="string">''</span>,</span><br><span class="line">            loadChildren: <span class="string">'../tab2/tab2.module#Tab2PageModule'</span></span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        path: <span class="string">'tab3'</span>,</span><br><span class="line">        children: [</span><br><span class="line">          &#123;</span><br><span class="line">            path: <span class="string">''</span>,</span><br><span class="line">            loadChildren: <span class="string">'../tab3/tab3.module#Tab3PageModule'</span></span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        path: <span class="string">''</span>,</span><br><span class="line">        redirectTo: <span class="string">'/tabs/tab1'</span>,</span><br><span class="line">        pathMatch: <span class="string">'full'</span></span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">''</span>,</span><br><span class="line">    redirectTo: <span class="string">'/tabs/tab1'</span>,</span><br><span class="line">    pathMatch: <span class="string">'full'</span></span><br><span class="line">  &#125;</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  imports: [</span><br><span class="line">    RouterModule.forChild(routes)</span><br><span class="line">  ],</span><br><span class="line">  exports: [RouterModule]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> TabsPageRoutingModule &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>보시다시피 뭐 특별한게 있는건 아니고요. angular routing 형태로 만들면 됩니다.</p>
+<figure class="highlight html"><figcaption><span>tabs.page.html</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ion-tabs</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">ion-tab-bar</span> <span class="attr">slot</span>=<span class="string">"bottom"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ion-tab-button</span> <span class="attr">tab</span>=<span class="string">"tab1"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">ion-icon</span> <span class="attr">name</span>=<span class="string">"flash"</span>&gt;</span><span class="tag">&lt;/<span class="name">ion-icon</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">ion-label</span>&gt;</span>Tab One<span class="tag">&lt;/<span class="name">ion-label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">ion-tab-button</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">ion-tab-button</span> <span class="attr">tab</span>=<span class="string">"tab2"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">ion-icon</span> <span class="attr">name</span>=<span class="string">"apps"</span>&gt;</span><span class="tag">&lt;/<span class="name">ion-icon</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">ion-label</span>&gt;</span>Tab Two<span class="tag">&lt;/<span class="name">ion-label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">ion-tab-button</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">ion-tab-button</span> <span class="attr">tab</span>=<span class="string">"tab3"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">ion-icon</span> <span class="attr">name</span>=<span class="string">"send"</span>&gt;</span><span class="tag">&lt;/<span class="name">ion-icon</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">ion-label</span>&gt;</span>Tab Three<span class="tag">&lt;/<span class="name">ion-label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">ion-tab-button</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ion-tab-bar</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">ion-tabs</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>뷰에서는 ionic이 제공되는 디렉티브를 이용하면 됩니다. 탭의 경우 위와같이 만들어져 있네요.<br>뭐 꼭 위처럼 안만들어도 되지만 예시가 이렇게 나와있으니 이 형식을 따르면 좋을것 같습니다.</p>
+<h2 id="각-플랫폼에서-실행하기"><a href="#각-플랫폼에서-실행하기" class="headerlink" title="각 플랫폼에서 실행하기"></a>각 플랫폼에서 실행하기</h2><p>이 링크에서 자세히 설명되어 있습니다만 <a href="https://ionicframework.com/docs/building/ios" rel="external nofollow noopener noreferrer" target="_blank">Running on iOS</a>, <a href="https://ionicframework.com/docs/building/android" rel="external nofollow noopener noreferrer" target="_blank">Running on Android</a> 아주 간단하게 적겠습니다.</p>
+<ul>
+<li><p>iOS</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ionic cordova prepare ios</span><br><span class="line">$ ionic cordova run ios -l</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Android</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ionic cordova prepare android</span><br><span class="line">$ ionic cordova run android -l</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>초기 세팅에 대해서만 알아보았습니다. 자세한것들은 공식 문서를 참고하면 됩니다. <a href="https://ionicframework.com/docs/" rel="external nofollow noopener noreferrer" target="_blank">Ionic Framework</a><br>근데 공식 문서에 항목들은 잘 정리된거 같은데 예시는 좀 부족한것 같네요. 그런데 iOS와 Android에서 보여주는 look의 차이까지 잘 보여주는 점은 장점입니다.<br>시간날 때마다 간단한 앱을 만들 수 있는 공부를 할 계획인데요. 아는게 생길때마다 포스팅 해보도록 하겠습니다.</p>
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        <!-- 깃헙 포스트 -->
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="7955259608" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/ionic/">ionic</a>
+
+            </div>
+        
+
+
+
+
+        <!--밍피디가 커스터마이징 해본 관련 글 영역-->
+        
+        
+        <!-- 끝 -->
+
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/05/05/anything/20190505-112100/" data-tooltip="저의 다른 글 매체를 소개합니다." aria-label="다음: 저의 다른 글 매체를 소개합니다.">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/05/15/develop/ionic-1/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/05/15/develop/ionic-1/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/05/15/develop/ionic-1/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+
+        <!-- 깃헙 관련글 밑 -->
+        <!--<ins class="adsbygoogle"-->
+             <!--style="display:block"-->
+             <!--data-ad-client="ca-pub-4098225824538946"-->
+             <!--data-ad-slot="4860470205"-->
+             <!--data-ad-format="auto"-->
+             <!--data-full-width-responsive="true"></ins>-->
+        <!--<script>-->
+          <!--(adsbygoogle = window.adsbygoogle || []).push({});-->
+        <!--</script>-->
+        <!--<br>-->
+
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 밍피디. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/05/05/anything/20190505-112100/" data-tooltip="저의 다른 글 매체를 소개합니다." aria-label="다음: 저의 다른 글 매체를 소개합니다.">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/05/15/develop/ionic-1/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/05/15/develop/ionic-1/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/05/15/develop/ionic-1/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/05/15/develop/ionic-1/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/05/15/develop/ionic-1/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/05/15/develop/ionic-1/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+            <h4 id="about-card-name">밍피디</h4>
+        
+            <div id="about-card-bio"><p>잔망스러운 개발자</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>개발자</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                판교, 대한민국
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/bg.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://mingpd.github.io/2019/05/15/develop/ionic-1/';
+                 
+                    this.page.identifier = '2019/05/15/develop/ionic-1/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mingpidi';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+
+    </body>
+</html>
