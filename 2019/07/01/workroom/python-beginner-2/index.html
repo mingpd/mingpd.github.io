@@ -1,0 +1,597 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="밍피디의 개발노트">
+    <title>python 기초 강좌 2 - 수업의 최종 목표와 기초 문법 - 밍피디의 개발노트</title>
+    <meta name="author" content="밍피디">
+    
+        <meta name="keywords" content="개발,developer,">
+    
+    
+        <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"수업의 최종 목표를 정한 다음에 기초문법을 아주 빠르게 훑어보도록 하겠습니다.자세한 내용은 점푸 투 파이썬을 참고하도록 합시다.\n최종 목표원래는 인스타그램 태그 검색 API를 통해 데이터를 파싱하는게 목표였으나 현재 인스타그램 API를 쓰기 쉽지 않은 상황이므로 네이버 이미지검색 API를 사용하기로 합니다.\n1234curl -i -X GET \\   -H \"X-Naver-Client-Id:네이버 오픈 API 아이디\" \\   -H \"X-Naver-Client-Secret:네이버 오픈 API 비밀키\" \\ 'https://openapi.naver.com/v1/search/image?query=치킨&amp;display=10&amp;sort=sim&amp;start=1'\n위 API를 실행하면 아래와 같은 결과가 리턴됩니다.12345678910111213141516171819202122232425262728293031&#123;\t\"lastBuildDate\": \"Mon, 01 Jul 2019 18:49:37 +0900\",\t\"total\": 755639,\t\"start\": 1,\t\"display\": 10,\t\"items\": [&#123;\t\t\t\"title\": \"BHC치킨 송정역점\",\t\t\t\"link\": \"http://ldb.phinf.naver.net/20171211_237/1512973532440z1E5V_JPEG/9vzoOYbXljNrKeKVKn8FtOnB.jpg\",\t\t\t\"thumbnail\": \"https://search.pstatic.net/common/?src=http://ldb.phinf.naver.net/20171211_237/1512973532440z1E5V_JPEG/9vzoOYbXljNrKeKVKn8FtOnB.jpg&amp;type=b150\",\t\t\t\"sizeheight\": \"400\",\t\t\t\"sizewidth\": \"540\"\t\t&#125;,\t\t&#123;\t\t\t\"title\": \"60계 치킨 마곡점\",\t\t\t\"link\": \"http://ldb.phinf.naver.net/20181016_21/1539669397893cVhPD_JPEG/plCjKmkVzK4jgT-l8MTL_v3Q.jpg\",\t\t\t\"thumbnail\": \"https://search.pstatic.net/common/?src=http://ldb.phinf.naver.net/20181016_21/1539669397893cVhPD_JPEG/plCjKmkVzK4jgT-l8MTL_v3Q.jpg&amp;type=b150\",\t\t\t\"sizeheight\": \"854\",\t\t\t\"sizewidth\": \"1280\"\t\t&#125;,\t\t&#123;\t\t\t\"title\": \"치킨파티 천북점\",\t\t\t\"link\": \"http://ldb.phinf.naver.net/20161028_110/1477631570926FTKBN_PNG/065904c7-a4b5-44af-bc5d-2a8b9d7b732c.png\",\t\t\t\"thumbnail\": \"https://search.pstatic.net/common/?src=http://ldb.phinf.naver.net/20161028_110/1477631570926FTKBN_PNG/065904c7-a4b5-44af-bc5d-2a8b9d7b732c.png&amp;type=b150\",\t\t\t\"sizeheight\": \"900\",\t\t\t\"sizewidth\": \"1200\"\t\t&#125;\t]&#125;이것을 자유자재로 파싱해보도록 하겠습니다. 이것이 궁극적인 목표입니다.\nJSON 초간단 요약{} == key-value[] == 리스트\n\n기본 문법출력12# 샵 뒤에 쓰는 글은 주석입니다print('헬로우월드')\n기본 타입과 연산12345678910111213# 숫자a = 1b = 2print(a + b)# 문자열a = \"hello\"b = \"world\"print(a + \" \" + b)# booleana = Trueprint(a)\n그 외 자료형123456789101112131415161718192021# 리스트a = [1, 2, 3, ['a', 'b', 'c']]print(a[1])print(a[-1])a[1] = 99print(a[1])# 튜플t = ('a', 'b', ('ab', 'cd'))print(t[1])print(t[-1])t[1] = 99print(t[1])# 딕셔너리dic = &#123;'name':'mingus', 'location':'pangyo'&#125;print(dic['name'])dic['name'] = 'nicole'print(dic['name'])print(dic)\n조건문 (if)12345money = Trueif money:    print(\"택시를 타고 가라\")else:    print(\"걸어 가라\")\n반복문 (for)123test_list = ['one', 'two', 'three'] for i in test_list:     print(i)\n연습문제총 학생의 시험 점수가 아래와 같을때 60점이 넘으면 “PASS”, 아니면 “FAIL”을 학생의 이름과 함께 표시하시오.1234567scores = [        &#123;'name':'mingus', 'score':100&#125;,        &#123;'name':'nicole', 'score':90&#125;,        &#123;'name':'sia', 'score':25&#125;,        &#123;'name':'irene', 'score':45&#125;,        &#123;'name':'maia', 'score':80&#125;    ]아래처럼 나오게 하면 성공12345mingus &quot;PASS&quot;nicole &quot;PASS&quot;sia &quot;FAIL&quot;irene &quot;FAIL&quot;maia &quot;PASS&quot;\n마치며기초 문법을 정말 간단한게 알아보았습니다.","dateCreated":"2019-07-01T22:00:00+09:00","dateModified":"2019-07-02T10:08:28+09:00","datePublished":"2019-07-01T22:00:00+09:00","description":"기초문법을 아주 빠르게 훑어보겠습니다.","headline":"python 기초 강좌 2 - 수업의 최종 목표와 기초 문법","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/07/01/workroom/python-beginner-2/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/07/01/workroom/python-beginner-2/","keywords":"python"}</script>
+    <meta name="description" content="기초문법을 아주 빠르게 훑어보겠습니다.">
+<meta name="keywords" content="python">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="python 기초 강좌 2 - 수업의 최종 목표와 기초 문법">
+<meta property="og:url" content="https://mingpd.github.io/2019/07/01/workroom/python-beginner-2/index.html">
+<meta property="og:site_name" content="밍피디의 개발노트">
+<meta property="og:description" content="기초문법을 아주 빠르게 훑어보겠습니다.">
+<meta property="og:locale" content="ko">
+<meta property="og:updated_time" content="2019-07-02T01:08:28.892Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python 기초 강좌 2 - 수업의 최종 목표와 기초 문법">
+<meta name="twitter:description" content="기초문법을 아주 빠르게 훑어보겠습니다.">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png">
+    
+    
+    
+    
+
+    <!-- adsense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+                                                      google_ad_client: "ca-pub-4098225824538946",
+                                                      enable_page_level_ads: true
+                                                    });
+    </script>
+
+    <!-- adfit -->
+    <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+
+    <link rel="canonical" href="https://mingpd.github.io/2019/07/01/workroom/python-beginner-2/">
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120538979-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120538979-3');
+    </script>
+
+
+    
+
+    <!-- naver 검색 -->
+    <meta name="naver-site-verification" content="cc953655bf884f0df42eb141555d032a9b64c1ee">
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">밍피디의 개발노트</a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+                </a>
+                <h4 class="sidebar-profile-name">밍피디</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>잔망스러운 개발자</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/ " title="홈">
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">홈</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-아무말" title="아무말">
+                    
+                        <i class="sidebar-button-icon fa fa-calendar" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아무말</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-개발" title="개발노트">
+                    
+                        <i class="sidebar-button-icon fa fa-code" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">개발노트</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" title="아카이브">
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" title="태그">
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://cfdf.tistory.com/" target="_blank" rel="external nofollow noopener noreferrer" title="티스토리">
+                    
+                        <i class="sidebar-button-icon fab fa-tumblr" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">티스토리</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+
+        <!--sidebar adsense-->
+        <table id="sidebar-ad">
+            <tr>
+                <td align="center">
+                    <!-- 깃헙 사이드바 대형 -->
+                    <ins class="adsbygoogle" style="display:inline-block;width:160px;height:600px" data-ad-client="ca-pub-4098225824538946" data-ad-slot="2729007176"></ins>
+                         <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                </td>
+            </tr>
+        </table>
+
+        <!--sidebar adsense-->
+        <table id="sidebar-ad-small">
+            <tr>
+                <td align="center">
+                    <!-- 깃헙 사이드바 소형 -->
+                    <ins class="adsbygoogle" style="display:inline-block;width:180px;height:150px" data-ad-client="ca-pub-4098225824538946" data-ad-slot="9168779678"></ins>
+                    <script>
+                      (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            python 기초 강좌 2 - 수업의 최종 목표와 기초 문법
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-07-01T22:00:00+09:00">
+	
+		    7월 01, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/개발/">개발</a>, <a class="category-link" href="/categories/개발/작업실/">작업실</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- 깃헙 포스트 -->
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="7955259608" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+
+            <!-- excerpt --><br><h1 id="table-of-contents">목차</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#최종-목표"><span class="toc-text">최종 목표</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#기본-문법"><span class="toc-text">기본 문법</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#출력"><span class="toc-text">출력</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#기본-타입과-연산"><span class="toc-text">기본 타입과 연산</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#그-외-자료형"><span class="toc-text">그 외 자료형</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#조건문-if"><span class="toc-text">조건문 (if)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#반복문-for"><span class="toc-text">반복문 (for)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#연습문제"><span class="toc-text">연습문제</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#마치며"><span class="toc-text">마치며</span></a></li></ol><br>수업의 최종 목표를 정한 다음에 기초문법을 아주 빠르게 훑어보도록 하겠습니다.<br>자세한 내용은 <a href="https://wikidocs.net/book/1" rel="external nofollow noopener noreferrer" target="_blank">점푸 투 파이썬</a>을 참고하도록 합시다.<p></p>
+<h2 id="최종-목표"><a href="#최종-목표" class="headerlink" title="최종 목표"></a>최종 목표</h2><p>원래는 인스타그램 태그 검색 API를 통해 데이터를 파싱하는게 목표였으나 현재 인스타그램 API를 쓰기 쉽지 않은 상황이므로 네이버 이미지검색 API를 사용하기로 합니다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl -i -X GET \</span><br><span class="line">   -H <span class="string">"X-Naver-Client-Id:네이버 오픈 API 아이디"</span> \</span><br><span class="line">   -H <span class="string">"X-Naver-Client-Secret:네이버 오픈 API 비밀키"</span> \</span><br><span class="line"> <span class="string">'https://openapi.naver.com/v1/search/image?query=치킨&amp;display=10&amp;sort=sim&amp;start=1'</span></span><br></pre></td></tr></table></figure>
+<p>위 API를 실행하면 아래와 같은 결과가 리턴됩니다.<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="attr">"lastBuildDate"</span>: <span class="string">"Mon, 01 Jul 2019 18:49:37 +0900"</span>,</span><br><span class="line">	<span class="attr">"total"</span>: <span class="number">755639</span>,</span><br><span class="line">	<span class="attr">"start"</span>: <span class="number">1</span>,</span><br><span class="line">	<span class="attr">"display"</span>: <span class="number">10</span>,</span><br><span class="line">	<span class="attr">"items"</span>: [&#123;</span><br><span class="line">			<span class="attr">"title"</span>: <span class="string">"BHC치킨 송정역점"</span>,</span><br><span class="line">			<span class="attr">"link"</span>: <span class="string">"http://ldb.phinf.naver.net/20171211_237/1512973532440z1E5V_JPEG/9vzoOYbXljNrKeKVKn8FtOnB.jpg"</span>,</span><br><span class="line">			<span class="attr">"thumbnail"</span>: <span class="string">"https://search.pstatic.net/common/?src=http://ldb.phinf.naver.net/20171211_237/1512973532440z1E5V_JPEG/9vzoOYbXljNrKeKVKn8FtOnB.jpg&amp;type=b150"</span>,</span><br><span class="line">			<span class="attr">"sizeheight"</span>: <span class="string">"400"</span>,</span><br><span class="line">			<span class="attr">"sizewidth"</span>: <span class="string">"540"</span></span><br><span class="line"></span><br><span class="line">		&#125;,</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="attr">"title"</span>: <span class="string">"60계 치킨 마곡점"</span>,</span><br><span class="line">			<span class="attr">"link"</span>: <span class="string">"http://ldb.phinf.naver.net/20181016_21/1539669397893cVhPD_JPEG/plCjKmkVzK4jgT-l8MTL_v3Q.jpg"</span>,</span><br><span class="line">			<span class="attr">"thumbnail"</span>: <span class="string">"https://search.pstatic.net/common/?src=http://ldb.phinf.naver.net/20181016_21/1539669397893cVhPD_JPEG/plCjKmkVzK4jgT-l8MTL_v3Q.jpg&amp;type=b150"</span>,</span><br><span class="line">			<span class="attr">"sizeheight"</span>: <span class="string">"854"</span>,</span><br><span class="line">			<span class="attr">"sizewidth"</span>: <span class="string">"1280"</span></span><br><span class="line"></span><br><span class="line">		&#125;,</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="attr">"title"</span>: <span class="string">"치킨파티 천북점"</span>,</span><br><span class="line">			<span class="attr">"link"</span>: <span class="string">"http://ldb.phinf.naver.net/20161028_110/1477631570926FTKBN_PNG/065904c7-a4b5-44af-bc5d-2a8b9d7b732c.png"</span>,</span><br><span class="line">			<span class="attr">"thumbnail"</span>: <span class="string">"https://search.pstatic.net/common/?src=http://ldb.phinf.naver.net/20161028_110/1477631570926FTKBN_PNG/065904c7-a4b5-44af-bc5d-2a8b9d7b732c.png&amp;type=b150"</span>,</span><br><span class="line">			<span class="attr">"sizeheight"</span>: <span class="string">"900"</span>,</span><br><span class="line">			<span class="attr">"sizewidth"</span>: <span class="string">"1200"</span></span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line">	]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>이것을 자유자재로 파싱해보도록 하겠습니다. 이것이 궁극적인 목표입니다.</p>
+<blockquote><p>JSON 초간단 요약<br>{} == key-value<br>[] == 리스트</p>
+</blockquote>
+<h2 id="기본-문법"><a href="#기본-문법" class="headerlink" title="기본 문법"></a>기본 문법</h2><h3 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 샵 뒤에 쓰는 글은 주석입니다</span></span><br><span class="line">print(<span class="string">'헬로우월드'</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="기본-타입과-연산"><a href="#기본-타입과-연산" class="headerlink" title="기본 타입과 연산"></a>기본 타입과 연산</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 숫자</span></span><br><span class="line">a = <span class="number">1</span></span><br><span class="line">b = <span class="number">2</span></span><br><span class="line">print(a + b)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 문자열</span></span><br><span class="line">a = <span class="string">"hello"</span></span><br><span class="line">b = <span class="string">"world"</span></span><br><span class="line">print(a + <span class="string">" "</span> + b)</span><br><span class="line"></span><br><span class="line"><span class="comment"># boolean</span></span><br><span class="line">a = <span class="literal">True</span></span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+<h3 id="그-외-자료형"><a href="#그-외-자료형" class="headerlink" title="그 외 자료형"></a>그 외 자료형</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 리스트</span></span><br><span class="line">a = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>]]</span><br><span class="line">print(a[<span class="number">1</span>])</span><br><span class="line">print(a[<span class="number">-1</span>])</span><br><span class="line">a[<span class="number">1</span>] = <span class="number">99</span></span><br><span class="line">print(a[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 튜플</span></span><br><span class="line">t = (<span class="string">'a'</span>, <span class="string">'b'</span>, (<span class="string">'ab'</span>, <span class="string">'cd'</span>))</span><br><span class="line">print(t[<span class="number">1</span>])</span><br><span class="line">print(t[<span class="number">-1</span>])</span><br><span class="line">t[<span class="number">1</span>] = <span class="number">99</span></span><br><span class="line">print(t[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 딕셔너리</span></span><br><span class="line">dic = &#123;<span class="string">'name'</span>:<span class="string">'mingus'</span>, <span class="string">'location'</span>:<span class="string">'pangyo'</span>&#125;</span><br><span class="line">print(dic[<span class="string">'name'</span>])</span><br><span class="line">dic[<span class="string">'name'</span>] = <span class="string">'nicole'</span></span><br><span class="line">print(dic[<span class="string">'name'</span>])</span><br><span class="line">print(dic)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="조건문-if"><a href="#조건문-if" class="headerlink" title="조건문 (if)"></a>조건문 (if)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">money = <span class="literal">True</span></span><br><span class="line"><span class="keyword">if</span> money:</span><br><span class="line">    print(<span class="string">"택시를 타고 가라"</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    print(<span class="string">"걸어 가라"</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="반복문-for"><a href="#반복문-for" class="headerlink" title="반복문 (for)"></a>반복문 (for)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">test_list = [<span class="string">'one'</span>, <span class="string">'two'</span>, <span class="string">'three'</span>] </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> test_list: </span><br><span class="line">    print(i)</span><br></pre></td></tr></table></figure>
+<h3 id="연습문제"><a href="#연습문제" class="headerlink" title="연습문제"></a>연습문제</h3><p>총 학생의 시험 점수가 아래와 같을때 60점이 넘으면 “PASS”, 아니면 “FAIL”을 학생의 이름과 함께 표시하시오.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">scores = [</span><br><span class="line">        &#123;<span class="string">'name'</span>:<span class="string">'mingus'</span>, <span class="string">'score'</span>:<span class="number">100</span>&#125;,</span><br><span class="line">        &#123;<span class="string">'name'</span>:<span class="string">'nicole'</span>, <span class="string">'score'</span>:<span class="number">90</span>&#125;,</span><br><span class="line">        &#123;<span class="string">'name'</span>:<span class="string">'sia'</span>, <span class="string">'score'</span>:<span class="number">25</span>&#125;,</span><br><span class="line">        &#123;<span class="string">'name'</span>:<span class="string">'irene'</span>, <span class="string">'score'</span>:<span class="number">45</span>&#125;,</span><br><span class="line">        &#123;<span class="string">'name'</span>:<span class="string">'maia'</span>, <span class="string">'score'</span>:<span class="number">80</span>&#125;</span><br><span class="line">    ]</span><br></pre></td></tr></table></figure><br>아래처럼 나오게 하면 성공<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mingus &quot;PASS&quot;</span><br><span class="line">nicole &quot;PASS&quot;</span><br><span class="line">sia &quot;FAIL&quot;</span><br><span class="line">irene &quot;FAIL&quot;</span><br><span class="line">maia &quot;PASS&quot;</span><br></pre></td></tr></table></figure></p>
+<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>기초 문법을 정말 간단한게 알아보았습니다.</p>
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        <!-- 깃헙 포스트 -->
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="7955259608" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/python/">python</a>
+
+            </div>
+        
+
+
+
+
+        <!--밍피디가 커스터마이징 해본 관련 글 영역-->
+        
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">관련 글</span><br>
+                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/06/19/workroom/python-beginner-1/" title="python 기초 강좌 1 - 설치 및 환경설정" rel="bookmark">python 기초 강좌 1 - 설치 및 환경설정</a></h3></div></li></ul>
+            </div>
+        
+        <!-- 끝 -->
+
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/06/19/workroom/python-beginner-1/" data-tooltip="python 기초 강좌 1 - 설치 및 환경설정" aria-label="다음: python 기초 강좌 1 - 설치 및 환경설정">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/07/01/workroom/python-beginner-2/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/07/01/workroom/python-beginner-2/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/07/01/workroom/python-beginner-2/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+
+        <!-- 깃헙 관련글 밑 -->
+        <!--<ins class="adsbygoogle"-->
+             <!--style="display:block"-->
+             <!--data-ad-client="ca-pub-4098225824538946"-->
+             <!--data-ad-slot="4860470205"-->
+             <!--data-ad-format="auto"-->
+             <!--data-full-width-responsive="true"></ins>-->
+        <!--<script>-->
+          <!--(adsbygoogle = window.adsbygoogle || []).push({});-->
+        <!--</script>-->
+        <!--<br>-->
+
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 밍피디. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/06/19/workroom/python-beginner-1/" data-tooltip="python 기초 강좌 1 - 설치 및 환경설정" aria-label="다음: python 기초 강좌 1 - 설치 및 환경설정">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/07/01/workroom/python-beginner-2/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/07/01/workroom/python-beginner-2/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/07/01/workroom/python-beginner-2/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/07/01/workroom/python-beginner-2/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/07/01/workroom/python-beginner-2/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/07/01/workroom/python-beginner-2/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+            <h4 id="about-card-name">밍피디</h4>
+        
+            <div id="about-card-bio"><p>잔망스러운 개발자</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>개발자</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                판교, 대한민국
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/bg.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://mingpd.github.io/2019/07/01/workroom/python-beginner-2/';
+                 
+                    this.page.identifier = '2019/07/01/workroom/python-beginner-2/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mingpidi';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+
+    </body>
+</html>
