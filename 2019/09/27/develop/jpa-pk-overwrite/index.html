@@ -1,0 +1,594 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="밍피디의 개발노트">
+    <title>jpa, PK가 auto increment인데, PK 값을 강제로 지정하고 싶을 때 - 밍피디의 개발노트</title>
+    <meta name="author" content="밍피디">
+    
+        <meta name="keywords" content="개발,developer,">
+    
+    
+        <link rel="icon" href="https://mingpd.github.io/assets/images/favicon.png">
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/feed.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png"},"articleBody":"\n일반적인 JPA의 id 컬럼 설정 방법JPA에서 mysql과 같이 auto increment PK를 사용하는 경우 아래처럼 작성합니다.123456789@Entity@Table(name = \"products\")public class Product &#123;    @Id    @GeneratedValue(strategy = GenerationType.IDENTITY)    private Long id;    // .. 기타등등 필드&#125;\n이러면 entity 생성시 위 id에 뭘 안넣어도 JPA가 auto increment 다음 값을 가져와서 entity에 값을 잘 설정해줍니다.\n만약 이런 경우라면..?우리가 어떤 두 시스템을 통합한다고 가정합시다.라이브 중인 서비스는 이미 이 통합작업을 고려하여 auto increment 값이 10000000번 부터 시작된 프로젝트입니다.마이그레이션 할 데이터들의 PK는 1번부터 시작하며 100만건 남짓 입니다.따라서 라이브중인 시스템과 마이그레이션 할 대상의 시스템의 PK는 겹치지 않습니다.이 두 시스템의 데이터를 합쳐야 합니다.\n요약하면, 마이그레이션 데이터의 PK를 유지한채 현 라이브중인 시스템으로 가져와야 된다는 의미입니다.아래처럼 하면 쉽게 될것 같지만.. 과연 그럴까요?123456@Transactionalpublic void migrate(Long originalPK) &#123;    Product p = new Product();    p.setId(originalPK);    // 가져올 데이터베이스의 PK값을 강제로 id필드에 할당    productRepository.save(p);&#125;\n결론은, 안됩니다. auto increment 컬럼과 매핑된 @GeneratedValue(strategy = GenerationType.IDENTITY) 이 속성의 @Id 필드에는요.자동으로 auto increment 다음 값을 가져와서 넣어버립니다.\n해결 방법많은 삽질을 해본 결과 아래와 같은 답을 찾았습니다. IdGenerator를 커스터마이징 하는 방법입니다.1234567891011@Entity@Table(name = \"products\")public class Product &#123;    @Id    @GenericGenerator(name = \"productId\", strategy = \"com.mingpd.jpa.ProductIdGenerator\")    @GeneratedValue(generator = \"productId\") // 위 name과 같은 이름을 써줍시다.//  @GeneratedValue(strategy = GenerationType.IDENTITY) // identity 전략은 사용하지 않습니다.    private Long id;    // .. 기타등등 필드&#125;\n이제 ProductIdGenerator를 아래처럼 만들어봅시다.12345678910111213141516171819202122232425import java.io.Serializable;import org.hibernate.HibernateException;import org.hibernate.engine.spi.SharedSessionContractImplementor;import org.hibernate.id.IdentityGenerator;import com.minpd.domain.Product;public class ProductIdGenerator extends IdentityGenerator &#123;\t@Override\tpublic Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException &#123;\t\tif (object instanceof Product) &#123;\t\t\tProduct p = (Product) object;\t\t\treturn p.getId() == null ? super.generate(session, object) : p.getId();\t\t&#125; else &#123;\t\t\tthrow new RuntimeException(\"Product entity가 아니에요.\");\t\t&#125;\t\t/*\t\t// 이것도 됨\t\tSerializable id = session.getEntityPersister(null, object).getClassMetadata().getIdentifier(object, session);\t\treturn id != null ? id : super.generate(session, object);\t\t */\t&#125;&#125;\nIdentityGenerator 클래스를 상속받아 만들었는데요. 이놈이 뭐하는애냐면, PK 생성이 IDENTITY 전략일 때 불리는 애 입니다.쉽게 말해, 현재 Product 엔티티의 id가 null일때만 auto increment를 이용하겠다는 의미입니다.\n마치며사실 이 방법이 올바른건진 잘 모르겠으나, 일단 되긴 됩니다. 그럼 됐죠 뭐..","dateCreated":"2019-09-27T11:30:00+09:00","dateModified":"2019-09-27T11:43:58+09:00","datePublished":"2019-09-27T11:30:00+09:00","description":"How to specify the @Id value on auto increment field with JPA.\n@GeneratedValue(strategy = GenerationType.IDENTITY) 필드에 때때로 값을 강제로 할당하고자 할 경우가 있습니다.","headline":"jpa, PK가 auto increment인데, PK 값을 강제로 지정하고 싶을 때","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://mingpd.github.io/2019/09/27/develop/jpa-pk-overwrite/"},"publisher":{"@type":"Organization","name":"밍피디","sameAs":["https://cfdf.tistory.com/"],"image":"profile.png","logo":{"@type":"ImageObject","url":"profile.png"}},"url":"https://mingpd.github.io/2019/09/27/develop/jpa-pk-overwrite/","keywords":"java, jpa"}</script>
+    <meta name="description" content="How to specify the @Id value on auto increment field with JPA. @GeneratedValue(strategy = GenerationType.IDENTITY) 필드에 때때로 값을 강제로 할당하고자 할 경우가 있습니다.">
+<meta name="keywords" content="java,jpa">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="jpa, PK가 auto increment인데, PK 값을 강제로 지정하고 싶을 때">
+<meta property="og:url" content="https://mingpd.github.io/2019/09/27/develop/jpa-pk-overwrite/index.html">
+<meta property="og:site_name" content="밍피디의 개발노트">
+<meta property="og:description" content="How to specify the @Id value on auto increment field with JPA. @GeneratedValue(strategy = GenerationType.IDENTITY) 필드에 때때로 값을 강제로 할당하고자 할 경우가 있습니다.">
+<meta property="og:locale" content="ko">
+<meta property="og:updated_time" content="2019-09-27T02:43:58.390Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jpa, PK가 auto increment인데, PK 값을 강제로 지정하고 싶을 때">
+<meta name="twitter:description" content="How to specify the @Id value on auto increment field with JPA. @GeneratedValue(strategy = GenerationType.IDENTITY) 필드에 때때로 값을 강제로 할당하고자 할 경우가 있습니다.">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://mingpd.github.io/assets/images/profile.png">
+    
+    
+    
+    
+
+    <!-- adsense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+                                                      google_ad_client: "ca-pub-4098225824538946",
+                                                      enable_page_level_ads: true
+                                                    });
+    </script>
+
+    <!-- adfit -->
+    <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+
+    <link rel="canonical" href="https://mingpd.github.io/2019/09/27/develop/jpa-pk-overwrite/">
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120538979-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120538979-3');
+    </script>
+
+
+    
+
+    <!-- naver 검색 -->
+    <meta name="naver-site-verification" content="cc953655bf884f0df42eb141555d032a9b64c1ee">
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">밍피디의 개발노트</a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+                </a>
+                <h4 class="sidebar-profile-name">밍피디</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>잔망스러운 개발자</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/ " title="홈">
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">홈</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-아무말" title="아무말">
+                    
+                        <i class="sidebar-button-icon fa fa-calendar" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아무말</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/category-개발" title="개발노트">
+                    
+                        <i class="sidebar-button-icon fa fa-code" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">개발노트</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" title="아카이브">
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" title="태그">
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://cfdf.tistory.com/" target="_blank" rel="external nofollow noopener noreferrer" title="티스토리">
+                    
+                        <i class="sidebar-button-icon fab fa-tumblr" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">티스토리</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+
+        <!--sidebar adsense-->
+        <table id="sidebar-ad">
+            <tr>
+                <td align="center">
+                    <!-- 깃헙 사이드바 대형 -->
+                    <ins class="adsbygoogle" style="display:inline-block;width:160px;height:600px" data-ad-client="ca-pub-4098225824538946" data-ad-slot="2729007176"></ins>
+                         <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                </td>
+            </tr>
+        </table>
+
+        <!--sidebar adsense-->
+        <table id="sidebar-ad-small">
+            <tr>
+                <td align="center">
+                    <!-- 깃헙 사이드바 소형 -->
+                    <ins class="adsbygoogle" style="display:inline-block;width:180px;height:150px" data-ad-client="ca-pub-4098225824538946" data-ad-slot="9168779678"></ins>
+                    <script>
+                      (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            jpa, PK가 auto increment인데, PK 값을 강제로 지정하고 싶을 때
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-09-27T11:30:00+09:00">
+	
+		    9월 27, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/개발/">개발</a>, <a class="category-link" href="/categories/개발/소소한-팁/">소소한 팁</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- 깃헙 포스트 -->
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="7955259608" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+
+            <!-- excerpt --><br><h1 id="table-of-contents">목차</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#일반적인-JPA의-id-컬럼-설정-방법"><span class="toc-text">일반적인 JPA의 id 컬럼 설정 방법</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#만약-이런-경우라면"><span class="toc-text">만약 이런 경우라면..?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#해결-방법"><span class="toc-text">해결 방법</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#마치며"><span class="toc-text">마치며</span></a></li></ol><p></p>
+<h2 id="일반적인-JPA의-id-컬럼-설정-방법"><a href="#일반적인-JPA의-id-컬럼-설정-방법" class="headerlink" title="일반적인 JPA의 id 컬럼 설정 방법"></a>일반적인 JPA의 id 컬럼 설정 방법</h2><p>JPA에서 mysql과 같이 auto increment PK를 사용하는 경우 아래처럼 작성합니다.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="meta">@Table</span>(name = <span class="string">"products"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Product</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@GeneratedValue</span>(strategy = GenerationType.IDENTITY)</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// .. 기타등등 필드</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>이러면 entity 생성시 위 id에 뭘 안넣어도 JPA가 auto increment 다음 값을 가져와서 entity에 값을 잘 설정해줍니다.</p>
+<h2 id="만약-이런-경우라면"><a href="#만약-이런-경우라면" class="headerlink" title="만약 이런 경우라면..?"></a>만약 이런 경우라면..?</h2><p>우리가 어떤 두 시스템을 통합한다고 가정합시다.<br>라이브 중인 서비스는 이미 이 통합작업을 고려하여 auto increment 값이 10000000번 부터 시작된 프로젝트입니다.<br>마이그레이션 할 데이터들의 PK는 1번부터 시작하며 100만건 남짓 입니다.<br>따라서 라이브중인 시스템과 마이그레이션 할 대상의 시스템의 PK는 겹치지 않습니다.<br>이 두 시스템의 데이터를 합쳐야 합니다.</p>
+<p><br><br>요약하면, 마이그레이션 데이터의 PK를 유지한채 현 라이브중인 시스템으로 가져와야 된다는 의미입니다.<br><br><br>아래처럼 하면 쉽게 될것 같지만.. 과연 그럴까요?<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">migrate</span><span class="params">(Long originalPK)</span> </span>&#123;</span><br><span class="line">    Product p = <span class="keyword">new</span> Product();</span><br><span class="line">    p.setId(originalPK);    <span class="comment">// 가져올 데이터베이스의 PK값을 강제로 id필드에 할당</span></span><br><span class="line">    productRepository.save(p);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>결론은, 안됩니다. auto increment 컬럼과 매핑된 <code>@GeneratedValue(strategy = GenerationType.IDENTITY)</code> 이 속성의 @Id 필드에는요.<br>자동으로 auto increment 다음 값을 가져와서 넣어버립니다.</p>
+<h2 id="해결-방법"><a href="#해결-방법" class="headerlink" title="해결 방법"></a>해결 방법</h2><p>많은 삽질을 해본 결과 아래와 같은 답을 찾았습니다. IdGenerator를 커스터마이징 하는 방법입니다.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="meta">@Table</span>(name = <span class="string">"products"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Product</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@GenericGenerator</span>(name = <span class="string">"productId"</span>, strategy = <span class="string">"com.mingpd.jpa.ProductIdGenerator"</span>)</span><br><span class="line">    <span class="meta">@GeneratedValue</span>(generator = <span class="string">"productId"</span>) <span class="comment">// 위 name과 같은 이름을 써줍시다.</span></span><br><span class="line"><span class="comment">//  @GeneratedValue(strategy = GenerationType.IDENTITY) // identity 전략은 사용하지 않습니다.</span></span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// .. 기타등등 필드</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>이제 ProductIdGenerator를 아래처럼 만들어봅시다.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.hibernate.HibernateException;</span><br><span class="line"><span class="keyword">import</span> org.hibernate.engine.spi.SharedSessionContractImplementor;</span><br><span class="line"><span class="keyword">import</span> org.hibernate.id.IdentityGenerator;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.minpd.domain.Product;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProductIdGenerator</span> <span class="keyword">extends</span> <span class="title">IdentityGenerator</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Serializable <span class="title">generate</span><span class="params">(SharedSessionContractImplementor session, Object object)</span> <span class="keyword">throws</span> HibernateException </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (object <span class="keyword">instanceof</span> Product) &#123;</span><br><span class="line">			Product p = (Product) object;</span><br><span class="line">			<span class="keyword">return</span> p.getId() == <span class="keyword">null</span> ? <span class="keyword">super</span>.generate(session, object) : p.getId();</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Product entity가 아니에요."</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">		// 이것도 됨</span></span><br><span class="line"><span class="comment">		Serializable id = session.getEntityPersister(null, object).getClassMetadata().getIdentifier(object, session);</span></span><br><span class="line"><span class="comment">		return id != null ? id : super.generate(session, object);</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>IdentityGenerator 클래스를 상속받아 만들었는데요. 이놈이 뭐하는애냐면, PK 생성이 IDENTITY 전략일 때 불리는 애 입니다.<br>쉽게 말해, 현재 Product 엔티티의 id가 null일때만 auto increment를 이용하겠다는 의미입니다.</p>
+<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>사실 이 방법이 올바른건진 잘 모르겠으나, 일단 되긴 됩니다. 그럼 됐죠 뭐..</p>
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        <!-- 깃헙 포스트 -->
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4098225824538946" data-ad-slot="7955259608" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/java/">java</a> <a class="tag tag--primary tag--small t-link" href="/tags/jpa/">jpa</a>
+
+            </div>
+        
+
+
+
+
+        <!--밍피디가 커스터마이징 해본 관련 글 영역-->
+        
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">관련 글</span><br>
+                <ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/22/interview/interview-1/" title="기술면접에 나올법한 질문들 1" rel="bookmark">기술면접에 나올법한 질문들 1</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-checked-to-unchecked/" title="java, checked excepton을 아름답게 unchecked exception으로 바꾸기" rel="bookmark">java, checked excepton을 아름답게 unchecked exception으로 바꾸기</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/31/develop/java-orelse-orelseget/" title="java, optional의 orElse와 orElseGet의 차이" rel="bookmark">java, optional의 orElse와 orElseGet의 차이</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/04/03/develop/java-stream-npe/" title="java, stream api에서 NPE 발생 주의" rel="bookmark">java, stream api에서 NPE 발생 주의</a></h3></div></li><li class="popular-posts-item"><div class="popular-posts-title"><h3><a href="/2019/03/12/develop/java-google-api/" title="java, google api 이용하기" rel="bookmark">java, google api 이용하기</a></h3></div></li></ul>
+            </div>
+        
+        <!-- 끝 -->
+
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/08/06/develop/ionic-4/" data-tooltip="ionic, local notification 사용하기" aria-label="다음: ionic, local notification 사용하기">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/09/27/develop/jpa-pk-overwrite/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/09/27/develop/jpa-pk-overwrite/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/09/27/develop/jpa-pk-overwrite/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+
+        <!-- 깃헙 관련글 밑 -->
+        <!--<ins class="adsbygoogle"-->
+             <!--style="display:block"-->
+             <!--data-ad-client="ca-pub-4098225824538946"-->
+             <!--data-ad-slot="4860470205"-->
+             <!--data-ad-format="auto"-->
+             <!--data-full-width-responsive="true"></ins>-->
+        <!--<script>-->
+          <!--(adsbygoogle = window.adsbygoogle || []).push({});-->
+        <!--</script>-->
+        <!--<br>-->
+
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 밍피디. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/08/06/develop/ionic-4/" data-tooltip="ionic, local notification 사용하기" aria-label="다음: ionic, local notification 사용하기">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="공유">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/09/27/develop/jpa-pk-overwrite/" title="Share on Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/09/27/develop/jpa-pk-overwrite/" title="Share on Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/09/27/develop/jpa-pk-overwrite/" title="Share on Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="목차">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://mingpd.github.io/2019/09/27/develop/jpa-pk-overwrite/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://mingpd.github.io/2019/09/27/develop/jpa-pk-overwrite/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://mingpd.github.io/2019/09/27/develop/jpa-pk-overwrite/" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.png" alt="Author&#39;s picture">
+        
+            <h4 id="about-card-name">밍피디</h4>
+        
+            <div id="about-card-bio"><p>잔망스러운 개발자</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>개발자</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                판교, 대한민국
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/bg.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://mingpd.github.io/2019/09/27/develop/jpa-pk-overwrite/';
+                 
+                    this.page.identifier = '2019/09/27/develop/jpa-pk-overwrite/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mingpidi';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+
+    </body>
+</html>
