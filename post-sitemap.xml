@@ -8,6 +8,14 @@
     </url>
 
     <url>
+        <loc>https://mingpd.github.io/2020/08/20/bear-migration/</loc>
+        <lastmod>2020-08-20T03:06:04.477Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://mingpd.github.io/2019/09/27/develop/jpa-pk-overwrite/</loc>
         <lastmod>2019-09-27T02:43:58.390Z</lastmod>
         <changefreq>weekly</changefreq>
