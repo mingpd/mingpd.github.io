@@ -1,0 +1,80 @@
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" #integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+
+</head>
+
+<body style="overflow-x: hidden">
+  <form id="spam-form">
+    <div class="form-group">
+      <textarea id="text-source" name="text" class="form-control" rows="7" maxlength="300" placeholder="바꾸려는 글귀를 입력하세요." style="resize:none;"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-5 col-sm-5 col-4">
+        <button type="button" class="btn-transform btn btn-info btn-block" data-mode="spam">스팸체</button> </div>
+      <div class="form-group col-md-5 col-sm-5 col-4">
+        <button type="button" class="btn-transform btn btn-info btn-block" data-mode="korean">한국인전용체</button>
+      </div>
+      <div class="form-group col-md-2 col-sm-2 col-4">
+        <button id="btn-reset" type="button" class="btn btn-danger btn-block">
+          다시쓰기
+        </button>
+      </div>
+    </div>
+    <div class="form-group"><textarea id="text-transformed" class="form-control" rows="7" style="resize:none;"></textarea></div>
+    <div class="form-row">
+      <div class="form-group col-md-12 col-sm-12 col-12">
+        <button id="btn-copy" type="button" class="btn btn-info btn-block" data-clipboard-target="#text-transformed">
+          복사하기
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <script type="text/javascript" src="lib/kotlin.js"></script>
+  <script type="text/javascript" src="spammaker.js"></script>
+  <script>
+    const clipboard = new ClipboardJS('#btn-copy');
+    clipboard.on('success', function(e) {
+      alert("복사 완료!");
+      e.clearSelection();
+    });
+
+    clipboard.on('error', function(e) {
+      alert("복사 실패! 다시 시도해주세요.");
+    });
+
+
+    $(document).ready(function() {
+      $("#btn-reset").click(function(e){
+        $("#text-source").val("");
+      });
+
+      $(".btn-transform").click(function (e) {
+        const source = $('#text-source').val();
+        if (!source) {
+          alert("입력이 제대로 안된거 같은데요");
+          return;
+        }
+
+        switch ($(e.target).data("mode")) {
+        case "spam":
+          $("#text-transformed").val(spammaker.toSpam(source));
+          break;
+        case "korean":
+          $("#text-transformed").val(spammaker.toKorean(source));
+          break;
+        }
+
+      });
+    });
+
+    const defaultPlaceholder = $("#text-source").attr("placeholder");
+    $("#text-transformed").attr("placeholder", spammaker.toSpam(defaultPlaceholder));
+    // console.log(spammaker.toSpam("동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세"));
+    // console.log(spammaker.toKorean("이 별점 높은 숙소 사실 가보니 매우 구립니다 사장님은 불친절하고 조식은 드럽게 맛이 없어요 별 1개도 아깝습니다"))
+  </script>
+</body>
+</html>
