@@ -15,21 +15,7 @@
     </url>
     
     <url>
-        <loc>https://mingpd.github.io/category-%EA%B0%9C%EB%B0%9C/</loc>
-        <lastmod>2026-07-31T12:18:43.911Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
-        <loc>https://mingpd.github.io/all-categories/</loc>
-        <lastmod>2026-07-31T12:18:43.911Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
-        <loc>https://mingpd.github.io/category-%EC%95%84%EB%AC%B4%EB%A7%90/</loc>
+        <loc>https://mingpd.github.io/all-archives/</loc>
         <lastmod>2026-07-31T12:18:43.911Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
@@ -43,7 +29,21 @@
     </url>
     
     <url>
-        <loc>https://mingpd.github.io/all-archives/</loc>
+        <loc>https://mingpd.github.io/category-%EA%B0%9C%EB%B0%9C/</loc>
+        <lastmod>2026-07-31T12:18:43.911Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>https://mingpd.github.io/category-%EC%95%84%EB%AC%B4%EB%A7%90/</loc>
+        <lastmod>2026-07-31T12:18:43.911Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>https://mingpd.github.io/all-categories/</loc>
         <lastmod>2026-07-31T12:18:43.911Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
