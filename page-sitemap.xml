@@ -22,7 +22,7 @@
     </url>
     
     <url>
-        <loc>https://mingpd.github.io/all-tags/</loc>
+        <loc>https://mingpd.github.io/all-categories/</loc>
         <lastmod>2026-07-31T12:18:43.911Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
@@ -43,7 +43,7 @@
     </url>
     
     <url>
-        <loc>https://mingpd.github.io/all-categories/</loc>
+        <loc>https://mingpd.github.io/all-tags/</loc>
         <lastmod>2026-07-31T12:18:43.911Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
